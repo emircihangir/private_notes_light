@@ -49,5 +49,20 @@ ThemeData appTheme() {
         animationDuration: Duration.zero,
       ),
     ),
+
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        splashFactory: NoSplash.splashFactory,
+        overlayColor: WidgetStatePropertyAll(Colors.transparent),
+        animationDuration: Duration.zero,
+        // padding: WidgetStatePropertyAll(EdgeInsets.only(bottom: 8, top: 8, left: 7, right: 7)),
+        foregroundColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.pressed)) {
+            return colorScheme.inversePrimary;
+          }
+          return colorScheme.primary;
+        }),
+      ),
+    ),
   );
 }

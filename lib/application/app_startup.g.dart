@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_repository.dart';
+part of 'app_startup.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authRepositoryHash() => r'3350843836125ae3e8dadab5ca21b472a67da6e9';
+String _$appStartupHash() => r'b3c6b8da7707021b3c0948ae53872640f86838e5';
 
-/// See also [authRepository].
-@ProviderFor(authRepository)
-final authRepositoryProvider = AutoDisposeProvider<AuthRepositoryImpl>.internal(
-  authRepository,
-  name: r'authRepositoryProvider',
+/// See also [appStartup].
+@ProviderFor(appStartup)
+final appStartupProvider = AutoDisposeFutureProvider<bool>.internal(
+  appStartup,
+  name: r'appStartupProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$authRepositoryHash,
+      : _$appStartupHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepositoryImpl>;
+typedef AppStartupRef = AutoDisposeFutureProviderRef<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
