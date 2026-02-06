@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:private_notes_light/presentation/login_screen.dart';
+import 'package:private_notes_light/presentation/signup_screen.dart';
 import 'package:private_notes_light/presentation/theme.dart';
 
 void main() {
@@ -12,6 +12,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: appTheme(), home: LoginScreen());
+    return MaterialApp(theme: appTheme(), home: SignupScreen());
   }
 }
