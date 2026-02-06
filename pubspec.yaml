@@ -14,6 +14,7 @@ dependencies:
   flutter_riverpod: ^3.2.1
   riverpod_annotation: ^4.0.2
   equatable: ^2.0.8
+  meta: ^1.17.0
 
 dev_dependencies:
   flutter_test:
