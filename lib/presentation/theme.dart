@@ -64,5 +64,7 @@ ThemeData appTheme() {
         }),
       ),
     ),
+
+    appBarTheme: AppBarTheme(scrolledUnderElevation: 0),
   );
 }

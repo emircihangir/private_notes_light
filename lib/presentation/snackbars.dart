@@ -20,3 +20,15 @@ void showPasswordWrongSnackbar(BuildContext context) {
     ),
   );
 }
+
+void showEmptyInputSnackbar(BuildContext context, {String inputName = 'input'}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        '$inputName cannot be empty.',
+        style: TextStyle(color: Theme.of(context).colorScheme.onError),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.error,
+    ),
+  );
+}
