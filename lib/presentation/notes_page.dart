@@ -22,9 +22,8 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         leading: IconButton(onPressed: () {}, icon: Icon(Icons.logout_rounded)),
         actions: [
           IconButton(
-            onPressed: () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (context) => CreateNotePage())),
+            onPressed: () =>
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewNotePage())),
             icon: Icon(Icons.add_rounded),
           ),
         ],
@@ -99,7 +98,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                               if (context.mounted) {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => CreateNotePage(note: result),
+                                    builder: (context) => ViewNotePage(note: result),
                                   ),
                                 );
                               }
@@ -133,9 +132,8 @@ class EmptyNotesWidget extends StatelessWidget {
         children: [
           Text('No notes.', style: Theme.of(context).textTheme.headlineMedium),
           TextButton(
-            onPressed: () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (context) => CreateNotePage())),
+            onPressed: () =>
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewNotePage())),
             child: Text('Create One'),
           ),
         ],

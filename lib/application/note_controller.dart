@@ -25,19 +25,20 @@ class NoteController extends _$NoteController {
     return result;
   }
 
-  Future<void> createNote({String? id, required String title, required String content}) async {
-    Note newNote = Note(
+  Future<void> createNote({
+    String? id,
+    required String title,
+    required String content,
+    DateTime? date,
+  }) async {
+    final encrypted = ref.read(encryptionServiceProvider.notifier).encryptWithMasterKey(content);
+
+    Note encryptedNote = Note(
       id: id ?? Uuid().v4(),
       title: title,
-      content: content,
-      dateCreated: DateTime.now(),
+      content: encrypted.encryptedText,
+      dateCreated: date ?? DateTime.now(),
     );
-
-    final encrypted = ref
-        .read(encryptionServiceProvider.notifier)
-        .encryptWithMasterKey(newNote.content);
-
-    Note encryptedNote = newNote.copyWith(content: encrypted.encryptedText);
 
     final NoteDto dto = NoteDto.fromDomain(
       encryptedNote,

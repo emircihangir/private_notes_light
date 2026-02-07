@@ -4,15 +4,15 @@ import 'package:private_notes_light/application/note_controller.dart';
 import 'package:private_notes_light/domain/note.dart';
 import 'package:private_notes_light/presentation/snackbars.dart';
 
-class CreateNotePage extends ConsumerStatefulWidget {
+class ViewNotePage extends ConsumerStatefulWidget {
   final Note? note;
-  const CreateNotePage({super.key, this.note});
+  const ViewNotePage({super.key, this.note});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CreateNotePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ViewNotePageState();
 }
 
-class _CreateNotePageState extends ConsumerState<CreateNotePage> {
+class _ViewNotePageState extends ConsumerState<ViewNotePage> {
   late final TextEditingController titleInputController;
   late final TextEditingController contentInputController;
 
@@ -20,19 +20,17 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
   void initState() {
     super.initState();
 
-    if (widget.note != null) {
-      titleInputController = TextEditingController(text: widget.note!.title);
-      contentInputController = TextEditingController(text: widget.note!.content);
-    } else {
-      titleInputController = TextEditingController(text: '');
-      contentInputController = TextEditingController(text: '');
-    }
+    titleInputController = TextEditingController(text: widget.note?.title ?? '');
+    contentInputController = TextEditingController(text: widget.note?.content ?? '');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Create Note'), centerTitle: false),
+      appBar: AppBar(
+        title: Text(widget.note == null ? 'Create Note' : 'Edit Note'),
+        centerTitle: false,
+      ),
       body: SingleChildScrollView(
         child: Center(
           child: Container(
@@ -69,6 +67,7 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
                           id: widget.note?.id,
                           title: titleInputController.text,
                           content: contentInputController.text,
+                          date: widget.note?.dateCreated,
                         );
 
                     if (context.mounted) {
@@ -83,5 +82,13 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    titleInputController.dispose();
+    contentInputController.dispose();
+
+    super.dispose();
   }
 }
