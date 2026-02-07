@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:private_notes_light/application/encryption_service.dart';
+import 'package:private_notes_light/application/master_key.dart';
 import 'package:private_notes_light/data/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:encrypt/encrypt.dart' as enc;
@@ -30,5 +31,31 @@ class AuthService extends _$AuthService {
     await ref
         .read(authRepositoryProvider)
         .saveCredentials(salt: salt, iv: iv.base64, encryptedMasterKey: encryptedMasterKey.base64);
+
+    ref.read(masterKeyProvider.notifier).set(masterKey.base64);
+  }
+
+  Future<bool> login(String passwordInput) async {
+    final authRepository = ref.read(authRepositoryProvider);
+    final Map<String, String> credentials = await authRepository.readCredentials();
+    final String iv = credentials[authRepository.ivKey]!;
+    final String salt = credentials[authRepository.saltKey]!;
+    final String encryptedMasterKey = credentials[authRepository.encryptedMasterKeyKey]!;
+
+    final derivedKey = await ref
+        .read(encryptionServiceProvider.notifier)
+        .deriveKeyFromPassword(passwordInput, salt);
+    final encrypter = enc.Encrypter(enc.AES(derivedKey));
+
+    try {
+      final masterKey = encrypter.decrypt(
+        enc.Encrypted.fromBase64(encryptedMasterKey),
+        iv: enc.IV.fromBase64(iv),
+      );
+      ref.read(masterKeyProvider.notifier).set(masterKey);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

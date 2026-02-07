@@ -11,9 +11,14 @@ abstract class AuthRepository {
     required String iv,
     required String encryptedMasterKey,
   });
+  Future<Map<String, String>> readCredentials();
 }
 
 class AuthRepositoryImpl implements AuthRepository {
+  final String saltKey = 'auth_salt';
+  final String ivKey = 'auth_master_key_iv';
+  final String encryptedMasterKeyKey = 'auth_encrypted_master_key';
+
   @override
   Future<void> saveCredentials({
     required String salt,
@@ -21,15 +26,25 @@ class AuthRepositoryImpl implements AuthRepository {
     required String encryptedMasterKey,
   }) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('auth_salt', salt);
-    await prefs.setString('auth_master_key_iv', iv);
-    await prefs.setString('auth_encrypted_master_key', encryptedMasterKey);
+    await prefs.setString(saltKey, salt);
+    await prefs.setString(ivKey, iv);
+    await prefs.setString(encryptedMasterKeyKey, encryptedMasterKey);
   }
 
   @override
   Future<bool> get userSignedUp async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.containsKey('auth_encrypted_master_key');
+    return prefs.containsKey(encryptedMasterKeyKey);
+  }
+
+  @override
+  Future<Map<String, String>> readCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    return {
+      saltKey: prefs.getString(saltKey)!,
+      ivKey: prefs.getString(ivKey)!,
+      encryptedMasterKeyKey: prefs.getString(encryptedMasterKeyKey)!,
+    };
   }
 }
 
