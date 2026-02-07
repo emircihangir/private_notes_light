@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/application/note_controller.dart';
 import 'package:private_notes_light/presentation/create_note_page.dart';
 import 'package:private_notes_light/presentation/generic_error_widget.dart';
+import 'package:private_notes_light/presentation/snackbars.dart';
 
 class NotesPage extends ConsumerStatefulWidget {
   const NotesPage({super.key});
@@ -33,12 +34,69 @@ class _NotesPageState extends ConsumerState<NotesPage> {
           data: (data) {
             if (data.isEmpty) return EmptyNotesWidget();
 
-            return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                final ({String noteID, String noteTitle}) note = data[index];
-                return ListTile(title: Text(note.noteTitle));
-              },
+            return Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  SearchBar(leading: Icon(Icons.search), hintText: 'Search'),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        final ({String noteID, String noteTitle}) note = data[index];
+
+                        return Dismissible(
+                          onDismissed: (direction) async {
+                            try {
+                              await ref
+                                  .read(noteControllerProvider.notifier)
+                                  .removeNote(note.noteID);
+                            } catch (e) {
+                              if (context.mounted) showErrorSnackbar(context);
+                            }
+                          },
+                          confirmDismiss: (direction) async {
+                            final bool? shouldDelete = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Delete Note?'),
+                                content: const Text('This action cannot be undone.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).pop(false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).pop(true),
+                                    child: Text(
+                                      'Delete',
+                                      style: TextStyle(color: Theme.of(context).colorScheme.error),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            return shouldDelete ?? false;
+                          },
+                          key: ValueKey(note.noteID),
+                          direction: .endToStart,
+                          background: Container(
+                            color: Theme.of(context).colorScheme.errorContainer,
+                            padding: EdgeInsets.only(right: 8),
+                            alignment: Alignment.centerRight,
+                            child: Icon(
+                              Icons.clear_rounded,
+                              color: Theme.of(context).colorScheme.onErrorContainer,
+                            ),
+                          ),
+                          child: ListTile(title: Text(note.noteTitle)),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             );
           },
           error: (error, stackTrace) => Center(child: GenericErrorWidget()),

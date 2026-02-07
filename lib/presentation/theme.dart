@@ -55,7 +55,6 @@ ThemeData appTheme() {
         splashFactory: NoSplash.splashFactory,
         overlayColor: WidgetStatePropertyAll(Colors.transparent),
         animationDuration: Duration.zero,
-        // padding: WidgetStatePropertyAll(EdgeInsets.only(bottom: 8, top: 8, left: 7, right: 7)),
         foregroundColor: WidgetStateColor.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
             return colorScheme.inversePrimary;
@@ -66,5 +65,33 @@ ThemeData appTheme() {
     ),
 
     appBarTheme: AppBarTheme(scrolledUnderElevation: 0),
+
+    listTileTheme: ListTileThemeData(
+      shape: Border(bottom: BorderSide(width: 1, color: colorScheme.onSurface)),
+    ),
+
+    searchBarTheme: SearchBarThemeData(
+      constraints: BoxConstraints(maxHeight: 45, minHeight: 45),
+      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+      elevation: WidgetStatePropertyAll(0),
+      padding: WidgetStatePropertyAll(EdgeInsets.only(left: 12, right: 12)),
+      backgroundColor: WidgetStatePropertyAll(colorScheme.surface),
+      shape: WidgetStateOutlinedBorder.resolveWith((states) {
+        if (states.contains(WidgetState.focused)) {
+          return RoundedRectangleBorder(
+            side: BorderSide(width: 3, color: colorScheme.primary),
+            borderRadius: BorderRadiusGeometry.all(Radius.circular(3)),
+          );
+        }
+        return RoundedRectangleBorder(
+          side: BorderSide(width: 2, color: colorScheme.primary),
+          borderRadius: BorderRadiusGeometry.all(Radius.circular(3)),
+        );
+      }),
+    ),
+
+    dialogTheme: DialogThemeData(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
+    ),
   );
 }

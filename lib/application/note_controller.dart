@@ -49,4 +49,17 @@ class NoteController extends _$NoteController {
 
     ref.invalidateSelf();
   }
+
+  Future<void> removeNote(String noteID) async {
+    final currentList = state.value;
+    if (currentList == null) return;
+
+    state = AsyncValue.data(currentList.where((element) => element.noteID != noteID).toList());
+    try {
+      await ref.read(noteRepositoryProvider).removeNote(noteID);
+    } catch (e) {
+      ref.invalidateSelf();
+      rethrow;
+    }
+  }
 }

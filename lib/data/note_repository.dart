@@ -8,6 +8,7 @@ part 'note_repository.g.dart';
 
 abstract class NoteRepository {
   Future<void> addNote(NoteDto dto);
+  Future<void> removeNote(String noteID);
   Future<List<NoteDto>> getNotes();
 }
 
@@ -51,6 +52,12 @@ class NoteRepositoryImpl implements NoteRepository {
     final db = await database;
     final notes = await db.query('notes', orderBy: 'date_created DESC');
     return notes.map((e) => NoteDto.fromMap(e)).toList();
+  }
+
+  @override
+  Future<void> removeNote(String noteID) async {
+    final db = await database;
+    await db.delete('notes', where: 'id = ?', whereArgs: [noteID]);
   }
 }
 
