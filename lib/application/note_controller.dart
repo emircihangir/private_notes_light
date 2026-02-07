@@ -25,9 +25,9 @@ class NoteController extends _$NoteController {
     return result;
   }
 
-  Future<void> createNote({required String title, required String content}) async {
+  Future<void> createNote({String? id, required String title, required String content}) async {
     Note newNote = Note(
-      id: Uuid().v4(),
+      id: id ?? Uuid().v4(),
       title: title,
       content: content,
       dateCreated: DateTime.now(),
@@ -61,5 +61,17 @@ class NoteController extends _$NoteController {
       ref.invalidateSelf();
       rethrow;
     }
+  }
+
+  Future<Note> openNote(String noteID) async {
+    final NoteDto dto = await ref.read(noteRepositoryProvider).getNote(noteID);
+    return Note(
+      id: dto.id,
+      title: dto.title,
+      content: ref
+          .read(encryptionServiceProvider.notifier)
+          .decryptWithMasterKey(dto.content, dto.iv),
+      dateCreated: DateTime.parse(dto.dateCreated),
+    );
   }
 }

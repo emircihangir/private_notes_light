@@ -10,6 +10,7 @@ abstract class NoteRepository {
   Future<void> addNote(NoteDto dto);
   Future<void> removeNote(String noteID);
   Future<List<NoteDto>> getNotes();
+  Future<NoteDto> getNote(String noteID);
 }
 
 class NoteRepositoryImpl implements NoteRepository {
@@ -58,6 +59,14 @@ class NoteRepositoryImpl implements NoteRepository {
   Future<void> removeNote(String noteID) async {
     final db = await database;
     await db.delete('notes', where: 'id = ?', whereArgs: [noteID]);
+  }
+
+  @override
+  Future<NoteDto> getNote(String noteID) async {
+    final db = await database;
+    final result = await db.query('notes', where: 'id = ?', whereArgs: [noteID]);
+    final NoteDto resultDto = result.map((e) => NoteDto.fromMap(e)).toList().first;
+    return resultDto;
   }
 }
 

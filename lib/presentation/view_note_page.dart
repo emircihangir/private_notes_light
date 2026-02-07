@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/application/note_controller.dart';
+import 'package:private_notes_light/domain/note.dart';
 import 'package:private_notes_light/presentation/snackbars.dart';
 
 class CreateNotePage extends ConsumerStatefulWidget {
-  const CreateNotePage({super.key});
+  final Note? note;
+  const CreateNotePage({super.key, this.note});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CreateNotePageState();
 }
 
 class _CreateNotePageState extends ConsumerState<CreateNotePage> {
-  String titleInput = '';
-  String contentInput = '';
+  late final TextEditingController titleInputController;
+  late final TextEditingController contentInputController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.note != null) {
+      titleInputController = TextEditingController(text: widget.note!.title);
+      contentInputController = TextEditingController(text: widget.note!.content);
+    } else {
+      titleInputController = TextEditingController(text: '');
+      contentInputController = TextEditingController(text: '');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,29 +43,33 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
               children: [
                 TextField(
                   decoration: InputDecoration(hintText: 'Title'),
-                  onChanged: (value) => titleInput = value,
+                  controller: titleInputController,
                   textInputAction: .next,
-                  autofocus: true,
+                  autofocus: widget.note == null,
                 ),
                 TextField(
                   decoration: InputDecoration(hintText: 'Content'),
                   maxLines: null,
-                  onChanged: (value) => contentInput = value,
+                  controller: contentInputController,
                 ),
                 FilledButton(
                   onPressed: () async {
-                    if (titleInput.isEmpty) {
+                    if (titleInputController.text.isEmpty) {
                       showEmptyInputSnackbar(context, inputName: 'Title');
                       return;
                     }
-                    if (contentInput.isEmpty) {
+                    if (contentInputController.text.isEmpty) {
                       showEmptyInputSnackbar(context, inputName: 'Content');
                       return;
                     }
 
                     await ref
                         .read(noteControllerProvider.notifier)
-                        .createNote(title: titleInput, content: contentInput);
+                        .createNote(
+                          id: widget.note?.id,
+                          title: titleInputController.text,
+                          content: contentInputController.text,
+                        );
 
                     if (context.mounted) {
                       Navigator.of(context).pop();

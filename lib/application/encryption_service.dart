@@ -53,6 +53,17 @@ class EncryptionService extends _$EncryptionService {
       iv: enc.IV.fromBase64(ivString),
     );
   }
+
+  String decryptWithMasterKey(String encryptedText, String ivString) {
+    final keyString = ref.read(masterKeyProvider);
+    final key = enc.Key.fromBase64(keyString!);
+
+    final encrypter = enc.Encrypter(enc.AES(key));
+    return encrypter.decrypt(
+      enc.Encrypted.fromBase64(encryptedText),
+      iv: enc.IV.fromBase64(ivString),
+    );
+  }
 }
 
 enc.Key deriveKeyBackground(Uint8List bytes) {

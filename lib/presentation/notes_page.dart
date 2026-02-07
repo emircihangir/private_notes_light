@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/application/note_controller.dart';
-import 'package:private_notes_light/presentation/create_note_page.dart';
+import 'package:private_notes_light/presentation/view_note_page.dart';
 import 'package:private_notes_light/presentation/generic_error_widget.dart';
 import 'package:private_notes_light/presentation/snackbars.dart';
 
@@ -90,7 +90,21 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                               color: Theme.of(context).colorScheme.onErrorContainer,
                             ),
                           ),
-                          child: ListTile(title: Text(note.noteTitle)),
+                          child: ListTile(
+                            title: Text(note.noteTitle),
+                            onTap: () async {
+                              final result = await ref
+                                  .read(noteControllerProvider.notifier)
+                                  .openNote(note.noteID);
+                              if (context.mounted) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => CreateNotePage(note: result),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                         );
                       },
                     ),
