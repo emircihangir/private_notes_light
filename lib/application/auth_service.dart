@@ -63,4 +63,8 @@ class AuthService extends _$AuthService {
       return false;
     }
   }
+
+  void logout() {
+    ref.read(masterKeyProvider.notifier).clear();
+  }
 }

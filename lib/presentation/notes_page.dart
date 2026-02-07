@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:private_notes_light/application/auth_service.dart';
 import 'package:private_notes_light/application/note_controller.dart';
+import 'package:private_notes_light/presentation/login_screen.dart';
 import 'package:private_notes_light/presentation/view_note_page.dart';
 import 'package:private_notes_light/presentation/generic_error_widget.dart';
 import 'package:private_notes_light/presentation/snackbars.dart';
@@ -19,7 +21,16 @@ class _NotesPageState extends ConsumerState<NotesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notes'),
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.logout_rounded)),
+        leading: IconButton(
+          onPressed: () {
+            ref.read(authServiceProvider.notifier).logout();
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+              (route) => false,
+            );
+          },
+          icon: Icon(Icons.logout_rounded),
+        ),
         actions: [
           IconButton(
             onPressed: () =>
