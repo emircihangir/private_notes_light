@@ -25,11 +25,11 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    if (state == AppLifecycleState.paused) {
+    if (state == .paused || state == .inactive) {
       ref.read(authServiceProvider.notifier).logout();
     }
 
-    if (state == AppLifecycleState.resumed) {
+    if (state == .resumed) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => LoginScreen()),
         (route) => false,
