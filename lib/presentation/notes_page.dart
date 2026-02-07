@@ -14,7 +14,30 @@ class NotesPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _NotesPageState();
 }
 
-class _NotesPageState extends ConsumerState<NotesPage> {
+class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.paused) {
+      ref.read(authServiceProvider.notifier).logout();
+    }
+
+    if (state == AppLifecycleState.resumed) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (route) => false,
+      );
+      showLoginAgainSnackbar(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final notes = ref.watch(noteControllerProvider);
@@ -128,6 +151,12 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }
 

@@ -32,3 +32,15 @@ void showEmptyInputSnackbar(BuildContext context, {String inputName = 'input'}) 
     ),
   );
 }
+
+void showLoginAgainSnackbar(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        'The app lost focus. Please login again.',
+        style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
+    ),
+  );
+}
