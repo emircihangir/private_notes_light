@@ -39,6 +39,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               FilledButton(
                 onPressed: () async {
                   try {
+                    if (passwordInput.isEmpty) {
+                      showEmptyInputSnackbar(context, inputName: 'Master password');
+                      return;
+                    }
+
                     await ref.read(authServiceProvider.notifier).signup(passwordInput);
                     if (context.mounted) {
                       Navigator.of(context).pushAndRemoveUntil(

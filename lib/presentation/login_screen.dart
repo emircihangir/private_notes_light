@@ -28,6 +28,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               PasswordTextField(onChanged: (value) => passwordInput = value),
               FilledButton(
                 onPressed: () async {
+                  if (passwordInput.isEmpty) {
+                    showEmptyInputSnackbar(context, inputName: 'Password');
+                    return;
+                  }
+
                   final loggedIn = await ref
                       .read(authServiceProvider.notifier)
                       .login(passwordInput);
