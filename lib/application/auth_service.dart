@@ -23,14 +23,20 @@ class AuthService extends _$AuthService {
     final masterKey = enc.Key(Uint8List.fromList(masterKeyBytes));
 
     // * Encrypt the generated master key.
-    final iv = enc.IV.fromLength(16);
-    final encrypter = enc.Encrypter(enc.AES(userKey));
-    final encryptedMasterKey = encrypter.encrypt(masterKey.base64, iv: iv);
+    var encrypted = ref
+        .read(encryptionServiceProvider.notifier)
+        .encryptText(masterKey.base64, userKey.base64);
+    final encryptedMasterKeyString = encrypted.encryptedText;
+    final encryptionIVstring = encrypted.encryptionIV;
 
     // * Save the encrypted master key along with salt and iv.
     await ref
         .read(authRepositoryProvider)
-        .saveCredentials(salt: salt, iv: iv.base64, encryptedMasterKey: encryptedMasterKey.base64);
+        .saveCredentials(
+          salt: salt,
+          iv: encryptionIVstring,
+          encryptedMasterKey: encryptedMasterKeyString,
+        );
 
     ref.read(masterKeyProvider.notifier).set(masterKey.base64);
   }
@@ -38,20 +44,19 @@ class AuthService extends _$AuthService {
   Future<bool> login(String passwordInput) async {
     final authRepository = ref.read(authRepositoryProvider);
     final Map<String, String> credentials = await authRepository.readCredentials();
-    final String iv = credentials[authRepository.ivKey]!;
+    final String ivString = credentials[authRepository.ivKey]!;
     final String salt = credentials[authRepository.saltKey]!;
-    final String encryptedMasterKey = credentials[authRepository.encryptedMasterKeyKey]!;
+    final String encryptedMasterKeyString = credentials[authRepository.encryptedMasterKeyKey]!;
 
     final derivedKey = await ref
         .read(encryptionServiceProvider.notifier)
         .deriveKeyFromPassword(passwordInput, salt);
-    final encrypter = enc.Encrypter(enc.AES(derivedKey));
 
     try {
-      final masterKey = encrypter.decrypt(
-        enc.Encrypted.fromBase64(encryptedMasterKey),
-        iv: enc.IV.fromBase64(iv),
-      );
+      final masterKey = ref
+          .read(encryptionServiceProvider.notifier)
+          .decryptText(encryptedMasterKeyString, derivedKey.base64, ivString);
+
       ref.read(masterKeyProvider.notifier).set(masterKey);
       return true;
     } catch (e) {
