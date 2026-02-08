@@ -44,6 +44,7 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
     return Scaffold(
       appBar: AppBar(
         title: Text('Notes'),
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             ref.read(authServiceProvider.notifier).logout();
