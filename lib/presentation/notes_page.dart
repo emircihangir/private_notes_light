@@ -5,6 +5,7 @@ import 'package:private_notes_light/application/filtered_notes_list.dart';
 import 'package:private_notes_light/application/note_controller.dart';
 import 'package:private_notes_light/application/search_query.dart';
 import 'package:private_notes_light/presentation/login_screen.dart';
+import 'package:private_notes_light/presentation/settings_sheet.dart';
 import 'package:private_notes_light/presentation/view_note_page.dart';
 import 'package:private_notes_light/presentation/generic_error_widget.dart';
 import 'package:private_notes_light/presentation/snackbars.dart';
@@ -60,6 +61,15 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
           icon: Icon(Icons.logout_rounded),
         ),
         actions: [
+          IconButton(
+            onPressed: () => showModalBottomSheet(
+              showDragHandle: true,
+              isScrollControlled: false,
+              context: context,
+              builder: settingsSheetBuilder,
+            ),
+            icon: Icon(Icons.settings_outlined),
+          ),
           IconButton(
             onPressed: () =>
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewNotePage())),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-ThemeData appTheme() {
-  final Brightness brightness = .light;
+ThemeData appTheme(Brightness brightness) {
   final ColorScheme colorScheme = .fromSeed(seedColor: Colors.blue, brightness: brightness);
 
   return ThemeData(
@@ -91,6 +90,19 @@ ThemeData appTheme() {
     ),
 
     dialogTheme: DialogThemeData(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
+    ),
+
+    segmentedButtonTheme: SegmentedButtonThemeData(
+      style: ButtonStyle(
+        overlayColor: WidgetStatePropertyAll(Colors.transparent),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
+        ),
+      ),
+    ),
+
+    bottomSheetTheme: BottomSheetThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
     ),
   );
