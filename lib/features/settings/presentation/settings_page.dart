@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:private_notes_light/application/backup_service.dart';
-import 'package:private_notes_light/application/settings_controller.dart';
-import 'package:private_notes_light/presentation/snackbars.dart';
+import 'package:private_notes_light/features/backup/application/backup_service.dart';
+import 'package:private_notes_light/features/settings/application/settings_controller.dart';
+import 'package:private_notes_light/core/snackbars.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends ConsumerWidget {

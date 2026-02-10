@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:private_notes_light/application/note_controller.dart';
-import 'package:private_notes_light/domain/note.dart';
-import 'package:private_notes_light/presentation/snackbars.dart';
+import 'package:private_notes_light/features/notes/application/note_controller.dart';
+import 'package:private_notes_light/features/notes/domain/note.dart';
+import 'package:private_notes_light/core/snackbars.dart';
 
 class ViewNotePage extends ConsumerStatefulWidget {
   final Note? note;

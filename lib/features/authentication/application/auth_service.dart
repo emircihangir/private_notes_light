@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:private_notes_light/application/encryption_service.dart';
-import 'package:private_notes_light/application/master_key.dart';
-import 'package:private_notes_light/data/auth_repository.dart';
+import 'package:private_notes_light/features/encryption/application/encryption_service.dart';
+import 'package:private_notes_light/features/encryption/application/master_key.dart';
+import 'package:private_notes_light/features/authentication/data/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 

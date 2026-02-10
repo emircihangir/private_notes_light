@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:private_notes_light/domain/note.dart';
+import 'package:private_notes_light/features/notes/domain/note.dart';
 
 @immutable
 class NoteDto {

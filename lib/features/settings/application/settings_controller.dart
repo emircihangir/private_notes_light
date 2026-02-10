@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:private_notes_light/data/settings_repository.dart';
+import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'settings_controller.g.dart';

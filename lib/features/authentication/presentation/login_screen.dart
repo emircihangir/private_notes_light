@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:private_notes_light/application/auth_service.dart';
-import 'package:private_notes_light/presentation/notes_page.dart';
-import 'package:private_notes_light/presentation/password_text_field.dart';
-import 'package:private_notes_light/presentation/snackbars.dart';
+import 'package:private_notes_light/features/authentication/application/auth_service.dart';
+import 'package:private_notes_light/features/notes/presentation/notes_page.dart';
+import 'package:private_notes_light/features/authentication/presentation/password_text_field.dart';
+import 'package:private_notes_light/core/snackbars.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

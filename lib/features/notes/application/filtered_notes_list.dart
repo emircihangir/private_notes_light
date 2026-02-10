@@ -1,5 +1,5 @@
-import 'package:private_notes_light/application/note_controller.dart';
-import 'package:private_notes_light/application/search_query.dart';
+import 'package:private_notes_light/features/notes/application/note_controller.dart';
+import 'package:private_notes_light/features/notes/application/search_query.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

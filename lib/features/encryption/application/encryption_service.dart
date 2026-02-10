@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
-import 'package:private_notes_light/application/master_key.dart';
+import 'package:private_notes_light/features/encryption/application/master_key.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 

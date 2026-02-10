@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:private_notes_light/application/settings_controller.dart';
-import 'package:private_notes_light/presentation/auth_guard.dart';
-import 'package:private_notes_light/presentation/theme.dart';
+import 'package:private_notes_light/features/settings/application/settings_controller.dart';
+import 'package:private_notes_light/features/authentication/presentation/auth_guard.dart';
+import 'package:private_notes_light/core/theme.dart';
 
 void main() {
   runApp(ProviderScope(child: App()));

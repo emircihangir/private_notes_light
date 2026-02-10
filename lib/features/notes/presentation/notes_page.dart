@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:private_notes_light/application/auth_service.dart';
-import 'package:private_notes_light/application/filtered_notes_list.dart';
-import 'package:private_notes_light/application/note_controller.dart';
-import 'package:private_notes_light/application/search_query.dart';
-import 'package:private_notes_light/presentation/login_screen.dart';
-import 'package:private_notes_light/presentation/settings_page.dart';
-import 'package:private_notes_light/presentation/view_note_page.dart';
-import 'package:private_notes_light/presentation/generic_error_widget.dart';
-import 'package:private_notes_light/presentation/snackbars.dart';
+import 'package:private_notes_light/features/authentication/application/auth_service.dart';
+import 'package:private_notes_light/features/notes/application/filtered_notes_list.dart';
+import 'package:private_notes_light/features/notes/application/note_controller.dart';
+import 'package:private_notes_light/features/notes/application/search_query.dart';
+import 'package:private_notes_light/features/authentication/presentation/login_screen.dart';
+import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
+import 'package:private_notes_light/features/notes/presentation/view_note_page.dart';
+import 'package:private_notes_light/core/generic_error_widget.dart';
+import 'package:private_notes_light/core/snackbars.dart';
 
 class NotesPage extends ConsumerStatefulWidget {
   const NotesPage({super.key});

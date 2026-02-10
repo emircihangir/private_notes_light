@@ -1,4 +1,4 @@
-import 'package:private_notes_light/data/backup_repository.dart';
+import 'package:private_notes_light/features/backup/data/backup_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'backup_service.g.dart';

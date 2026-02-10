@@ -1,8 +1,8 @@
-import 'package:private_notes_light/application/encryption_service.dart';
-import 'package:private_notes_light/application/master_key.dart';
-import 'package:private_notes_light/data/note_repository.dart';
-import 'package:private_notes_light/domain/note.dart';
-import 'package:private_notes_light/domain/note_dto.dart';
+import 'package:private_notes_light/features/encryption/application/encryption_service.dart';
+import 'package:private_notes_light/features/encryption/application/master_key.dart';
+import 'package:private_notes_light/features/notes/data/note_repository.dart';
+import 'package:private_notes_light/features/notes/domain/note.dart';
+import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 

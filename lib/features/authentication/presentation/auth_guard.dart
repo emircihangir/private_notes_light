@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:private_notes_light/application/app_startup.dart';
-import 'package:private_notes_light/presentation/generic_error_widget.dart';
-import 'package:private_notes_light/presentation/login_screen.dart';
-import 'package:private_notes_light/presentation/signup_screen.dart';
+import 'package:private_notes_light/features/authentication/application/app_startup.dart';
+import 'package:private_notes_light/core/generic_error_widget.dart';
+import 'package:private_notes_light/features/authentication/presentation/login_screen.dart';
+import 'package:private_notes_light/features/authentication/presentation/signup_screen.dart';
 
 class AuthGuard extends ConsumerWidget {
   const AuthGuard({super.key});
