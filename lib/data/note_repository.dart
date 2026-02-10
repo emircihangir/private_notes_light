@@ -11,11 +11,13 @@ abstract class NoteRepository {
   Future<void> removeNote(String noteID);
   Future<List<NoteDto>> getNotes();
   Future<NoteDto> getNote(String noteID);
+  Future<Database> get database;
 }
 
 class NoteRepositoryImpl implements NoteRepository {
   Database? _database;
 
+  @override
   Future<Database> get database async {
     if (_database != null) return _database!;
 

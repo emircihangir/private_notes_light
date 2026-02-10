@@ -1,30 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'settings_controller.dart';
+part of 'backup_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$settingsControllerHash() =>
-    r'3a3414068e86d3b5a14cc336ce1031ee540a8490';
+String _$backupServiceHash() => r'a44473354901b9ee0c06e38bb325655db3ec35d1';
 
-/// See also [SettingsController].
-@ProviderFor(SettingsController)
-final settingsControllerProvider =
-    AutoDisposeAsyncNotifierProvider<
-      SettingsController,
-      SettingsState
-    >.internal(
-      SettingsController.new,
-      name: r'settingsControllerProvider',
+/// See also [BackupService].
+@ProviderFor(BackupService)
+final backupServiceProvider =
+    AutoDisposeAsyncNotifierProvider<BackupService, void>.internal(
+      BackupService.new,
+      name: r'backupServiceProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$settingsControllerHash,
+          : _$backupServiceHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$SettingsController = AutoDisposeAsyncNotifier<SettingsState>;
+typedef _$BackupService = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

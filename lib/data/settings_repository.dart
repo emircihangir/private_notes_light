@@ -4,16 +4,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'settings_repository.g.dart';
 
-typedef SettingsRecord = ({bool autoExport, String? brightness});
+typedef SettingsRecord = ({bool exportSuggestions, bool exportWarnings, String? brightness});
 
 abstract class SettingsRepository {
   SettingsRecord getSettings();
-  void setAutoExport(bool newValue);
+  void setExportSuggestions(bool newValue);
+  void setExportWarnings(bool newValue);
   void setBrightness(String? newValue);
 }
 
 class SettingsRepositoryImpl implements SettingsRepository {
-  static const autoExportKey = 'autoExport';
+  static const exportSuggestionsKey = 'exportSuggestions';
+  static const exportWarningsKey = 'exportWarnings';
   static const brightnessKey = 'brightness';
   final SharedPreferences pref;
 
@@ -21,18 +23,27 @@ class SettingsRepositoryImpl implements SettingsRepository {
 
   @override
   SettingsRecord getSettings() {
-    final bool? autoExportPref = pref.getBool(autoExportKey);
+    final bool? exportSuggestionsPref = pref.getBool(exportSuggestionsKey);
+    final bool? exportWarningsPref = pref.getBool(exportWarningsKey);
     final String? brightnessPref = pref.getString(brightnessKey);
 
-    if (autoExportPref == null) setAutoExport(true);
+    if (exportSuggestionsPref == null) setExportSuggestions(true);
+    if (exportWarningsPref == null) setExportWarnings(true);
 
-    return (autoExport: autoExportPref ?? true, brightness: brightnessPref);
+    return (
+      exportSuggestions: exportSuggestionsPref ?? true,
+      exportWarnings: exportWarningsPref ?? true,
+      brightness: brightnessPref,
+    );
   }
 
   @override
-  Future<void> setAutoExport(bool newValue) async {
-    await pref.setBool(autoExportKey, newValue);
-  }
+  Future<void> setExportSuggestions(bool newValue) async =>
+      await pref.setBool(exportSuggestionsKey, newValue);
+
+  @override
+  Future<void> setExportWarnings(bool newValue) async =>
+      await pref.setBool(exportWarningsKey, newValue);
 
   @override
   Future<void> setBrightness(String? newValue) async {

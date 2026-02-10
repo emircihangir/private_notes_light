@@ -9,14 +9,8 @@ ThemeData appTheme(Brightness brightness) {
 
     filledButtonTheme: FilledButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: WidgetStateColor.resolveWith((states) {
-          if (states.contains(WidgetState.pressed)) return colorScheme.inversePrimary;
-          if (states.contains(WidgetState.disabled)) return colorScheme.primaryContainer;
-          return colorScheme.primary;
-        }),
-        overlayColor: WidgetStatePropertyAll(Colors.transparent),
+        backgroundColor: WidgetStatePropertyAll(colorScheme.primary),
         elevation: WidgetStatePropertyAll(0),
-        animationDuration: Duration.zero,
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
         ),
@@ -38,32 +32,14 @@ ThemeData appTheme(Brightness brightness) {
 
     iconButtonTheme: IconButtonThemeData(
       style: ButtonStyle(
-        iconColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.pressed)) return colorScheme.inversePrimary;
-          if (states.contains(WidgetState.disabled)) return colorScheme.primaryFixed;
-          return colorScheme.primary;
-        }),
-        overlayColor: WidgetStatePropertyAll(Colors.transparent),
+        iconColor: WidgetStatePropertyAll(colorScheme.primary),
         elevation: WidgetStatePropertyAll(0),
-        animationDuration: Duration.zero,
       ),
     ),
 
     textButtonTheme: TextButtonThemeData(
-      style: ButtonStyle(
-        splashFactory: NoSplash.splashFactory,
-        overlayColor: WidgetStatePropertyAll(Colors.transparent),
-        animationDuration: Duration.zero,
-        foregroundColor: WidgetStateColor.resolveWith((states) {
-          if (states.contains(WidgetState.pressed)) {
-            return colorScheme.inversePrimary;
-          }
-          return colorScheme.primary;
-        }),
-      ),
+      style: ButtonStyle(foregroundColor: WidgetStatePropertyAll(colorScheme.primary)),
     ),
-
-    appBarTheme: AppBarTheme(scrolledUnderElevation: 0),
 
     listTileTheme: ListTileThemeData(
       shape: Border(bottom: BorderSide(width: 1, color: colorScheme.onSurface)),
@@ -71,7 +47,6 @@ ThemeData appTheme(Brightness brightness) {
 
     searchBarTheme: SearchBarThemeData(
       constraints: BoxConstraints(maxHeight: 45, minHeight: 45),
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
       elevation: WidgetStatePropertyAll(0),
       padding: WidgetStatePropertyAll(EdgeInsets.only(left: 12, right: 12)),
       backgroundColor: WidgetStatePropertyAll(colorScheme.surface),
@@ -95,7 +70,6 @@ ThemeData appTheme(Brightness brightness) {
 
     segmentedButtonTheme: SegmentedButtonThemeData(
       style: ButtonStyle(
-        overlayColor: WidgetStatePropertyAll(Colors.transparent),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
         ),

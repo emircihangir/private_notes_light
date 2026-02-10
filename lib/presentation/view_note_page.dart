@@ -29,7 +29,7 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.note == null ? 'Create Note' : 'Edit Note'),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Center(

@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'settings_controller.g.dart';
 
-typedef SettingsState = ({bool autoExport, Brightness? brightness});
+typedef SettingsState = ({bool exportSuggestions, bool exportWarnings, Brightness? brightness});
 
 @riverpod
 class SettingsController extends _$SettingsController {
@@ -21,15 +21,35 @@ class SettingsController extends _$SettingsController {
       brightnessValue = Brightness.dark;
     }
 
-    return (autoExport: settingsPrefs.autoExport, brightness: brightnessValue);
+    return (
+      exportSuggestions: settingsPrefs.exportSuggestions,
+      exportWarnings: settingsPrefs.exportWarnings,
+      brightness: brightnessValue,
+    );
   }
 
-  Future<void> setAutoExport(bool newValue) async {
+  Future<void> setExportSuggestions(bool newValue) async {
     final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
-    await settingsRepo.setAutoExport(newValue);
+    await settingsRepo.setExportSuggestions(newValue);
 
     final previous = state.value!;
-    state = AsyncData((autoExport: newValue, brightness: previous.brightness));
+    state = AsyncData((
+      exportSuggestions: newValue,
+      exportWarnings: previous.exportWarnings,
+      brightness: previous.brightness,
+    ));
+  }
+
+  Future<void> setExportWarnings(bool newValue) async {
+    final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
+    await settingsRepo.setExportWarnings(newValue);
+
+    final previous = state.value!;
+    state = AsyncData((
+      exportSuggestions: previous.exportSuggestions,
+      exportWarnings: newValue,
+      brightness: previous.brightness,
+    ));
   }
 
   Future<void> setBrightness(Brightness? newBrightness) async {
@@ -43,6 +63,10 @@ class SettingsController extends _$SettingsController {
     await settingsRepo.setBrightness(newBrightnessValue);
 
     final previous = state.value!;
-    state = AsyncData((autoExport: previous.autoExport, brightness: newBrightness));
+    state = AsyncData((
+      exportSuggestions: previous.exportSuggestions,
+      exportWarnings: previous.exportWarnings,
+      brightness: newBrightness,
+    ));
   }
 }

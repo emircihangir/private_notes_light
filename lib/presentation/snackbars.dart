@@ -44,3 +44,15 @@ void showLoginAgainSnackbar(BuildContext context) {
     ),
   );
 }
+
+void showExportSuccessfulSnackbar(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        'Export successful.',
+        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+    ),
+  );
+}
