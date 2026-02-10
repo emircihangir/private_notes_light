@@ -5,6 +5,7 @@ import 'package:private_notes_light/features/notes/application/filtered_notes_li
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
 import 'package:private_notes_light/features/notes/application/search_query.dart';
 import 'package:private_notes_light/features/authentication/presentation/login_screen.dart';
+import 'package:private_notes_light/features/notes/presentation/confirm_delete_dialog.dart';
 import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
 import 'package:private_notes_light/features/notes/presentation/view_note_page.dart';
 import 'package:private_notes_light/core/generic_error_widget.dart';
@@ -103,23 +104,7 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
                         confirmDismiss: (direction) async {
                           final bool? shouldDelete = await showDialog<bool>(
                             context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Delete Note?'),
-                              content: const Text('This action cannot be undone.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(true),
-                                  child: Text(
-                                    'Delete',
-                                    style: TextStyle(color: Theme.of(context).colorScheme.error),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            builder: (context) => ConfirmDeleteDialog(),
                           );
 
                           return shouldDelete ?? false;

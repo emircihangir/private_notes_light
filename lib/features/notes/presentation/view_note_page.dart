@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
 import 'package:private_notes_light/features/notes/domain/note.dart';
 import 'package:private_notes_light/core/snackbars.dart';
+import 'package:private_notes_light/features/notes/presentation/confirm_delete_dialog.dart';
 
 class ViewNotePage extends ConsumerStatefulWidget {
   final Note? note;
@@ -29,6 +30,7 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.note == null ? 'Create Note' : 'Edit Note'),
+        actions: widget.note != null ? [DeleteNoteButton(widget.note!.id)] : null,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -90,5 +92,28 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
     contentInputController.dispose();
 
     super.dispose();
+  }
+}
+
+class DeleteNoteButton extends ConsumerWidget {
+  final String noteID;
+  const DeleteNoteButton(this.noteID, {super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return IconButton(
+      onPressed: () async {
+        final result = await showDialog<bool>(
+          context: context,
+          builder: (_) => ConfirmDeleteDialog(),
+        );
+
+        if (result == true) {
+          await ref.read(noteControllerProvider.notifier).removeNote(noteID);
+          if (context.mounted) Navigator.of(context).pop();
+        }
+      },
+      icon: Icon(Icons.delete_rounded),
+    );
   }
 }
