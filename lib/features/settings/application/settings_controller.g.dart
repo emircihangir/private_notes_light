@@ -7,15 +7,12 @@ part of 'settings_controller.dart';
 // **************************************************************************
 
 String _$settingsControllerHash() =>
-    r'3a3414068e86d3b5a14cc336ce1031ee540a8490';
+    r'fa3a4c91a544e8cfe52810c232381f619c53b1cf';
 
 /// See also [SettingsController].
 @ProviderFor(SettingsController)
 final settingsControllerProvider =
-    AutoDisposeAsyncNotifierProvider<
-      SettingsController,
-      SettingsState
-    >.internal(
+    AutoDisposeAsyncNotifierProvider<SettingsController, SettingsData>.internal(
       SettingsController.new,
       name: r'settingsControllerProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -25,6 +22,6 @@ final settingsControllerProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$SettingsController = AutoDisposeAsyncNotifier<SettingsState>;
+typedef _$SettingsController = AutoDisposeAsyncNotifier<SettingsData>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

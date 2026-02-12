@@ -8,6 +8,7 @@ part 'note_repository.g.dart';
 
 abstract class NoteRepository {
   Future<void> addNote(NoteDto dto);
+  Future<void> importNotes(List<NoteDto> noteDTOs);
   Future<void> removeNote(String noteID);
   Future<List<NoteDto>> getNotes();
   Future<NoteDto> getNote(String noteID);
@@ -39,7 +40,7 @@ class NoteRepositoryImpl implements NoteRepository {
         title TEXT,
         content TEXT,
         iv TEXT,
-        date_created TEXT
+        dateCreated TEXT
       )
     ''');
   }
@@ -47,14 +48,24 @@ class NoteRepositoryImpl implements NoteRepository {
   @override
   Future<void> addNote(NoteDto dto) async {
     final db = await database;
-    await db.insert('notes', dto.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert('notes', dto.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  @override
+  Future<void> importNotes(List<NoteDto> noteDTOs) async {
+    final db = await database;
+    Batch batch = db.batch();
+    for (NoteDto noteDTO in noteDTOs) {
+      batch.insert('notes', noteDTO.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+    }
+    await batch.commit(noResult: true);
   }
 
   @override
   Future<List<NoteDto>> getNotes() async {
     final db = await database;
-    final notes = await db.query('notes', orderBy: 'date_created DESC');
-    return notes.map((e) => NoteDto.fromMap(e)).toList();
+    final notes = await db.query('notes', orderBy: 'dateCreated DESC');
+    return notes.map((e) => NoteDto.fromJson(e)).toList();
   }
 
   @override
@@ -67,10 +78,10 @@ class NoteRepositoryImpl implements NoteRepository {
   Future<NoteDto> getNote(String noteID) async {
     final db = await database;
     final result = await db.query('notes', where: 'id = ?', whereArgs: [noteID]);
-    final NoteDto resultDto = result.map((e) => NoteDto.fromMap(e)).toList().first;
+    final NoteDto resultDto = result.map((e) => NoteDto.fromJson(e)).toList().first;
     return resultDto;
   }
 }
 
 @riverpod
-NoteRepository noteRepository(Ref ref) => NoteRepositoryImpl();
+NoteRepositoryImpl noteRepository(Ref ref) => NoteRepositoryImpl();

@@ -4,71 +4,55 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:private_notes_light/features/backup/domain/backup_data.dart';
 import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 
 part 'backup_repository.g.dart';
 
 abstract class BackupRepository {
-  Future<bool> export();
-  Future<void> import();
+  Future<void> export(Map<String, dynamic> exportDataMap);
+  Future<void> import(BackupData importData);
 }
 
 class BackupRepositoryImpl implements BackupRepository {
-  final Database db;
-  final SettingsRecord settingsRecord;
   final DateFormat dateFormat = DateFormat('yyyy_MM_dd_HH_mm_ss');
-  BackupRepositoryImpl(this.db, this.settingsRecord);
+  final SettingsRepository settingsRepo;
+  final NoteRepository noteRepo;
+
+  BackupRepositoryImpl({required this.settingsRepo, required this.noteRepo});
 
   @override
-  Future<bool> export() async {
-    Map<String, dynamic> exportData = {
-      "settings": {
-        "exportSuggestions": settingsRecord.exportSuggestions.toString(),
-        "exportWarnings": settingsRecord.exportWarnings.toString(),
-        "theme": settingsRecord.brightness ?? "system",
-      },
-    };
-
-    final List<Map<String, Object?>> allNotes = await db.query('notes');
-    exportData['notes'] = allNotes;
-
-    final exportDataJsonString = jsonEncode(exportData);
+  Future<void> export(Map<String, dynamic> exportDataMap) async {
+    final exportJsonString = jsonEncode(exportDataMap);
 
     final tempDir = await getTemporaryDirectory();
     final fileName = 'private_notes_export_${dateFormat.format(DateTime.now())}.json';
     final filePath = p.join(tempDir.path, fileName);
     final file = File(filePath);
 
-    await file.writeAsString(exportDataJsonString);
+    await file.writeAsString(exportJsonString);
 
-    final result = await FilePicker.platform.saveFile(
+    await FilePicker.platform.saveFile(
       fileName: fileName,
       dialogTitle: 'Save Export File',
       bytes: await file.readAsBytes(),
     );
-
-    if (result == null) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
   @override
-  Future<void> import() async {}
+  Future<void> import(BackupData importData) async {
+    await noteRepo.importNotes(importData.notesData);
+    await settingsRepo.importSettings(importData.settingsData);
+  }
 }
 
 @riverpod
-FutureOr<BackupRepository> backupRepository(Ref ref) async {
-  final noteRepo = ref.watch(noteRepositoryProvider);
-  final db = await noteRepo.database;
-
+Future<BackupRepository> backupRepository(Ref ref) async {
   final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
-  final settingsRecord = settingsRepo.getSettings();
+  final noteRepo = ref.watch(noteRepositoryProvider);
 
-  return BackupRepositoryImpl(db, settingsRecord);
+  return BackupRepositoryImpl(settingsRepo: settingsRepo, noteRepo: noteRepo);
 }

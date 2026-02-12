@@ -14,19 +14,7 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsAsync = ref.watch(settingsControllerProvider);
-
-    late final ThemeMode themeMode;
-    final brightness = settingsAsync.valueOrNull?.brightness;
-
-    if (brightness == .light) {
-      themeMode = .light;
-    } else if (brightness == .dark) {
-      themeMode = .dark;
-    } else {
-      // brightness is null. Saved settings is loading.
-      // Default to system theme.
-      themeMode = .system;
-    }
+    final themeMode = settingsAsync.valueOrNull?.theme ?? .system;
 
     return MaterialApp(
       themeMode: themeMode,

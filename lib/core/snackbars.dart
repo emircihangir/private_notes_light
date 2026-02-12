@@ -45,13 +45,10 @@ void showLoginAgainSnackbar(BuildContext context) {
   );
 }
 
-void showExportSuccessfulSnackbar(BuildContext context) {
+void showSuccessSnackbar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(
-        'Export successful.',
-        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-      ),
+      content: Text(text, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
       backgroundColor: Theme.of(context).colorScheme.primary,
     ),
   );

@@ -1,58 +1,58 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:private_notes_light/features/settings/domain/settings_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'settings_repository.g.dart';
 
-typedef SettingsRecord = ({bool exportSuggestions, bool exportWarnings, String? brightness});
-
 abstract class SettingsRepository {
-  SettingsRecord getSettings();
-  void setExportSuggestions(bool newValue);
-  void setExportWarnings(bool newValue);
-  void setBrightness(String? newValue);
+  SettingsData getSettings();
+  Future<void> setExportSuggestions(bool newValue);
+  Future<void> setExportWarnings(bool newValue);
+  Future<void> setTheme(ThemeMode newValue);
+  Future<void> importSettings(SettingsData settingsData);
 }
 
 class SettingsRepositoryImpl implements SettingsRepository {
-  static const exportSuggestionsKey = 'exportSuggestions';
-  static const exportWarningsKey = 'exportWarnings';
-  static const brightnessKey = 'brightness';
   final SharedPreferences pref;
 
   SettingsRepositoryImpl(this.pref);
 
   @override
-  SettingsRecord getSettings() {
-    final bool? exportSuggestionsPref = pref.getBool(exportSuggestionsKey);
-    final bool? exportWarningsPref = pref.getBool(exportWarningsKey);
-    final String? brightnessPref = pref.getString(brightnessKey);
+  SettingsData getSettings() {
+    final bool? exportSuggestionsPref = pref.getBool(SettingsData.propertyNames.exportSuggestions);
+    final bool? exportWarningsPref = pref.getBool(SettingsData.propertyNames.exportWarnings);
+    final String? brightnessPref = pref.getString(SettingsData.propertyNames.theme);
 
     if (exportSuggestionsPref == null) setExportSuggestions(true);
     if (exportWarningsPref == null) setExportWarnings(true);
 
-    return (
+    return SettingsData(
       exportSuggestions: exportSuggestionsPref ?? true,
       exportWarnings: exportWarningsPref ?? true,
-      brightness: brightnessPref,
+      theme: ThemeMode.values.byName(brightnessPref ?? ThemeMode.system.name),
     );
   }
 
   @override
+  Future<void> importSettings(SettingsData settingsData) async {
+    await setExportSuggestions(settingsData.exportSuggestions);
+    await setExportWarnings(settingsData.exportWarnings);
+    await setTheme(settingsData.theme);
+  }
+
+  @override
   Future<void> setExportSuggestions(bool newValue) async =>
-      await pref.setBool(exportSuggestionsKey, newValue);
+      await pref.setBool(SettingsData.propertyNames.exportSuggestions, newValue);
 
   @override
   Future<void> setExportWarnings(bool newValue) async =>
-      await pref.setBool(exportWarningsKey, newValue);
+      await pref.setBool(SettingsData.propertyNames.exportWarnings, newValue);
 
   @override
-  Future<void> setBrightness(String? newValue) async {
-    if (newValue == null) {
-      await pref.remove(brightnessKey);
-    } else {
-      await pref.setString(brightnessKey, newValue);
-    }
-  }
+  Future<void> setTheme(ThemeMode newValue) async =>
+      await pref.setString(SettingsData.propertyNames.theme, newValue.name);
 }
 
 @riverpod

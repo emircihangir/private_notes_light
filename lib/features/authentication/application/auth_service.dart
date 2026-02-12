@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:private_notes_light/features/authentication/domain/credentials_data.dart';
 import 'package:private_notes_light/features/encryption/application/encryption_service.dart';
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
 import 'package:private_notes_light/features/authentication/data/auth_repository.dart';
@@ -33,9 +34,11 @@ class AuthService extends _$AuthService {
     await ref
         .read(authRepositoryProvider)
         .saveCredentials(
-          salt: salt,
-          iv: encryptionIVstring,
-          encryptedMasterKey: encryptedMasterKeyString,
+          CredentialsData(
+            salt: salt,
+            iv: encryptionIVstring,
+            encryptedMasterKey: encryptedMasterKeyString,
+          ),
         );
 
     ref.read(masterKeyProvider.notifier).set(masterKey.base64);
@@ -43,19 +46,16 @@ class AuthService extends _$AuthService {
 
   Future<bool> login(String passwordInput) async {
     final authRepository = ref.read(authRepositoryProvider);
-    final Map<String, String> credentials = await authRepository.readCredentials();
-    final String ivString = credentials[authRepository.ivKey]!;
-    final String salt = credentials[authRepository.saltKey]!;
-    final String encryptedMasterKeyString = credentials[authRepository.encryptedMasterKeyKey]!;
+    final CredentialsData credentialsData = await authRepository.readCredentials();
 
     final derivedKey = await ref
         .read(encryptionServiceProvider.notifier)
-        .deriveKeyFromPassword(passwordInput, salt);
+        .deriveKeyFromPassword(passwordInput, credentialsData.salt);
 
     try {
       final masterKey = ref
           .read(encryptionServiceProvider.notifier)
-          .decryptText(encryptedMasterKeyString, derivedKey.base64, ivString);
+          .decryptText(credentialsData.encryptedMasterKey, derivedKey.base64, credentialsData.iv);
 
       ref.read(masterKeyProvider.notifier).set(masterKey);
       return true;
