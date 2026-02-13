@@ -27,6 +27,8 @@ dependencies:
   file_picker: ^10.3.10
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
+  cryptography: ^2.9.0
+  cryptography_flutter: ^2.3.4
 
 dev_dependencies:
   flutter_test:
