@@ -4,6 +4,7 @@ import 'package:private_notes_light/features/backup/presentation/export_list_til
 import 'package:private_notes_light/features/backup/presentation/import_list_tile.dart';
 import 'package:private_notes_light/features/settings/application/settings_controller.dart';
 import 'package:private_notes_light/core/snackbars.dart';
+import 'package:private_notes_light/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -14,49 +15,59 @@ class SettingsPage extends ConsumerWidget {
     final settingsControllerAsync = ref.watch(settingsControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(automaticallyImplyActions: true, title: Text('Settings'), centerTitle: true),
+      appBar: AppBar(
+        automaticallyImplyActions: true,
+        title: Text(AppLocalizations.of(context)!.settingsTitle),
+        centerTitle: true,
+      ),
       body: ListTileTheme(
-        shape: Border(),
+        shape: const Border(),
         child: ListView(
           children: [
-            SectionHeader('Data Management'),
-            ExportListTile(),
-            ImportListTile(),
+            SectionHeader(AppLocalizations.of(context)!.dataManagementSection),
+            const ExportListTile(),
+            const ImportListTile(),
             settingsControllerAsync.whenData((settingsData) {
                   return SwitchListTile(
-                    title: Text('Export Suggestions'),
+                    title: Text(AppLocalizations.of(context)!.exportSuggestions),
                     value: settingsData.exportSuggestions,
                     onChanged: (newValue) async => await ref
                         .read(settingsControllerProvider.notifier)
                         .setExportSuggestions(newValue),
                   );
                 }).value ??
-                ListTile(title: Text('Export Suggestions'), trailing: SizedBox()),
+                ListTile(
+                  title: Text(AppLocalizations.of(context)!.exportSuggestions),
+                  trailing: const SizedBox(),
+                ),
 
             settingsControllerAsync.whenData((settingsState) {
                   return SwitchListTile(
-                    title: Text('Export Warnings'),
+                    title: Text(AppLocalizations.of(context)!.exportWarnings),
                     value: settingsState.exportWarnings,
                     onChanged: (newValue) async => await ref
                         .read(settingsControllerProvider.notifier)
                         .setExportWarnings(newValue),
                   );
                 }).value ??
-                ListTile(title: Text('Export Warnings'), trailing: SizedBox()),
+                ListTile(
+                  title: Text(AppLocalizations.of(context)!.exportWarnings),
+                  trailing: const SizedBox(),
+                ),
 
-            SectionHeader('Theme'),
-            ListTile(title: BrightnessSegmentedButton()),
+            SectionHeader(AppLocalizations.of(context)!.themeSection),
+            const ListTile(title: BrightnessSegmentedButton()),
 
-            SectionHeader('About'),
+            SectionHeader(AppLocalizations.of(context)!.aboutSection),
             ListTile(
               leading: const Icon(Icons.code),
-              title: const Text('Source Code'),
-              subtitle: Text('Available on GitHub'),
+              title: Text(AppLocalizations.of(context)!.sourceCodeTitle),
+              subtitle: Text(AppLocalizations.of(context)!.sourceCodeSubtitle),
               trailing: const Icon(Icons.open_in_new, size: 16),
               onTap: () async {
                 final result = await launchUrl(
                   Uri.parse("https://github.com/emircihangir/private_notes_light"),
-                  mode: .externalApplication,
+                  mode: LaunchMode.externalApplication,
                 );
                 if (result == false && context.mounted) {
                   showErrorSnackbar(context);
@@ -65,12 +76,12 @@ class SettingsPage extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.feedback_rounded),
-              title: const Text('Report Feedback'),
-              subtitle: const Text('Contact via Email'),
+              title: Text(AppLocalizations.of(context)!.reportFeedbackTitle),
+              subtitle: Text(AppLocalizations.of(context)!.reportFeedbackSubtitle),
               onTap: () async {
                 final result = await launchUrl(
                   Uri.parse("mailto:m.emircihangir@gmail.com"),
-                  mode: .externalApplication,
+                  mode: LaunchMode.externalApplication,
                 );
                 if (result == false && context.mounted) {
                   showErrorSnackbar(context);
@@ -79,12 +90,12 @@ class SettingsPage extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.coffee),
-              title: const Text('Support Development'),
-              subtitle: const Text('Buy me a coffee'),
+              title: Text(AppLocalizations.of(context)!.supportDevelopmentTitle),
+              subtitle: Text(AppLocalizations.of(context)!.supportDevelopmentSubtitle),
               onTap: () async {
                 final result = await launchUrl(
                   Uri.parse("https://buymeacoffee.com/emircihangir"),
-                  mode: .externalApplication,
+                  mode: LaunchMode.externalApplication,
                 );
                 if (result == false && context.mounted) {
                   showErrorSnackbar(context);
@@ -98,14 +109,17 @@ class SettingsPage extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Private Notes Light', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    AppLocalizations.of(context)!.appName,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   const SizedBox(height: 4),
                   Text(
-                    'Version 1.0.0 • February 2026',
+                    AppLocalizations.of(context)!.appVersionInfo,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   Text(
-                    'Developed by Muhammed Emir Cihangir',
+                    AppLocalizations.of(context)!.developedBy,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -151,7 +165,7 @@ class ExportSuggestionsSwitch extends ConsumerWidget {
             },
           );
         }).value ??
-        SizedBox();
+        const SizedBox();
   }
 }
 
@@ -168,19 +182,19 @@ class BrightnessSegmentedButton extends ConsumerWidget {
                 showSelectedIcon: false,
                 segments: [
                   ButtonSegment<ThemeMode>(
-                    value: .light,
-                    label: Text('Light'),
-                    icon: Icon(Icons.light_mode_rounded),
+                    value: ThemeMode.light,
+                    label: Text(AppLocalizations.of(context)!.themeLight),
+                    icon: const Icon(Icons.light_mode_rounded),
                   ),
                   ButtonSegment(
-                    value: .system,
-                    label: Text('System'),
-                    icon: Icon(Icons.auto_mode_rounded),
+                    value: ThemeMode.system,
+                    label: Text(AppLocalizations.of(context)!.themeSystem),
+                    icon: const Icon(Icons.auto_mode_rounded),
                   ),
                   ButtonSegment<ThemeMode>(
-                    value: .dark,
-                    label: Text('Dark'),
-                    icon: Icon(Icons.dark_mode_rounded),
+                    value: ThemeMode.dark,
+                    label: Text(AppLocalizations.of(context)!.themeDark),
+                    icon: const Icon(Icons.dark_mode_rounded),
                   ),
                 ],
                 selected: <ThemeMode>{settingData.theme},
@@ -191,6 +205,6 @@ class BrightnessSegmentedButton extends ConsumerWidget {
               ),
             )
             .value ??
-        SizedBox();
+        const SizedBox();
   }
 }

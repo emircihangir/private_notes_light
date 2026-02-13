@@ -1,0 +1,231 @@
+{
+  "@@locale": "en",
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Main title greeting on the auth screens."
+  },
+  "masterPasswordSetupWarning": "Please set up a master password. Be careful, there is no way to unlock your notes without the master password.",
+  "@masterPasswordSetupWarning": {
+    "description": "Disclaimer text explaining the importance of the master password."
+  },
+  "masterPasswordHint": "Master Password",
+  "@masterPasswordHint": {
+    "description": "Hint text displayed inside the password text field."
+  },
+  "masterPasswordEmptyError": "Master password input cannot be empty.",
+  "@masterPasswordEmptyError": {
+    "description": "Error snackbar message shown when the user attempts to sign up with an empty password."
+  },
+  "signupButton": "Sign Up",
+  "@signupButton": {
+    "description": "Label for the sign-up submission button."
+  },
+  "signupGenericError": "Signup failed. Please try again.",
+  "@signupGenericError": {
+    "description": "Generic error snackbar message when the sign-up process fails."
+  },
+  "login": "Login",
+  "@login": {
+    "description": "Label for the login button."
+  },
+  "passwordEmptyError": "Password input cannot be empty.",
+  "@passwordEmptyError": {
+    "description": "Error message when password field is empty during login."
+  },
+  "wrongPasswordError": "Wrong password. Please try again.",
+  "@wrongPasswordError": {
+    "description": "Error message for invalid password submission."
+  },
+  "exportSuccess": "Export successful.",
+  "@exportSuccess": {
+    "description": "Snackbar message shown when data export completes successfully."
+  },
+  "exportDataTitle": "Export Data",
+  "@exportDataTitle": {
+    "description": "Title for the export option in the settings or list."
+  },
+  "exportDataSubtitle": "Save your notes to a local file",
+  "@exportDataSubtitle": {
+    "description": "Subtitle/Description for the export option."
+  },
+  "importSelectBackupTitle": "Select a Backup File",
+  "@importSelectBackupTitle": {
+    "description": "Title displayed on the file picker dialog."
+  },
+  "importSuccess": "Import successful.",
+  "@importSuccess": {
+    "description": "Snackbar message shown when data import completes successfully."
+  },
+  "importDataTitle": "Import Data",
+  "@importDataTitle": {
+    "description": "Title for the import option in the settings or list."
+  },
+  "importDataSubtitle": "Restore notes from a backup file",
+  "@importDataSubtitle": {
+    "description": "Subtitle/Description for the import option."
+  },
+  "importSettingsDialogTitle": "Import settings?",
+  "@importSettingsDialogTitle": {
+    "description": "Title of the dialog asking to import settings."
+  },
+  "importSettingsDialogContent": "Selecting Yes will overwrite your current settings.",
+  "@importSettingsDialogContent": {
+    "description": "Content warning in the import settings dialog."
+  },
+  "no": "No",
+  "@no": {
+    "description": "Generic negative response button text."
+  },
+  "yes": "Yes",
+  "@yes": {
+    "description": "Generic affirmative response button text."
+  },
+  "areYouSure": "Are you sure?",
+  "@areYouSure": {
+    "description": "Generic confirmation dialog title."
+  },
+  "overwriteWarningContent": "You currently have notes saved in the database. Importing will override or delete existing notes.",
+  "@overwriteWarningContent": {
+    "description": "Warning message displayed before importing data over existing data."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Generic cancel button text."
+  },
+  "proceed": "Proceed",
+  "@proceed": {
+    "description": "Generic continue/proceed button text."
+  },
+  "deleteNoteTitle": "Delete Note?",
+  "@deleteNoteTitle": {
+    "description": "Title of the dialog asking to delete a note."
+  },
+  "deleteNoteContent": "This action cannot be undone.",
+  "@deleteNoteContent": {
+    "description": "Warning content when deleting a note."
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Generic delete button text."
+  },
+  "sessionExpiredMessage": "The app lost focus. Please login again.",
+  "@sessionExpiredMessage": {
+    "description": "Snackbar message shown when the app session expires due to backgrounding."
+  },
+  "notesTitle": "Notes",
+  "@notesTitle": {
+    "description": "Title of the main notes list screen."
+  },
+  "searchHint": "Search",
+  "@searchHint": {
+    "description": "Hint text in the search bar."
+  },
+  "noNotesTitle": "No notes.",
+  "@noNotesTitle": {
+    "description": "Message displayed when the notes list is empty."
+  },
+  "createNoteButton": "Create One",
+  "@createNoteButton": {
+    "description": "Button label to create a note from the empty state."
+  },
+  "createNoteTitle": "Create Note",
+  "@createNoteTitle": {
+    "description": "AppBar title when creating a new note."
+  },
+  "editNoteTitle": "Edit Note",
+  "@editNoteTitle": {
+    "description": "AppBar title when editing an existing note."
+  },
+  "noteTitleLabel": "Title",
+  "@noteTitleLabel": {
+    "description": "Label and hint text for the note title input field."
+  },
+  "noteContentLabel": "Content",
+  "@noteContentLabel": {
+    "description": "Label and hint text for the note content input field."
+  },
+  "titleEmptyError": "Title input cannot be empty.",
+  "@titleEmptyError": {
+    "description": "Validation error when saving a note without a title."
+  },
+  "contentEmptyError": "Content input cannot be empty.",
+  "@contentEmptyError": {
+    "description": "Validation error when saving a note without content."
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Generic save button text."
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "AppBar title for the settings screen."
+  },
+  "dataManagementSection": "Data Management",
+  "@dataManagementSection": {
+    "description": "Section header for data/storage related settings."
+  },
+  "exportSuggestions": "Export Suggestions",
+  "@exportSuggestions": {
+    "description": "Label for the toggle enabling export suggestions."
+  },
+  "exportWarnings": "Export Warnings",
+  "@exportWarnings": {
+    "description": "Label for the toggle enabling export warnings."
+  },
+  "themeSection": "Theme",
+  "@themeSection": {
+    "description": "Section header for theme/appearance settings."
+  },
+  "aboutSection": "About",
+  "@aboutSection": {
+    "description": "Section header for app information."
+  },
+  "sourceCodeTitle": "Source Code",
+  "@sourceCodeTitle": {
+    "description": "Link title for the source code repository."
+  },
+  "sourceCodeSubtitle": "Available on GitHub",
+  "@sourceCodeSubtitle": {
+    "description": "Subtitle describing the source code link."
+  },
+  "reportFeedbackTitle": "Report Feedback",
+  "@reportFeedbackTitle": {
+    "description": "Link title for reporting feedback."
+  },
+  "reportFeedbackSubtitle": "Contact via Email",
+  "@reportFeedbackSubtitle": {
+    "description": "Subtitle describing the feedback method."
+  },
+  "supportDevelopmentTitle": "Support Development",
+  "@supportDevelopmentTitle": {
+    "description": "Link title for donation/support."
+  },
+  "supportDevelopmentSubtitle": "Buy me a coffee",
+  "@supportDevelopmentSubtitle": {
+    "description": "Subtitle describing the support method."
+  },
+  "appName": "Private Notes Light",
+  "@appName": {
+    "description": "The name of the application."
+  },
+  "appVersionInfo": "Version 1.0.0 • February 2026",
+  "@appVersionInfo": {
+    "description": "Static version and date string."
+  },
+  "developedBy": "Developed by Muhammed Emir Cihangir",
+  "@developedBy": {
+    "description": "Developer credit text."
+  },
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Label for light theme mode."
+  },
+  "themeSystem": "System",
+  "@themeSystem": {
+    "description": "Label for system default theme mode."
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Label for dark theme mode."
+  }
+}

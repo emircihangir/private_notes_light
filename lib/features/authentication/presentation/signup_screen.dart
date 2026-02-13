@@ -4,6 +4,7 @@ import 'package:private_notes_light/features/authentication/application/auth_ser
 import 'package:private_notes_light/features/notes/presentation/notes_page.dart';
 import 'package:private_notes_light/features/authentication/presentation/password_text_field.dart';
 import 'package:private_notes_light/core/snackbars.dart';
+import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -24,23 +25,29 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             mainAxisAlignment: .center,
             spacing: 32,
             children: [
-              Text('Welcome', style: Theme.of(context).textTheme.headlineLarge),
+              Text(
+                AppLocalizations.of(context)!.welcome,
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Text(
-                  'Please set up a master password. Be careful, there is no way to unlock your notes without the master password.',
+                  AppLocalizations.of(context)!.masterPasswordSetupWarning,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ),
               PasswordTextField(
                 onChanged: (value) => passwordInput = value,
-                hintText: 'Master Password',
+                hintText: AppLocalizations.of(context)!.masterPasswordHint,
               ),
               FilledButton(
                 onPressed: () async {
                   try {
                     if (passwordInput.isEmpty) {
-                      showErrorSnackbar(context, content: 'Master password input cannot be empty.');
+                      showErrorSnackbar(
+                        context,
+                        content: AppLocalizations.of(context)!.masterPasswordEmptyError,
+                      );
                       return;
                     }
 
@@ -53,11 +60,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     }
                   } catch (e) {
                     if (context.mounted) {
-                      showErrorSnackbar(context, content: 'Signup failed. Please try again.');
+                      showErrorSnackbar(
+                        context,
+                        content: AppLocalizations.of(context)!.signupGenericError,
+                      );
                     }
                   }
                 },
-                child: Text('Sign Up'),
+                child: Text(AppLocalizations.of(context)!.signupButton),
               ),
             ],
           ),

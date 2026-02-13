@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:private_notes_light/core/snackbars.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
 import 'package:private_notes_light/features/notes/domain/note.dart';
-import 'package:private_notes_light/core/snackbars.dart';
 import 'package:private_notes_light/features/notes/presentation/confirm_delete_dialog.dart';
+import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class ViewNotePage extends ConsumerStatefulWidget {
   final Note? note;
@@ -29,7 +30,11 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.note == null ? 'Create Note' : 'Edit Note'),
+        title: Text(
+          widget.note == null
+              ? AppLocalizations.of(context)!.createNoteTitle
+              : AppLocalizations.of(context)!.editNoteTitle,
+        ),
         actions: widget.note != null ? [DeleteNoteButton(widget.note!.id)] : null,
         centerTitle: true,
       ),
@@ -37,25 +42,25 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
         child: Center(
           child: Container(
             constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
-            padding: EdgeInsets.only(top: 16),
+            padding: const EdgeInsets.only(top: 16),
             child: Column(
               spacing: 16,
               children: [
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Title',
-                    labelText: 'Title',
-                    contentPadding: EdgeInsets.all(16),
+                    hintText: AppLocalizations.of(context)!.noteTitleLabel,
+                    labelText: AppLocalizations.of(context)!.noteTitleLabel,
+                    contentPadding: const EdgeInsets.all(16),
                   ),
                   controller: titleInputController,
-                  textInputAction: .next,
+                  textInputAction: TextInputAction.next,
                   autofocus: widget.note == null,
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Content',
-                    labelText: 'Content',
-                    contentPadding: EdgeInsets.all(16),
+                    hintText: AppLocalizations.of(context)!.noteContentLabel,
+                    labelText: AppLocalizations.of(context)!.noteContentLabel,
+                    contentPadding: const EdgeInsets.all(16),
                   ),
                   maxLines: null,
                   controller: contentInputController,
@@ -63,11 +68,17 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
                 FilledButton(
                   onPressed: () async {
                     if (titleInputController.text.isEmpty) {
-                      showErrorSnackbar(context, content: 'Title input cannot be empty.');
+                      showErrorSnackbar(
+                        context,
+                        content: AppLocalizations.of(context)!.titleEmptyError,
+                      );
                       return;
                     }
                     if (contentInputController.text.isEmpty) {
-                      showErrorSnackbar(context, content: 'Content input cannot be empty.');
+                      showErrorSnackbar(
+                        context,
+                        content: AppLocalizations.of(context)!.contentEmptyError,
+                      );
                       return;
                     }
 
@@ -84,7 +95,7 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: Text('Save'),
+                  child: Text(AppLocalizations.of(context)!.save),
                 ),
               ],
             ),
@@ -113,7 +124,7 @@ class DeleteNoteButton extends ConsumerWidget {
       onPressed: () async {
         final result = await showDialog<bool>(
           context: context,
-          builder: (_) => ConfirmDeleteDialog(),
+          builder: (_) => const ConfirmDeleteDialog(),
         );
 
         if (result == true) {
@@ -121,7 +132,7 @@ class DeleteNoteButton extends ConsumerWidget {
           if (context.mounted) Navigator.of(context).pop();
         }
       },
-      icon: Icon(Icons.delete_rounded),
+      icon: const Icon(Icons.delete_rounded),
     );
   }
 }

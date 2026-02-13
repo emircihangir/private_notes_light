@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
@@ -13,6 +12,7 @@ import 'package:private_notes_light/features/settings/presentation/settings_page
 import 'package:private_notes_light/features/notes/presentation/view_note_page.dart';
 import 'package:private_notes_light/core/generic_error_widget.dart';
 import 'package:private_notes_light/core/snackbars.dart';
+import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class NotesPage extends ConsumerStatefulWidget {
   const NotesPage({super.key});
@@ -33,19 +33,19 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
     super.didChangeAppLifecycleState(state);
     final filePickerRunning = ref.watch(filePickerRunningProvider);
 
-    if ((state == .inactive) && !filePickerRunning) {
+    if ((state == AppLifecycleState.inactive) && !filePickerRunning) {
       log('The app lost focus. Logging out.', name: 'INFO');
       logoutOnResume = true;
       ref.read(authServiceProvider.notifier).logout();
     }
 
-    if (state == .resumed && logoutOnResume) {
+    if (state == AppLifecycleState.resumed && logoutOnResume) {
       log('Forcing the user to login again.', name: 'INFO');
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
         (route) => false,
       );
-      showInfoSnackbar(context, content: 'The app lost focus. Please login again.');
+      showInfoSnackbar(context, content: AppLocalizations.of(context)!.sessionExpiredMessage);
       logoutOnResume = false;
     }
   }
@@ -58,28 +58,30 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notes'),
+        title: Text(AppLocalizations.of(context)!.notesTitle),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
             ref.read(authServiceProvider.notifier).logout();
             Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => LoginScreen()),
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
               (route) => false,
             );
           },
-          icon: Icon(Icons.logout_rounded),
+          icon: const Icon(Icons.logout_rounded),
         ),
         actions: [
           IconButton(
-            onPressed: () =>
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage())),
-            icon: Icon(Icons.settings_outlined),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => const SettingsPage())),
+            icon: const Icon(Icons.settings_outlined),
           ),
           IconButton(
-            onPressed: () =>
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewNotePage())),
-            icon: Icon(Icons.add_rounded),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => const ViewNotePage())),
+            icon: const Icon(Icons.add_rounded),
           ),
         ],
       ),
@@ -87,16 +89,16 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
         child: fullNotesList.when(
           error: (error, stackTrace) {
             log('ERROR', error: error, stackTrace: stackTrace);
-            return Center(child: GenericErrorWidget());
+            return const Center(child: GenericErrorWidget());
           },
-          loading: () => Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: CircularProgressIndicator()),
           data: (_) => Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
               children: [
                 SearchBar(
-                  leading: Icon(Icons.search),
-                  hintText: 'Search',
+                  leading: const Icon(Icons.search),
+                  hintText: AppLocalizations.of(context)!.searchHint,
                   onChanged: (value) => ref.read(searchQueryProvider.notifier).set(value),
                 ),
                 Expanded(
@@ -116,16 +118,16 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
                         confirmDismiss: (direction) async {
                           final bool? shouldDelete = await showDialog<bool>(
                             context: context,
-                            builder: (context) => ConfirmDeleteDialog(),
+                            builder: (context) => const ConfirmDeleteDialog(),
                           );
 
                           return shouldDelete ?? false;
                         },
                         key: ValueKey(note.noteID),
-                        direction: .endToStart,
+                        direction: DismissDirection.endToStart,
                         background: Container(
                           color: Theme.of(context).colorScheme.errorContainer,
-                          padding: EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.only(right: 8),
                           alignment: Alignment.centerRight,
                           child: Icon(
                             Icons.clear_rounded,
@@ -171,14 +173,18 @@ class EmptyNotesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: .center,
+        mainAxisAlignment: MainAxisAlignment.center,
         spacing: 16,
         children: [
-          Text('No notes.', style: Theme.of(context).textTheme.headlineMedium),
+          Text(
+            AppLocalizations.of(context)!.noNotesTitle,
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
           TextButton(
-            onPressed: () =>
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewNotePage())),
-            child: Text('Create One'),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => const ViewNotePage())),
+            child: Text(AppLocalizations.of(context)!.createNoteButton),
           ),
         ],
       ),

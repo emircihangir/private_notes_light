@@ -4,6 +4,7 @@ import 'package:private_notes_light/features/authentication/application/auth_ser
 import 'package:private_notes_light/features/notes/presentation/notes_page.dart';
 import 'package:private_notes_light/features/authentication/presentation/password_text_field.dart';
 import 'package:private_notes_light/core/snackbars.dart';
+import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -24,12 +25,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             mainAxisAlignment: .center,
             spacing: 32,
             children: [
-              Text('Welcome', style: Theme.of(context).textTheme.headlineLarge),
+              Text(
+                AppLocalizations.of(context)!.welcome,
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
               PasswordTextField(onChanged: (value) => passwordInput = value),
               FilledButton(
                 onPressed: () async {
                   if (passwordInput.isEmpty) {
-                    showErrorSnackbar(context, content: 'Password input cannot be empty.');
+                    showErrorSnackbar(
+                      context,
+                      content: AppLocalizations.of(context)!.passwordEmptyError,
+                    );
                     return;
                   }
 
@@ -44,10 +51,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       (route) => false,
                     );
                   } else {
-                    showErrorSnackbar(context, content: 'Wrong password. Please try again.');
+                    showErrorSnackbar(
+                      context,
+                      content: AppLocalizations.of(context)!.wrongPasswordError,
+                    );
                   }
                 },
-                child: Text('Login'),
+                child: Text(AppLocalizations.of(context)!.login),
               ),
             ],
           ),

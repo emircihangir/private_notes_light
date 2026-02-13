@@ -8,6 +8,7 @@ import 'package:private_notes_light/features/backup/domain/import_exception.dart
 import 'package:private_notes_light/features/backup/presentation/import_settings_dialog.dart';
 import 'package:private_notes_light/features/backup/presentation/overwrite_warning_dialog.dart';
 import 'package:private_notes_light/features/notes/data/note_repository.dart';
+import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class ImportListTile extends ConsumerWidget {
   const ImportListTile({super.key});
@@ -22,15 +23,19 @@ class ImportListTile extends ConsumerWidget {
       if (notesList.isNotEmpty && context.mounted) {
         proceedImport = await showDialog<bool>(
           context: context,
-          builder: (context) => OverwriteWarningDialog(),
+          builder: (context) => const OverwriteWarningDialog(),
         );
       }
       if (proceedImport != true) {
         return;
       }
 
+      if (!context.mounted) return;
+
       ref.read(filePickerRunningProvider.notifier).set(true);
-      final pickerResult = await FilePicker.platform.pickFiles(dialogTitle: 'Select a Backup File');
+      final pickerResult = await FilePicker.platform.pickFiles(
+        dialogTitle: AppLocalizations.of(context)!.importSelectBackupTitle,
+      );
       ref.read(filePickerRunningProvider.notifier).set(false);
       if (pickerResult == null || pickerResult.count == 0) return;
 
@@ -51,21 +56,21 @@ class ImportListTile extends ConsumerWidget {
       if (context.mounted) {
         alsoImportSettings = await showDialog<bool>(
           context: context,
-          builder: (context) => ImportSettingsDialog(),
+          builder: (context) => const ImportSettingsDialog(),
         );
       }
 
       await backupService.processImport(pickedFileContent, alsoImportSettings ?? false);
       if (context.mounted) {
-        showSuccessSnackbar(context, content: 'Import successful.');
+        showSuccessSnackbar(context, content: AppLocalizations.of(context)!.importSuccess);
         Navigator.of(context).pop();
       }
     }
 
     return ListTile(
       leading: const Icon(Icons.download_rounded),
-      title: const Text('Import Data'),
-      subtitle: const Text('Restore notes from a backup file'),
+      title: Text(AppLocalizations.of(context)!.importDataTitle),
+      subtitle: Text(AppLocalizations.of(context)!.importDataSubtitle),
       onTap: triggerImport,
     );
   }
