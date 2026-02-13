@@ -8,10 +8,10 @@ class OverwriteWarningDialog extends StatelessWidget {
     return AlertDialog(
       title: const Text('Are you sure?'),
       content: const Text(
-        'Choosing Proceed will overwrite or delete your existing notes. Choose Abort to keep them.',
+        'You currently have notes saved in the database. Importing will override or delete existing notes.',
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Abort')),
+        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
         TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text('Proceed')),
       ],
     );

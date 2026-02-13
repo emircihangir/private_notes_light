@@ -15,6 +15,20 @@ class ImportListTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     void triggerImport() async {
+      // * Warn about overwrites if there are notes in the database.
+      final notesList = await ref.read(noteRepositoryProvider).getNotes();
+      bool? proceedImport =
+          notesList.isEmpty; // if notes list is empty, automatically proceed import.
+      if (notesList.isNotEmpty && context.mounted) {
+        proceedImport = await showDialog<bool>(
+          context: context,
+          builder: (context) => OverwriteWarningDialog(),
+        );
+      }
+      if (proceedImport != true) {
+        return;
+      }
+
       ref.read(filePickerRunningProvider.notifier).set(true);
       final pickerResult = await FilePicker.platform.pickFiles(dialogTitle: 'Select a Backup File');
       ref.read(filePickerRunningProvider.notifier).set(false);
@@ -29,20 +43,6 @@ class ImportListTile extends ConsumerWidget {
         return;
       } on FileIsCorrupt catch (e) {
         if (context.mounted) showErrorSnackbar(context, content: e.message!);
-        return;
-      }
-
-      // * Warn about overwrites if there are notes in the database.
-      final notesList = await ref.read(noteRepositoryProvider).getNotes();
-      late final bool? proceedImport;
-      if (notesList.isNotEmpty && context.mounted) {
-        proceedImport = await showDialog<bool>(
-          context: context,
-          builder: (context) => OverwriteWarningDialog(),
-        );
-      }
-      if (proceedImport != true && context.mounted) {
-        showInfoSnackbar(context, content: 'Import aborted.');
         return;
       }
 
