@@ -54,6 +54,10 @@ class NoteRepositoryImpl implements NoteRepository {
   @override
   Future<void> importNotes(List<NoteDto> noteDTOs) async {
     final db = await database;
+
+    // * Delete all rows from the notes table.
+    await db.delete('notes');
+
     Batch batch = db.batch();
     for (NoteDto noteDTO in noteDTOs) {
       batch.insert('notes', noteDTO.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);

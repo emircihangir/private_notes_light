@@ -6,6 +6,8 @@ import 'package:private_notes_light/features/backup/application/backup_service.d
 import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
 import 'package:private_notes_light/features/backup/domain/import_exception.dart';
 import 'package:private_notes_light/features/backup/presentation/import_settings_dialog.dart';
+import 'package:private_notes_light/features/backup/presentation/overwrite_warning_dialog.dart';
+import 'package:private_notes_light/features/notes/data/note_repository.dart';
 
 class ImportListTile extends ConsumerWidget {
   const ImportListTile({super.key});
@@ -30,8 +32,20 @@ class ImportListTile extends ConsumerWidget {
         return;
       }
 
-      late final bool? alsoImportSettings;
+      // * Warn about overwrites if there are notes in the database.
+      final notesList = await ref.read(noteRepositoryProvider).getNotes();
+      late final bool? proceedImport;
+      if (notesList.isNotEmpty && context.mounted) {
+        proceedImport = await showDialog<bool>(
+          context: context,
+          builder: (context) => OverwriteWarningDialog(),
+        );
+      }
 
+      if (proceedImport != true) return;
+
+      // * Ask for settings import option.
+      late final bool? alsoImportSettings;
       if (context.mounted) {
         alsoImportSettings = await showDialog<bool>(
           context: context,
