@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:crypto/crypto.dart';
+import 'package:cryptography/cryptography.dart';
 import 'package:flutter/foundation.dart';
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,8 +16,12 @@ class EncryptionService extends _$EncryptionService {
   String generateSalt() => base64Url.encode(generateRandomBytes(16));
 
   Future<enc.Key> deriveKeyFromPassword(String password, String salt) async {
-    var bytes = utf8.encode(password + salt);
-    return await compute(deriveKeyBackground, bytes);
+    var passwordBytes = utf8.encode(password);
+    var saltBytes = utf8.encode(salt);
+    return await compute(deriveKeyBackground, {
+      'passwordBytes': passwordBytes,
+      'saltBytes': saltBytes,
+    });
   }
 
   List<int> generateRandomBytes(int length) {
@@ -66,10 +70,22 @@ class EncryptionService extends _$EncryptionService {
   }
 }
 
-enc.Key deriveKeyBackground(Uint8List bytes) {
-  var digest = sha256.convert(bytes);
-  for (var i = 0; i < 100000; i++) {
-    digest = sha256.convert(digest.bytes);
-  }
-  return enc.Key(Uint8List.fromList(digest.bytes));
+Future<enc.Key> deriveKeyBackground(Map<String, Uint8List> args) async {
+  final passwordBytes = args['passwordBytes']!;
+  final saltBytes = args['saltBytes']!;
+
+  final algorithm = Argon2id(
+    parallelism: 4,
+    memory: 16000, // 16MB
+    iterations: 3,
+    hashLength: 32,
+  );
+
+  final newSecretKey = await algorithm.deriveKey(
+    secretKey: SecretKey(passwordBytes),
+    nonce: saltBytes,
+  );
+  final newSecretKeyBytes = await newSecretKey.extractBytes();
+
+  return enc.Key(Uint8List.fromList(newSecretKeyBytes));
 }
