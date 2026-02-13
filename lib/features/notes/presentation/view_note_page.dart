@@ -42,13 +42,21 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
               spacing: 16,
               children: [
                 TextField(
-                  decoration: InputDecoration(hintText: 'Title'),
+                  decoration: InputDecoration(
+                    hintText: 'Title',
+                    labelText: 'Title',
+                    contentPadding: EdgeInsets.all(16),
+                  ),
                   controller: titleInputController,
                   textInputAction: .next,
                   autofocus: widget.note == null,
                 ),
                 TextField(
-                  decoration: InputDecoration(hintText: 'Content'),
+                  decoration: InputDecoration(
+                    hintText: 'Content',
+                    labelText: 'Content',
+                    contentPadding: EdgeInsets.all(16),
+                  ),
                   maxLines: null,
                   controller: contentInputController,
                 ),
