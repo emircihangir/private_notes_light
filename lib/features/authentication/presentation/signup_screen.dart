@@ -14,7 +14,7 @@ class SignupScreen extends ConsumerStatefulWidget {
 }
 
 class _SignupScreenState extends ConsumerState<SignupScreen> {
-  String passwordInput = '';
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +37,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 ),
               ),
               PasswordTextField(
-                onChanged: (value) => passwordInput = value,
+                controller: passwordController,
                 hintText: AppLocalizations.of(context)!.masterPasswordHint,
               ),
               FilledButton(
                 onPressed: () async {
+                  final passwordInput = passwordController.text;
                   try {
                     if (passwordInput.isEmpty) {
                       showErrorSnackbar(
@@ -53,6 +54,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
                     await ref.read(authServiceProvider.notifier).signup(passwordInput);
                     if (context.mounted) {
+                      passwordController.clear();
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => NotesPage()),
                         (route) => false,

@@ -14,7 +14,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  String passwordInput = '';
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +29,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 AppLocalizations.of(context)!.welcome,
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
-              PasswordTextField(onChanged: (value) => passwordInput = value),
+              PasswordTextField(controller: passwordController),
               FilledButton(
                 onPressed: () async {
+                  final passwordInput = passwordController.text;
+
                   if (passwordInput.isEmpty) {
                     showErrorSnackbar(
                       context,
@@ -46,6 +48,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   if (!context.mounted) return;
 
                   if (loggedIn) {
+                    passwordController.clear();
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => NotesPage()),
                       (route) => false,
