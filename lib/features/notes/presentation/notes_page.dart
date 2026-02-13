@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
+import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
 import 'package:private_notes_light/features/notes/application/filtered_notes_list.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
 import 'package:private_notes_light/features/notes/application/search_query.dart';
@@ -28,20 +31,26 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
+    final filePickerRunning = ref.watch(filePickerRunningProvider);
 
-    if (state == .paused || state == .inactive) {
+    if ((state == .inactive) && !filePickerRunning) {
+      log('The app lost focus. Logging out.', name: 'INFO');
+      logoutOnResume = true;
       ref.read(authServiceProvider.notifier).logout();
     }
 
-    if (state == .resumed) {
+    if (state == .resumed && logoutOnResume) {
+      log('Forcing the user to login again.', name: 'INFO');
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => LoginScreen()),
         (route) => false,
       );
       showLoginAgainSnackbar(context);
+      logoutOnResume = false;
     }
   }
 
+  bool logoutOnResume = false;
   @override
   Widget build(BuildContext context) {
     final filteredNotes = ref.watch(filteredNotesListProvider);
@@ -76,7 +85,10 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
       ),
       body: SafeArea(
         child: fullNotesList.when(
-          error: (error, stackTrace) => Center(child: GenericErrorWidget()),
+          error: (error, stackTrace) {
+            log('ERROR', error: error, stackTrace: stackTrace);
+            return Center(child: GenericErrorWidget());
+          },
           loading: () => Center(child: CircularProgressIndicator()),
           data: (_) => Padding(
             padding: const EdgeInsets.all(12),

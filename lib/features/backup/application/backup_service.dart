@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:private_notes_light/features/authentication/data/auth_repository.dart';
+import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
 import 'package:private_notes_light/features/backup/data/backup_repository.dart';
 import 'package:private_notes_light/features/backup/domain/backup_data.dart';
 import 'package:private_notes_light/features/backup/domain/import_exception.dart';
@@ -39,7 +40,9 @@ class BackupService extends _$BackupService {
     }
     exportDataMap[BackupData.propertyNames.notesData] = expandedNotesData;
 
+    ref.read(filePickerRunningProvider.notifier).set(true);
     await backupRepo.export(exportDataMap);
+    ref.read(filePickerRunningProvider.notifier).set(false);
   }
 
   void validateImportString(String importString) {
