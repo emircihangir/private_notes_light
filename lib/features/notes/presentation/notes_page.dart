@@ -45,7 +45,7 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
         MaterialPageRoute(builder: (context) => LoginScreen()),
         (route) => false,
       );
-      showLoginAgainSnackbar(context);
+      showInfoSnackbar(context, content: 'The app lost focus. Please login again.');
       logoutOnResume = false;
     }
   }

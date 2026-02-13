@@ -41,8 +41,10 @@ class ImportListTile extends ConsumerWidget {
           builder: (context) => OverwriteWarningDialog(),
         );
       }
-
-      if (proceedImport != true) return;
+      if (proceedImport != true && context.mounted) {
+        showInfoSnackbar(context, content: 'Import aborted.');
+        return;
+      }
 
       // * Ask for settings import option.
       late final bool? alsoImportSettings;
@@ -55,7 +57,7 @@ class ImportListTile extends ConsumerWidget {
 
       await backupService.processImport(pickedFileContent, alsoImportSettings ?? false);
       if (context.mounted) {
-        showSuccessSnackbar(context, 'Import successful.');
+        showSuccessSnackbar(context, content: 'Import successful.');
         Navigator.of(context).pop();
       }
     }

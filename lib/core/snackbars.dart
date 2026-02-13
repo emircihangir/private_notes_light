@@ -9,46 +9,19 @@ void showErrorSnackbar(BuildContext context, {String content = 'Error occurred.'
   );
 }
 
-void showPasswordWrongSnackbar(BuildContext context) {
+void showInfoSnackbar(BuildContext context, {required String content}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(
-        'Wrong password. Try again.',
-        style: TextStyle(color: Theme.of(context).colorScheme.onError),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.error,
-    ),
-  );
-}
-
-void showEmptyInputSnackbar(BuildContext context, {String inputName = 'input'}) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(
-        '$inputName cannot be empty.',
-        style: TextStyle(color: Theme.of(context).colorScheme.onError),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.error,
-    ),
-  );
-}
-
-void showLoginAgainSnackbar(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(
-        'The app lost focus. Please login again.',
-        style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface),
-      ),
+      content: Text(content, style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface)),
       backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
     ),
   );
 }
 
-void showSuccessSnackbar(BuildContext context, String text) {
+void showSuccessSnackbar(BuildContext context, {required String content}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(text, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+      content: Text(content, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
       backgroundColor: Theme.of(context).colorScheme.primary,
     ),
   );

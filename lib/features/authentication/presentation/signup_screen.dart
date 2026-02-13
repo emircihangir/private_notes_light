@@ -40,7 +40,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 onPressed: () async {
                   try {
                     if (passwordInput.isEmpty) {
-                      showEmptyInputSnackbar(context, inputName: 'Master password');
+                      showErrorSnackbar(context, content: 'Master password input cannot be empty.');
                       return;
                     }
 

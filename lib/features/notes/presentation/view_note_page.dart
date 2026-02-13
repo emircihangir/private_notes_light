@@ -55,11 +55,11 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
                 FilledButton(
                   onPressed: () async {
                     if (titleInputController.text.isEmpty) {
-                      showEmptyInputSnackbar(context, inputName: 'Title');
+                      showErrorSnackbar(context, content: 'Title input cannot be empty.');
                       return;
                     }
                     if (contentInputController.text.isEmpty) {
-                      showEmptyInputSnackbar(context, inputName: 'Content');
+                      showErrorSnackbar(context, content: 'Content input cannot be empty.');
                       return;
                     }
 

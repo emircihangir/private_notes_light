@@ -29,7 +29,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               FilledButton(
                 onPressed: () async {
                   if (passwordInput.isEmpty) {
-                    showEmptyInputSnackbar(context, inputName: 'Password');
+                    showErrorSnackbar(context, content: 'Password input cannot be empty.');
                     return;
                   }
 
@@ -44,7 +44,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       (route) => false,
                     );
                   } else {
-                    showPasswordWrongSnackbar(context);
+                    showErrorSnackbar(context, content: 'Wrong password. Please try again.');
                   }
                 },
                 child: Text('Login'),

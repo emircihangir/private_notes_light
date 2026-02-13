@@ -11,7 +11,7 @@ class ExportListTile extends ConsumerWidget {
     void triggerExport() async {
       try {
         await ref.read(backupServiceProvider.notifier).export();
-        if (context.mounted) showSuccessSnackbar(context, 'Export Successful.');
+        if (context.mounted) showSuccessSnackbar(context, content: 'Export successful.');
       } catch (e) {
         if (context.mounted) showErrorSnackbar(context);
       }
