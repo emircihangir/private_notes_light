@@ -14,7 +14,7 @@ part 'backup_repository.g.dart';
 
 abstract class BackupRepository {
   Future<void> export(Map<String, dynamic> exportDataMap);
-  Future<void> import(BackupData importData);
+  Future<void> import(BackupData importData, bool alsoImportSettings);
 }
 
 class BackupRepositoryImpl implements BackupRepository {
@@ -43,9 +43,9 @@ class BackupRepositoryImpl implements BackupRepository {
   }
 
   @override
-  Future<void> import(BackupData importData) async {
+  Future<void> import(BackupData importData, bool alsoImportSettings) async {
     await noteRepo.importNotes(importData.notesData);
-    await settingsRepo.importSettings(importData.settingsData);
+    if (alsoImportSettings) await settingsRepo.importSettings(importData.settingsData);
   }
 }
 

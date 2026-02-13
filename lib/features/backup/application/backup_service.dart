@@ -62,7 +62,7 @@ class BackupService extends _$BackupService {
     }
   }
 
-  Future<void> processImport(String importString) async {
+  Future<void> processImport(String importString, bool alsoImportSettings) async {
     // * Convert String to Map<String, dynamic>.
     final Map<String, dynamic> importJson = jsonDecode(importString);
 
@@ -78,7 +78,7 @@ class BackupService extends _$BackupService {
       // Current master key is capable of decrypting note contents.
       // * Execute import.
       final backupRepo = await ref.watch(backupRepositoryProvider.future);
-      await backupRepo.import(backupData);
+      await backupRepo.import(backupData, alsoImportSettings);
 
       // * Trigger provider rebuilds.
       ref.invalidate(noteControllerProvider);

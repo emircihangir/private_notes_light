@@ -5,6 +5,7 @@ import 'package:private_notes_light/core/snackbars.dart';
 import 'package:private_notes_light/features/backup/application/backup_service.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
 import 'package:private_notes_light/features/backup/domain/import_exception.dart';
+import 'package:private_notes_light/features/backup/presentation/import_settings_dialog.dart';
 
 class ImportListTile extends ConsumerWidget {
   const ImportListTile({super.key});
@@ -29,9 +30,16 @@ class ImportListTile extends ConsumerWidget {
         return;
       }
 
-      // TODO: Ask if the program should import the settings.
+      late final bool? alsoImportSettings;
 
-      await backupService.processImport(pickedFileContent);
+      if (context.mounted) {
+        alsoImportSettings = await showDialog<bool>(
+          context: context,
+          builder: (context) => ImportSettingsDialog(),
+        );
+      }
+
+      await backupService.processImport(pickedFileContent, alsoImportSettings ?? false);
       if (context.mounted) {
         showSuccessSnackbar(context, 'Import successful.');
         Navigator.of(context).pop();
