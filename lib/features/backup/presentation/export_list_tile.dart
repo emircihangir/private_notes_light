@@ -10,8 +10,10 @@ class ExportListTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     void triggerExport() async {
       try {
-        await ref.read(backupServiceProvider.notifier).export();
-        if (context.mounted) showSuccessSnackbar(context, content: 'Export successful.');
+        final exportResult = await ref.read(backupServiceProvider.notifier).export();
+        if (exportResult == true && context.mounted) {
+          showSuccessSnackbar(context, content: 'Export successful.');
+        }
       } catch (e) {
         if (context.mounted) showErrorSnackbar(context);
       }

@@ -19,7 +19,7 @@ class BackupService extends _$BackupService {
   @override
   FutureOr<void> build() {}
 
-  Future<void> export() async {
+  Future<bool?> export() async {
     final backupRepo = await ref.watch(backupRepositoryProvider.future);
     final authRepo = ref.watch(authRepositoryProvider);
     final noteRepo = ref.watch(noteRepositoryProvider);
@@ -41,8 +41,10 @@ class BackupService extends _$BackupService {
     exportDataMap[BackupData.propertyNames.notesData] = expandedNotesData;
 
     ref.read(filePickerRunningProvider.notifier).set(true);
-    await backupRepo.export(exportDataMap);
+    final exportResult = await backupRepo.export(exportDataMap);
     ref.read(filePickerRunningProvider.notifier).set(false);
+
+    return exportResult;
   }
 
   void validateImportString(String importString) {

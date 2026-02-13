@@ -13,7 +13,7 @@ import 'package:path/path.dart' as p;
 part 'backup_repository.g.dart';
 
 abstract class BackupRepository {
-  Future<void> export(Map<String, dynamic> exportDataMap);
+  Future<bool?> export(Map<String, dynamic> exportDataMap);
   Future<void> import(BackupData importData, bool alsoImportSettings);
 }
 
@@ -25,7 +25,7 @@ class BackupRepositoryImpl implements BackupRepository {
   BackupRepositoryImpl({required this.settingsRepo, required this.noteRepo});
 
   @override
-  Future<void> export(Map<String, dynamic> exportDataMap) async {
+  Future<bool?> export(Map<String, dynamic> exportDataMap) async {
     final exportJsonString = jsonEncode(exportDataMap);
 
     final tempDir = await getTemporaryDirectory();
@@ -35,11 +35,13 @@ class BackupRepositoryImpl implements BackupRepository {
 
     await file.writeAsString(exportJsonString);
 
-    await FilePicker.platform.saveFile(
+    final pickerResult = await FilePicker.platform.saveFile(
       fileName: fileName,
       dialogTitle: 'Save Export File',
       bytes: await file.readAsBytes(),
     );
+
+    return pickerResult != null;
   }
 
   @override
