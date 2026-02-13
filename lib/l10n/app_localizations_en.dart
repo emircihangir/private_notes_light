@@ -32,7 +32,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login => 'Login';
 
   @override
-  String get passwordEmptyError => 'Password input cannot be empty.';
+  String get passwordEmptyError => 'Please enter a password.';
 
   @override
   String get wrongPasswordError => 'Wrong password. Please try again.';

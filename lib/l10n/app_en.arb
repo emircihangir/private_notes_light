@@ -28,7 +28,7 @@
   "@login": {
     "description": "Label for the login button."
   },
-  "passwordEmptyError": "Password input cannot be empty.",
+  "passwordEmptyError": "Please enter a password.",
   "@passwordEmptyError": {
     "description": "Error message when password field is empty during login."
   },

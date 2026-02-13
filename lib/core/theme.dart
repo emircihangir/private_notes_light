@@ -21,13 +21,17 @@ ThemeData appTheme(Brightness brightness) {
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(width: 2, color: colorScheme.primary),
       ),
-      contentPadding: EdgeInsets.only(left: 5, top: 10, bottom: 10),
-      isDense: true,
-      hintStyle: TextStyle(fontWeight: FontWeight.w200, color: colorScheme.onSurfaceVariant),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(3),
         borderSide: BorderSide(color: colorScheme.primary, width: 3),
       ),
+      errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: colorScheme.error)),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(width: 3, color: colorScheme.error),
+      ),
+      contentPadding: EdgeInsets.only(left: 5, top: 10, bottom: 10),
+      isDense: true,
+      hintStyle: TextStyle(fontWeight: FontWeight.w200, color: colorScheme.onSurfaceVariant),
     ),
 
     iconButtonTheme: IconButtonThemeData(

@@ -139,7 +139,7 @@ abstract class AppLocalizations {
   /// Error message when password field is empty during login.
   ///
   /// In en, this message translates to:
-  /// **'Password input cannot be empty.'**
+  /// **'Please enter a password.'**
   String get passwordEmptyError;
 
   /// Error message for invalid password submission.

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
@@ -14,7 +16,15 @@ class SignupScreen extends ConsumerStatefulWidget {
 }
 
 class _SignupScreenState extends ConsumerState<SignupScreen> {
+  final _formKey = GlobalKey<FormState>();
   final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    super.dispose();
+    log('Disposed the password text field controller.', name: 'INFO');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,22 +46,23 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ),
-              PasswordTextField(
-                controller: passwordController,
-                hintText: AppLocalizations.of(context)!.masterPasswordHint,
+              Form(
+                key: _formKey,
+                child: PasswordTextField(
+                  controller: passwordController,
+                  hintText: AppLocalizations.of(context)!.masterPasswordHint,
+                  onChanged: (value) {
+                    if (value.isNotEmpty) _formKey.currentState!.validate();
+                  },
+                ),
               ),
               FilledButton(
                 onPressed: () async {
+                  final isValid = _formKey.currentState!.validate();
+                  if (isValid == false) return;
+
                   final passwordInput = passwordController.text;
                   try {
-                    if (passwordInput.isEmpty) {
-                      showErrorSnackbar(
-                        context,
-                        content: AppLocalizations.of(context)!.masterPasswordEmptyError,
-                      );
-                      return;
-                    }
-
                     await ref.read(authServiceProvider.notifier).signup(passwordInput);
                     if (context.mounted) {
                       passwordController.clear();
