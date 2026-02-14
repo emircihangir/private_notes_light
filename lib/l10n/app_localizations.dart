@@ -435,6 +435,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dark'**
   String get themeDark;
+
+  /// Title for the settings list tile responsible for changing the master password.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// Subtitle for the settings list tile responsible for changing the master password.
+  ///
+  /// In en, this message translates to:
+  /// **'Update the master password'**
+  String get changePasswordSubtitle;
+
+  /// Title for the submit button on the change master password bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submitButton;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPassword;
+
+  /// No description provided for @newPasswordConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get newPasswordConfirm;
+
+  /// No description provided for @newPasswordWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Caution: Do not forget the new password, as there is no way to recover your notes without it.'**
+  String get newPasswordWarning;
+
+  /// No description provided for @passwordsDontMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match.'**
+  String get passwordsDontMatch;
+
+  /// No description provided for @changedPasswordSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Password change successful.'**
+  String get changedPasswordSuccessfully;
 }
 
 class _AppLocalizationsDelegate

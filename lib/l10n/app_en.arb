@@ -227,5 +227,27 @@
   "themeDark": "Dark",
   "@themeDark": {
     "description": "Label for dark theme mode."
-  }
+  },
+  "changePassword": "Change Password",
+  "@changePassword": {
+    "description": "Title for the settings list tile responsible for changing the master password."
+  },
+  "changePasswordSubtitle": "Update the master password",
+  "@changePasswordSubtitle": {
+    "description": "Subtitle for the settings list tile responsible for changing the master password."
+  },
+  "submitButton": "Submit",
+  "@submitButton": {
+    "description": "Title for the submit button on the change master password bottom sheet"
+  },
+  "newPassword" : "New password",
+  "@newPassword": {},
+  "newPasswordConfirm" : "Confirm new password",
+  "@newPasswordConfirm": {},
+  "newPasswordWarning" : "Caution: Do not forget the new password, as there is no way to recover your notes without it.",
+  "@newPasswordWarning": {},
+  "passwordsDontMatch" : "Passwords do not match.",
+  "@passwordsDontMatch": {},
+  "changedPasswordSuccessfully" : "Password change successful.",
+  "@changedPasswordSuccessfully": {}
 }

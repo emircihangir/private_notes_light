@@ -14,6 +14,7 @@ class AuthService extends _$AuthService {
   FutureOr<void> build() {}
 
   Future<void> signup(String masterPassword) async {
+    // * Derive key from the password input.
     final salt = ref.read(encryptionServiceProvider.notifier).generateSalt();
     final userKey = await ref
         .read(encryptionServiceProvider.notifier)
@@ -42,6 +43,38 @@ class AuthService extends _$AuthService {
         );
 
     ref.read(masterKeyProvider.notifier).set(masterKey.base64);
+  }
+
+  Future<void> changeMasterPassword(String newMasterPassword) async {
+    final currentMasterKey = ref.read(masterKeyProvider);
+    assert(
+      currentMasterKey != null,
+      "Master key must not be null when changeMasterPassword function is called",
+    );
+
+    // * Derive newUserKey from password input and newSalt.
+    final newSalt = ref.read(encryptionServiceProvider.notifier).generateSalt();
+    final newUserKey = await ref
+        .read(encryptionServiceProvider.notifier)
+        .deriveKeyFromPassword(newMasterPassword, newSalt);
+
+    // * Encrypt currentMasterKey with newUserKey.
+    var encrypted = ref
+        .read(encryptionServiceProvider.notifier)
+        .encryptText(currentMasterKey!, newUserKey.base64);
+    final encryptedMasterKeyString = encrypted.encryptedText;
+    final newIVstring = encrypted.encryptionIV;
+
+    // * Save the newly encrypted master key.
+    await ref
+        .read(authRepositoryProvider)
+        .saveCredentials(
+          CredentialsData(
+            salt: newSalt,
+            iv: newIVstring,
+            encryptedMasterKey: encryptedMasterKeyString,
+          ),
+        );
   }
 
   Future<bool> login(String passwordInput) async {

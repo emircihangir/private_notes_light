@@ -182,4 +182,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeDark => 'Dark';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get changePasswordSubtitle => 'Update the master password';
+
+  @override
+  String get submitButton => 'Submit';
+
+  @override
+  String get newPassword => 'New password';
+
+  @override
+  String get newPasswordConfirm => 'Confirm new password';
+
+  @override
+  String get newPasswordWarning =>
+      'Caution: Do not forget the new password, as there is no way to recover your notes without it.';
+
+  @override
+  String get passwordsDontMatch => 'Passwords do not match.';
+
+  @override
+  String get changedPasswordSuccessfully => 'Password change successful.';
 }

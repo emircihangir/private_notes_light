@@ -4,6 +4,7 @@ import 'package:private_notes_light/features/backup/presentation/export_list_til
 import 'package:private_notes_light/features/backup/presentation/import_list_tile.dart';
 import 'package:private_notes_light/features/settings/application/settings_controller.dart';
 import 'package:private_notes_light/core/snackbars.dart';
+import 'package:private_notes_light/features/settings/presentation/change_password_sheet.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,6 +28,7 @@ class SettingsPage extends ConsumerWidget {
             SectionHeader(AppLocalizations.of(context)!.dataManagementSection),
             const ExportListTile(),
             const ImportListTile(),
+            const ChangePasswordListTile(),
             settingsControllerAsync.whenData((settingsData) {
                   return SwitchListTile(
                     title: Text(AppLocalizations.of(context)!.exportSuggestions),
@@ -128,6 +130,27 @@ class SettingsPage extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ChangePasswordListTile extends ConsumerWidget {
+  const ChangePasswordListTile({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListTile(
+      leading: const Icon(Icons.key_outlined),
+      title: Text(AppLocalizations.of(context)!.changePassword),
+      subtitle: Text(AppLocalizations.of(context)!.changePasswordSubtitle),
+      onTap: () async {
+        await showModalBottomSheet(
+          isScrollControlled: true,
+          showDragHandle: true,
+          context: context,
+          builder: (context) => ChangePasswordSheet(),
+        );
+      },
     );
   }
 }

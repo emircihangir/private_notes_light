@@ -6,12 +6,18 @@ class PasswordTextField extends StatefulWidget {
   final String hintText;
   final String? errorText;
   final Function(String value)? onChanged;
+  final bool canBeToggled;
+  final bool autoFocus;
+  final TextInputAction textInputAction;
   const PasswordTextField({
     super.key,
     required this.controller,
     this.hintText = 'Password',
     this.errorText,
     this.onChanged,
+    this.canBeToggled = true,
+    this.autoFocus = false,
+    this.textInputAction = .done,
   });
 
   @override
@@ -27,13 +33,14 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       width: MediaQuery.of(context).size.width * 0.8,
       child: Row(
         children: [
-          SizedBox(width: 48, height: 48),
+          widget.canBeToggled ? SizedBox(width: 48, height: 48) : SizedBox(),
           Expanded(
             child: TextFormField(
+              autofocus: widget.autoFocus,
               onChanged: widget.onChanged,
               controller: widget.controller,
               obscureText: isObscure,
-              textInputAction: TextInputAction.done,
+              textInputAction: widget.textInputAction,
               decoration: InputDecoration(hintText: widget.hintText, errorText: widget.errorText),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -43,10 +50,12 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
               },
             ),
           ),
-          IconButton(
-            onPressed: () => setState(() => isObscure = !isObscure),
-            icon: Icon(isObscure ? Icons.visibility : Icons.visibility_off),
-          ),
+          widget.canBeToggled
+              ? IconButton(
+                  onPressed: () => setState(() => isObscure = !isObscure),
+                  icon: Icon(isObscure ? Icons.visibility : Icons.visibility_off),
+                )
+              : SizedBox(),
         ],
       ),
     );
