@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/snackbars.dart';
-import 'package:private_notes_light/features/backup/application/backup_service.dart';
+import 'package:private_notes_light/features/backup/application/export_service.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class ExportListTile extends ConsumerWidget {
@@ -11,7 +11,7 @@ class ExportListTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     void triggerExport() async {
       try {
-        final exportResult = await ref.read(backupServiceProvider.notifier).export();
+        final exportResult = await ref.watch(exportServiceProvider.future);
         if (exportResult == true && context.mounted) {
           showSuccessSnackbar(context, content: AppLocalizations.of(context)!.exportSuccess);
         }
