@@ -17,13 +17,16 @@ class SignupScreen extends ConsumerStatefulWidget {
 
 class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  final passwordController = TextEditingController();
+  final controller1 = TextEditingController();
+  final controller2 = TextEditingController();
+  String? errorText2;
 
   @override
   void dispose() {
-    passwordController.dispose();
+    controller1.dispose();
+    controller2.dispose();
     super.dispose();
-    log('Disposed the password text field controller.', name: 'INFO');
+    log('Disposed the password text field controllers.', name: 'INFO');
   }
 
   @override
@@ -31,54 +34,72 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 32,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.welcome,
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Text(
-                  AppLocalizations.of(context)!.masterPasswordSetupWarning,
-                  style: Theme.of(context).textTheme.labelMedium,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 32,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.welcome,
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
-              ),
-              Form(
-                key: _formKey,
-                child: PasswordTextField(
-                  controller: passwordController,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Text(
+                    AppLocalizations.of(context)!.masterPasswordSetupWarning,
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ),
+                PasswordTextField(
+                  controller: controller1,
+                  canBeToggled: false,
                   hintText: AppLocalizations.of(context)!.masterPasswordHint,
+                  textInputAction: .next,
                 ),
-              ),
-              FilledButton(
-                onPressed: () async {
-                  final isValid = _formKey.currentState!.validate();
-                  if (isValid == false) return;
+                PasswordTextField(
+                  controller: controller2,
+                  canBeToggled: false,
+                  hintText: AppLocalizations.of(context)!.masterPasswordConfirm,
+                  errorText: errorText2,
+                  onChanged: (value) {
+                    if (errorText2 != null) setState(() => errorText2 = null);
+                  },
+                ),
+                FilledButton(
+                  onPressed: () async {
+                    final isValid = _formKey.currentState!.validate();
+                    if (isValid == false) return;
 
-                  final passwordInput = passwordController.text;
-                  try {
-                    await ref.read(authServiceProvider.notifier).signup(passwordInput);
-                    if (context.mounted) {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => NotesPage()),
-                        (route) => false,
-                      );
+                    if (controller1.text != controller2.text) {
+                      setState(() => errorText2 = AppLocalizations.of(context)!.passwordsDontMatch);
+                      return;
+                    } else if (errorText2 != null) {
+                      setState(() => errorText2 = null);
                     }
-                  } catch (e) {
-                    if (context.mounted) {
-                      showErrorSnackbar(
-                        context,
-                        content: AppLocalizations.of(context)!.signupGenericError,
-                      );
+
+                    final passwordInput = controller2.text;
+                    try {
+                      await ref.read(authServiceProvider.notifier).signup(passwordInput);
+                      if (context.mounted) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => NotesPage()),
+                          (route) => false,
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        showErrorSnackbar(
+                          context,
+                          content: AppLocalizations.of(context)!.signupGenericError,
+                        );
+                      }
                     }
-                  }
-                },
-                child: Text(AppLocalizations.of(context)!.signupButton),
-              ),
-            ],
+                  },
+                  child: Text(AppLocalizations.of(context)!.signupButton),
+                ),
+              ],
+            ),
           ),
         ),
       ),

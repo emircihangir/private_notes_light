@@ -8,10 +8,12 @@
   "@masterPasswordSetupWarning": {
     "description": "Disclaimer text explaining the importance of the master password."
   },
-  "masterPasswordHint": "Master Password",
+  "masterPasswordHint": "Master password",
   "@masterPasswordHint": {
     "description": "Hint text displayed inside the password text field."
   },
+  "masterPasswordConfirm" : "Confirm master password",
+  "@masterPasswordConfirm": {},
   "masterPasswordEmptyError": "Master password input cannot be empty.",
   "@masterPasswordEmptyError": {
     "description": "Error snackbar message shown when the user attempts to sign up with an empty password."

@@ -16,7 +16,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please set up a master password. Be careful, there is no way to unlock your notes without the master password.';
 
   @override
-  String get masterPasswordHint => 'Master Password';
+  String get masterPasswordHint => 'Master password';
+
+  @override
+  String get masterPasswordConfirm => 'Confirm master password';
 
   @override
   String get masterPasswordEmptyError =>
@@ -35,7 +38,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordEmptyError => 'Please enter a password.';
 
   @override
-  String get wrongPasswordError => 'Wrong password. Please try again.';
+  String get wrongPasswordError => 'Wrong password.';
 
   @override
   String get exportSuccess => 'Export successful.';

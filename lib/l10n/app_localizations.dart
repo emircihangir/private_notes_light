@@ -109,8 +109,14 @@ abstract class AppLocalizations {
   /// Hint text displayed inside the password text field.
   ///
   /// In en, this message translates to:
-  /// **'Master Password'**
+  /// **'Master password'**
   String get masterPasswordHint;
+
+  /// No description provided for @masterPasswordConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm master password'**
+  String get masterPasswordConfirm;
 
   /// Error snackbar message shown when the user attempts to sign up with an empty password.
   ///
@@ -145,7 +151,7 @@ abstract class AppLocalizations {
   /// Error message for invalid password submission.
   ///
   /// In en, this message translates to:
-  /// **'Wrong password. Please try again.'**
+  /// **'Wrong password.'**
   String get wrongPasswordError;
 
   /// Snackbar message shown when data export completes successfully.

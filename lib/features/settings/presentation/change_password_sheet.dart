@@ -15,8 +15,8 @@ class ChangePasswordSheet extends ConsumerStatefulWidget {
 }
 
 class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
-  final TextEditingController controller1 = TextEditingController();
-  final TextEditingController controller2 = TextEditingController();
+  final controller1 = TextEditingController();
+  final controller2 = TextEditingController();
   String? errorText2;
   final _formKey = GlobalKey<FormState>();
 
@@ -60,6 +60,9 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
                   canBeToggled: false,
                   hintText: AppLocalizations.of(context)!.newPasswordConfirm,
                   errorText: errorText2,
+                  onChanged: (value) {
+                    if (errorText2 != null) setState(() => errorText2 = null);
+                  },
                 ),
                 FilledButton(
                   onPressed: () async {
@@ -67,9 +70,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
                     if (isValid == false) return;
 
                     if (controller1.text != controller2.text) {
-                      setState(() {
-                        errorText2 = AppLocalizations.of(context)!.passwordsDontMatch;
-                      });
+                      setState(() => errorText2 = AppLocalizations.of(context)!.passwordsDontMatch);
                       return;
                     } else if (errorText2 != null) {
                       setState(() => errorText2 = null);
