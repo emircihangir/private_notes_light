@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:file_picker/file_picker.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
 import 'package:private_notes_light/features/backup/data/backup_repository.dart';
@@ -21,7 +22,13 @@ class ImportController extends _$ImportController {
   ImportControllerState? build() => null;
 
   Future<void> validateImportFile(PlatformFile importFile) async {
-    final importString = await importFile.xFile.readAsString();
+    late final String importString;
+    try {
+      importString = await importFile.xFile.readAsString();
+    } catch (e) {
+      state = ImportControllerState.showError(errorKind: ImportErrorKind.invalidFileType);
+      return;
+    }
 
     // * Try to convert String to Map<String, dynamic>.
     late final Map<String, dynamic> importJson;
@@ -33,13 +40,20 @@ class ImportController extends _$ImportController {
     }
 
     // * Try to convert Map<String, dynamic> to BackupData.
+    late final BackupData backupData;
     try {
-      final backupData = BackupData.fromJson(importJson);
-      state = ImportControllerState.askForSettings(backupData);
-      return;
+      backupData = BackupData.fromJson(importJson);
     } catch (e) {
       state = ImportControllerState.showError(errorKind: ImportErrorKind.fileIsCorrupt);
       return;
+    }
+
+    final isDecryptable = _keyCanDecryptNotes(backupData, ref.read(masterKeyProvider)!);
+
+    if (isDecryptable) {
+      askForSettings(backupData);
+    } else {
+      state = ImportControllerState.showPasswordDialog(backupData);
     }
   }
 
@@ -56,7 +70,7 @@ class ImportController extends _$ImportController {
 
       return true;
     } catch (e) {
-      return true;
+      return false;
     }
   }
 
@@ -111,6 +125,8 @@ class ImportController extends _$ImportController {
       updatedNotesList.add(updateNote);
     }
 
+    log('Performed key rotation.', name: 'INFO');
+
     return backupData.copyWith(notesData: updatedNotesList);
   }
 
@@ -126,15 +142,41 @@ class ImportController extends _$ImportController {
     }
   }
 
-  Future<void> submitPassword(BackupData backupData, String password) async {
+  enc.Key? decryptBackupCredentials({required BackupData backupData, required enc.Key key}) {
+    final encryptionService = ref.read(encryptionServiceProvider.notifier);
+    final backupCredentials = backupData.credentialsData;
+
+    try {
+      final decryptedString = encryptionService.decryptText(
+        encryptedText: backupCredentials.encryptedMasterKey,
+        key: key,
+        iv: enc.IV.fromBase64(backupCredentials.iv),
+      );
+      return enc.Key.fromBase64(decryptedString);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  void askForSettings(BackupData backupData) =>
+      state = ImportControllerState.askForSettings(backupData);
+
+  Future<BackupData?> submitPassword(BackupData backupData, String password) async {
     final enc.Key derivedKey = await ref
         .read(encryptionServiceProvider.notifier)
         .deriveKeyFromPassword(password, backupData.credentialsData.salt);
 
-    if (_keyCanDecryptNotes(backupData, derivedKey)) {
-      _performKeyRotation(backupData: backupData, backupsMasterKey: derivedKey);
+    final decryptedBackupKey = decryptBackupCredentials(backupData: backupData, key: derivedKey);
+
+    if (decryptedBackupKey != null) {
+      final rotatedBackupData = await _performKeyRotation(
+        backupData: backupData,
+        backupsMasterKey: decryptedBackupKey,
+      );
+      return rotatedBackupData;
     } else {
-      state = ImportControllerState.showPasswordDialog();
+      log('User entered the wrong password.', name: 'INFO');
+      return null;
     }
   }
 }

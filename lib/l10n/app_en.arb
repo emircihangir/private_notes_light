@@ -255,5 +255,11 @@
   "couldNotParseJson" : "Could not parse the selected file. Make sure the file follows JSON syntax.",
   "@couldNotParseJson": {},
   "fileIsCorrupt" : "File is corrupt. Failed to retrieve data.",
-  "@fileIsCorrupt": {}
+  "@fileIsCorrupt": {},
+  "importPasswordDialogTitle" : "Enter Password",
+  "@importPasswordDialogTitle": {},
+  "importPasswordDialogContent" : "The import file could not be decrypted with the current master key. Please enter a password to decrypt the import file.",
+  "@importPasswordDialogContent": {},
+  "invalidFileType" : "Invalid file type. Please choose a JSON file.",
+  "@invalidFileType": {}
 }

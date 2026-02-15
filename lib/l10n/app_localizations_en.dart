@@ -217,4 +217,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fileIsCorrupt => 'File is corrupt. Failed to retrieve data.';
+
+  @override
+  String get importPasswordDialogTitle => 'Enter Password';
+
+  @override
+  String get importPasswordDialogContent =>
+      'The import file could not be decrypted with the current master key. Please enter a password to decrypt the import file.';
+
+  @override
+  String get invalidFileType => 'Invalid file type. Please choose a JSON file.';
 }

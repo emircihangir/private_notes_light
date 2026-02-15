@@ -22,6 +22,8 @@ class NotesPage extends ConsumerStatefulWidget {
 }
 
 class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserver {
+  bool logoutOnResume = false;
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +52,6 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
     }
   }
 
-  bool logoutOnResume = false;
   @override
   Widget build(BuildContext context) {
     final filteredNotes = ref.watch(filteredNotesListProvider);

@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/snackbars.dart';
 import 'package:private_notes_light/features/backup/application/import_controller.dart';
 import 'package:private_notes_light/features/backup/domain/import_controller_state.dart';
+import 'package:private_notes_light/features/backup/presentation/import_password_dialog.dart';
 import 'package:private_notes_light/features/backup/presentation/import_settings_dialog.dart';
 import 'package:private_notes_light/features/backup/presentation/overwrite_warning_dialog.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
@@ -30,6 +33,9 @@ class ImportListTile extends ConsumerWidget {
         },
         showError: (value) {
           switch (value.errorKind) {
+            case ImportErrorKind.invalidFileType:
+              showErrorSnackbar(context, content: AppLocalizations.of(context)!.invalidFileType);
+
             case ImportErrorKind.fileIsCorrupt:
               showErrorSnackbar(context, content: AppLocalizations.of(context)!.fileIsCorrupt);
 
@@ -41,8 +47,14 @@ class ImportListTile extends ConsumerWidget {
           showSuccessSnackbar(context, content: AppLocalizations.of(context)!.importSuccess);
           Navigator.of(context).pop();
         },
-        showPasswordDialog: (value) {},
+        showPasswordDialog: (value) async {
+          await showDialog(
+            context: context,
+            builder: (context) => ImportPasswordDialog(value.backupData),
+          );
+        },
         askForSettings: (value) async {
+          log('Opening the settings dialog');
           final bool? alsoImportSettings = await showDialog<bool>(
             context: context,
             builder: (context) => const ImportSettingsDialog(),

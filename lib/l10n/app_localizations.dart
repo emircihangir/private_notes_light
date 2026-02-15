@@ -501,6 +501,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'File is corrupt. Failed to retrieve data.'**
   String get fileIsCorrupt;
+
+  /// No description provided for @importPasswordDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Password'**
+  String get importPasswordDialogTitle;
+
+  /// No description provided for @importPasswordDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'The import file could not be decrypted with the current master key. Please enter a password to decrypt the import file.'**
+  String get importPasswordDialogContent;
+
+  /// No description provided for @invalidFileType.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid file type. Please choose a JSON file.'**
+  String get invalidFileType;
 }
 
 class _AppLocalizationsDelegate
