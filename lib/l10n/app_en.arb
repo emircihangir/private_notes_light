@@ -32,7 +32,7 @@
   "@passwordEmptyError": {
     "description": "Error message when password field is empty during login."
   },
-  "wrongPasswordError": "Wrong password. Please try again.",
+  "wrongPasswordError": "Wrong password.",
   "@wrongPasswordError": {
     "description": "Error message for invalid password submission."
   },
