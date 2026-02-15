@@ -30,47 +30,34 @@ class EncryptionService extends _$EncryptionService {
   }
 
   ({String encryptedText, String encryptionIV}) encryptWithMasterKey(String text, {enc.IV? iv}) {
-    final keyString = ref.read(masterKeyProvider);
-    final key = enc.Key.fromBase64(keyString!);
+    final key = ref.read(masterKeyProvider)!;
     final encrypter = enc.Encrypter(enc.AES(key));
     final enc.IV ivValue = iv ?? enc.IV.fromLength(16);
     final encrypted = encrypter.encrypt(text, iv: ivValue);
     return (encryptedText: encrypted.base64, encryptionIV: ivValue.base64);
   }
 
-  ({String encryptedText, String encryptionIV}) encryptText(
-    String text,
-    String keyString, {
+  ({String encryptedText, String encryptionIV}) encryptText({
+    required String text,
+    required enc.Key key,
     enc.IV? iv,
   }) {
-    final key = enc.Key.fromBase64(keyString);
     final encrypter = enc.Encrypter(enc.AES(key));
     final enc.IV ivValue = iv ?? enc.IV.fromLength(16);
     final encrypted = encrypter.encrypt(text, iv: ivValue);
     return (encryptedText: encrypted.base64, encryptionIV: ivValue.base64);
   }
 
-  String decryptText({
-    required String encryptedText,
-    required String keyString,
-    required String ivString,
-  }) {
-    final encrypter = enc.Encrypter(enc.AES(enc.Key.fromBase64(keyString)));
-    return encrypter.decrypt(
-      enc.Encrypted.fromBase64(encryptedText),
-      iv: enc.IV.fromBase64(ivString),
-    );
+  String decryptText({required String encryptedText, required enc.Key key, required enc.IV iv}) {
+    final encrypter = enc.Encrypter(enc.AES(key));
+    return encrypter.decrypt(enc.Encrypted.fromBase64(encryptedText), iv: iv);
   }
 
-  String decryptWithMasterKey(String encryptedText, String ivString) {
-    final keyString = ref.read(masterKeyProvider);
-    final key = enc.Key.fromBase64(keyString!);
+  String decryptWithMasterKey(String encryptedText, enc.IV iv) {
+    final key = ref.read(masterKeyProvider)!;
 
     final encrypter = enc.Encrypter(enc.AES(key));
-    return encrypter.decrypt(
-      enc.Encrypted.fromBase64(encryptedText),
-      iv: enc.IV.fromBase64(ivString),
-    );
+    return encrypter.decrypt(enc.Encrypted.fromBase64(encryptedText), iv: iv);
   }
 }
 

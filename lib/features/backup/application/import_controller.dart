@@ -50,8 +50,8 @@ class ImportController extends _$ImportController {
     try {
       encryptionService.decryptText(
         encryptedText: firstNote.content,
-        keyString: key.base64,
-        ivString: firstNote.iv,
+        key: key,
+        iv: enc.IV.fromBase64(firstNote.iv),
       );
 
       return true;
@@ -86,7 +86,7 @@ class ImportController extends _$ImportController {
     required enc.Key backupsMasterKey,
   }) async {
     final encryptionService = ref.watch(encryptionServiceProvider.notifier);
-    final currentMasterKey = enc.Key.fromBase64(ref.read(masterKeyProvider)!);
+    final currentMasterKey = ref.read(masterKeyProvider)!;
 
     final currentNotesList = List<NoteDto>.from(backupData.notesData);
     List<NoteDto> updatedNotesList = [];
@@ -94,12 +94,15 @@ class ImportController extends _$ImportController {
       // * Decrypt with backup's master key.
       final decryptedContent = encryptionService.decryptText(
         encryptedText: currentNote.content,
-        keyString: backupsMasterKey.base64,
-        ivString: currentNote.iv,
+        key: backupsMasterKey,
+        iv: enc.IV.fromBase64(currentNote.iv),
       );
 
       // * Encrypt with the current master key.
-      final reEncrypted = encryptionService.encryptText(decryptedContent, currentMasterKey.base64);
+      final reEncrypted = encryptionService.encryptText(
+        text: decryptedContent,
+        key: currentMasterKey,
+      );
       final updateNote = currentNote.copyWith(
         content: reEncrypted.encryptedText,
         iv: reEncrypted.encryptionIV,

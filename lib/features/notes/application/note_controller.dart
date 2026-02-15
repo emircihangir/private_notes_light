@@ -5,6 +5,7 @@ import 'package:private_notes_light/features/notes/domain/note.dart';
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 
 part 'note_controller.g.dart';
 
@@ -71,7 +72,7 @@ class NoteController extends _$NoteController {
       title: dto.title,
       content: ref
           .read(encryptionServiceProvider.notifier)
-          .decryptWithMasterKey(dto.content, dto.iv),
+          .decryptWithMasterKey(dto.content, enc.IV.fromBase64(dto.iv)),
       dateCreated: DateTime.parse(dto.dateCreated),
     );
   }

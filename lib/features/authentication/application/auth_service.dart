@@ -27,7 +27,7 @@ class AuthService extends _$AuthService {
     // * Encrypt the generated master key.
     var encrypted = ref
         .read(encryptionServiceProvider.notifier)
-        .encryptText(masterKey.base64, userKey.base64);
+        .encryptText(text: masterKey.base64, key: userKey);
     final encryptedMasterKeyString = encrypted.encryptedText;
     final encryptionIVstring = encrypted.encryptionIV;
 
@@ -42,7 +42,7 @@ class AuthService extends _$AuthService {
           ),
         );
 
-    ref.read(masterKeyProvider.notifier).set(masterKey.base64);
+    ref.read(masterKeyProvider.notifier).set(masterKey);
   }
 
   Future<void> changeMasterPassword(String newMasterPassword) async {
@@ -61,7 +61,7 @@ class AuthService extends _$AuthService {
     // * Encrypt currentMasterKey with newUserKey.
     var encrypted = ref
         .read(encryptionServiceProvider.notifier)
-        .encryptText(currentMasterKey!, newUserKey.base64);
+        .encryptText(text: currentMasterKey!.base64, key: newUserKey);
     final encryptedMasterKeyString = encrypted.encryptedText;
     final newIVstring = encrypted.encryptionIV;
 
@@ -86,15 +86,15 @@ class AuthService extends _$AuthService {
         .deriveKeyFromPassword(passwordInput, credentialsData.salt);
 
     try {
-      final masterKey = ref
+      final masterKeyString = ref
           .read(encryptionServiceProvider.notifier)
           .decryptText(
             encryptedText: credentialsData.encryptedMasterKey,
-            keyString: derivedKey.base64,
-            ivString: credentialsData.iv,
+            key: derivedKey,
+            iv: enc.IV.fromBase64(credentialsData.iv),
           );
 
-      ref.read(masterKeyProvider.notifier).set(masterKey);
+      ref.read(masterKeyProvider.notifier).set(enc.Key.fromBase64(masterKeyString));
       return true;
     } catch (e) {
       return false;
