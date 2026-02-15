@@ -15,12 +15,12 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsAsync = ref.watch(settingsControllerProvider);
-    final themeMode = settingsAsync.valueOrNull?.theme ?? .system;
+    final themeMode = settingsAsync.valueOrNull?.theme ?? ThemeMode.system;
 
     return MaterialApp(
       themeMode: themeMode,
-      theme: appTheme(.light),
-      darkTheme: appTheme(.dark),
+      theme: appTheme(Brightness.light),
+      darkTheme: appTheme(Brightness.dark),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: AuthGuard(),

@@ -17,7 +17,7 @@ class PasswordTextField extends StatefulWidget {
     this.onChanged,
     this.canBeToggled = true,
     this.autoFocus = false,
-    this.textInputAction = .done,
+    this.textInputAction = TextInputAction.done,
   });
 
   @override

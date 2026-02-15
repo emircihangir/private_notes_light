@@ -249,5 +249,9 @@
   "passwordsDontMatch" : "Passwords do not match.",
   "@passwordsDontMatch": {},
   "changedPasswordSuccessfully" : "Password change successful.",
-  "@changedPasswordSuccessfully": {}
+  "@changedPasswordSuccessfully": {},
+  "couldNotParseJson" : "Could not parse the selected file. Make sure the file follows JSON syntax.",
+  "@couldNotParseJson": {},
+  "fileIsCorrupt" : "File is corrupt. Failed to retrieve data.",
+  "@fileIsCorrupt": {}
 }

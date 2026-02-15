@@ -50,7 +50,11 @@ class EncryptionService extends _$EncryptionService {
     return (encryptedText: encrypted.base64, encryptionIV: ivValue.base64);
   }
 
-  String decryptText(String encryptedText, String keyString, String ivString) {
+  String decryptText({
+    required String encryptedText,
+    required String keyString,
+    required String ivString,
+  }) {
     final encrypter = enc.Encrypter(enc.AES(enc.Key.fromBase64(keyString)));
     return encrypter.decrypt(
       enc.Encrypted.fromBase64(encryptedText),

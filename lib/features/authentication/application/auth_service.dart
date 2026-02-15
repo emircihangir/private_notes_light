@@ -88,7 +88,11 @@ class AuthService extends _$AuthService {
     try {
       final masterKey = ref
           .read(encryptionServiceProvider.notifier)
-          .decryptText(credentialsData.encryptedMasterKey, derivedKey.base64, credentialsData.iv);
+          .decryptText(
+            encryptedText: credentialsData.encryptedMasterKey,
+            keyString: derivedKey.base64,
+            ivString: credentialsData.iv,
+          );
 
       ref.read(masterKeyProvider.notifier).set(masterKey);
       return true;

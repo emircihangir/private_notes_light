@@ -483,6 +483,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password change successful.'**
   String get changedPasswordSuccessfully;
+
+  /// No description provided for @couldNotParseJson.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not parse the selected file. Make sure the file follows JSON syntax.'**
+  String get couldNotParseJson;
+
+  /// No description provided for @fileIsCorrupt.
+  ///
+  /// In en, this message translates to:
+  /// **'File is corrupt. Failed to retrieve data.'**
+  String get fileIsCorrupt;
 }
 
 class _AppLocalizationsDelegate

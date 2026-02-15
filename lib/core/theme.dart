@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 ThemeData appTheme(Brightness brightness) {
-  final ColorScheme colorScheme = .fromSeed(seedColor: Colors.blue, brightness: brightness);
+  final ColorScheme colorScheme = ColorScheme.fromSeed(
+    seedColor: Colors.blue,
+    brightness: brightness,
+  );
 
   return ThemeData(
     colorScheme: colorScheme,

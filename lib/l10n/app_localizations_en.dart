@@ -207,4 +207,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changedPasswordSuccessfully => 'Password change successful.';
+
+  @override
+  String get couldNotParseJson =>
+      'Could not parse the selected file. Make sure the file follows JSON syntax.';
+
+  @override
+  String get fileIsCorrupt => 'File is corrupt. Failed to retrieve data.';
 }
