@@ -47,3 +47,4 @@ repomix-output.xml
 sample_export.json
 
 *.g.dart
+*.freezed.dart
