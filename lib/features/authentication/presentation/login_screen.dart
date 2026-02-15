@@ -44,12 +44,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   controller: passwordController,
                   errorText: errorText,
                   onChanged: (value) {
-                    if (errorText != null) {
-                      setState(() {
-                        errorText = null;
-                      });
-                    }
-                    if (value.isNotEmpty) _formKey.currentState!.validate();
+                    if (errorText != null) setState(() => errorText = null);
                   },
                 ),
               ),
@@ -66,7 +61,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   if (!context.mounted) return;
 
                   if (loggedIn) {
-                    passwordController.clear();
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => NotesPage()),
                       (route) => false,

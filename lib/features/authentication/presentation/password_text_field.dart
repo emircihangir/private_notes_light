@@ -32,10 +32,12 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           widget.canBeToggled ? SizedBox(width: 48, height: 48) : SizedBox(),
           Expanded(
             child: TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               autofocus: widget.autoFocus,
               onChanged: widget.onChanged,
               controller: widget.controller,

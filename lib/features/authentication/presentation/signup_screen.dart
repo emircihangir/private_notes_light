@@ -51,9 +51,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 child: PasswordTextField(
                   controller: passwordController,
                   hintText: AppLocalizations.of(context)!.masterPasswordHint,
-                  onChanged: (value) {
-                    if (value.isNotEmpty) _formKey.currentState!.validate();
-                  },
                 ),
               ),
               FilledButton(
@@ -65,7 +62,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   try {
                     await ref.read(authServiceProvider.notifier).signup(passwordInput);
                     if (context.mounted) {
-                      passwordController.clear();
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => NotesPage()),
                         (route) => false,
