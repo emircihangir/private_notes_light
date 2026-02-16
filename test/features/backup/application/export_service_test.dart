@@ -26,21 +26,23 @@ void main() {
   late MockAuthRepository mockAuthRepository;
   late MockNoteRepository mockNoteRepository;
   late MockSettingsRepository mockSettingsRepository;
-
-  ProviderContainer createContainer() => ProviderContainer(
-    overrides: [
-      backupRepositoryProvider.overrideWith((ref) async => mockBackupRepository),
-      authRepositoryProvider.overrideWith((_) => mockAuthRepository),
-      noteRepositoryProvider.overrideWith((_) => mockNoteRepository),
-      settingsRepositoryProvider.overrideWith((ref) async => mockSettingsRepository),
-    ],
-  );
+  late ProviderContainer container;
 
   setUp(() {
     mockBackupRepository = MockBackupRepository();
     mockAuthRepository = MockAuthRepository();
     mockNoteRepository = MockNoteRepository();
     mockSettingsRepository = MockSettingsRepository();
+
+    container = ProviderContainer(
+      overrides: [
+        backupRepositoryProvider.overrideWith((ref) async => mockBackupRepository),
+        authRepositoryProvider.overrideWith((_) => mockAuthRepository),
+        noteRepositoryProvider.overrideWith((_) => mockNoteRepository),
+        settingsRepositoryProvider.overrideWith((ref) async => mockSettingsRepository),
+      ],
+    );
+    addTearDown(container.dispose);
 
     final dummyCredentials = CredentialsData(
       salt: 'salt',
@@ -64,8 +66,6 @@ void main() {
     test('both return true', () async {
       // Setup
       when(mockBackupRepository.export(any)).thenAnswer((_) async => true);
-      final container = createContainer();
-      addTearDown(container.dispose);
 
       // Act
       final result = await container.read(exportServiceProvider.future);
@@ -77,8 +77,6 @@ void main() {
     test('both return false', () async {
       // Setup
       when(mockBackupRepository.export(any)).thenAnswer((_) async => false);
-      final container = createContainer();
-      addTearDown(container.dispose);
 
       final List<bool> filePickerRunningValueHistory = [];
       container.listen(filePickerRunningProvider, (previous, next) {
@@ -97,8 +95,6 @@ void main() {
   test('exportService correctly modifies filePickerRunningProvider', () async {
     // Setup
     when(mockBackupRepository.export(any)).thenAnswer((_) async => true);
-    final container = createContainer();
-    addTearDown(container.dispose);
     final List<bool> filePickerRunningValueHistory = [];
     container.listen(filePickerRunningProvider, (previous, next) {
       filePickerRunningValueHistory.add(next);
