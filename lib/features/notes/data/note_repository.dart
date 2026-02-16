@@ -6,19 +6,9 @@ import 'package:sqflite/sqflite.dart';
 
 part 'note_repository.g.dart';
 
-abstract class NoteRepository {
-  Future<void> addNote(NoteDto dto);
-  Future<void> importNotes(List<NoteDto> noteDTOs);
-  Future<void> removeNote(String noteID);
-  Future<List<NoteDto>> getNotes();
-  Future<NoteDto> getNote(String noteID);
-  Future<Database> get database;
-}
-
-class NoteRepositoryImpl implements NoteRepository {
+class NoteRepository {
   Database? _database;
 
-  @override
   Future<Database> get database async {
     if (_database != null) return _database!;
 
@@ -45,13 +35,11 @@ class NoteRepositoryImpl implements NoteRepository {
     ''');
   }
 
-  @override
   Future<void> addNote(NoteDto dto) async {
     final db = await database;
     await db.insert('notes', dto.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  @override
   Future<void> importNotes(List<NoteDto> noteDTOs) async {
     final db = await database;
 
@@ -65,20 +53,17 @@ class NoteRepositoryImpl implements NoteRepository {
     await batch.commit(noResult: true);
   }
 
-  @override
   Future<List<NoteDto>> getNotes() async {
     final db = await database;
     final notes = await db.query('notes', orderBy: 'dateCreated DESC');
     return notes.map((e) => NoteDto.fromJson(e)).toList();
   }
 
-  @override
   Future<void> removeNote(String noteID) async {
     final db = await database;
     await db.delete('notes', where: 'id = ?', whereArgs: [noteID]);
   }
 
-  @override
   Future<NoteDto> getNote(String noteID) async {
     final db = await database;
     final result = await db.query('notes', where: 'id = ?', whereArgs: [noteID]);
@@ -88,4 +73,4 @@ class NoteRepositoryImpl implements NoteRepository {
 }
 
 @riverpod
-NoteRepositoryImpl noteRepository(Ref ref) => NoteRepositoryImpl();
+NoteRepository noteRepository(Ref ref) => NoteRepository();

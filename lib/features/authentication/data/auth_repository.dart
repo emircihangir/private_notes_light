@@ -5,14 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_repository.g.dart';
 
-abstract class AuthRepository {
-  Future<bool> get userSignedUp;
-  Future<void> saveCredentials(CredentialsData credentialsData);
-  Future<CredentialsData> readCredentials();
-}
-
-class AuthRepositoryImpl implements AuthRepository {
-  @override
+class AuthRepository {
   Future<void> saveCredentials(CredentialsData credentialsData) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(CredentialsData.propertyNames.salt, credentialsData.salt);
@@ -23,13 +16,11 @@ class AuthRepositoryImpl implements AuthRepository {
     );
   }
 
-  @override
   Future<bool> get userSignedUp async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.containsKey(CredentialsData.propertyNames.encryptedMasterKey);
   }
 
-  @override
   Future<CredentialsData> readCredentials() async {
     final prefs = await SharedPreferences.getInstance();
     return CredentialsData(
@@ -41,4 +32,4 @@ class AuthRepositoryImpl implements AuthRepository {
 }
 
 @riverpod
-AuthRepositoryImpl authRepository(Ref ref) => AuthRepositoryImpl();
+AuthRepository authRepository(Ref ref) => AuthRepository();

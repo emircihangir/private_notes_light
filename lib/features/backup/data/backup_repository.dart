@@ -12,19 +12,13 @@ import 'package:path/path.dart' as p;
 
 part 'backup_repository.g.dart';
 
-abstract class BackupRepository {
-  Future<bool?> export(Map<String, dynamic> exportDataMap);
-  Future<void> import(BackupData importData, bool alsoImportSettings);
-}
-
-class BackupRepositoryImpl implements BackupRepository {
+class BackupRepository {
   final DateFormat dateFormat = DateFormat('yyyy_MM_dd_HH_mm_ss');
   final SettingsRepository settingsRepo;
   final NoteRepository noteRepo;
 
-  BackupRepositoryImpl({required this.settingsRepo, required this.noteRepo});
+  BackupRepository({required this.settingsRepo, required this.noteRepo});
 
-  @override
   Future<bool?> export(Map<String, dynamic> exportDataMap) async {
     final exportJsonString = jsonEncode(exportDataMap);
 
@@ -44,7 +38,6 @@ class BackupRepositoryImpl implements BackupRepository {
     return pickerResult != null;
   }
 
-  @override
   Future<void> import(BackupData importData, bool alsoImportSettings) async {
     await noteRepo.importNotes(importData.notesData);
     if (alsoImportSettings) await settingsRepo.importSettings(importData.settingsData);
@@ -56,5 +49,5 @@ Future<BackupRepository> backupRepository(Ref ref) async {
   final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
   final noteRepo = ref.watch(noteRepositoryProvider);
 
-  return BackupRepositoryImpl(settingsRepo: settingsRepo, noteRepo: noteRepo);
+  return BackupRepository(settingsRepo: settingsRepo, noteRepo: noteRepo);
 }
