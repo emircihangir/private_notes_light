@@ -76,9 +76,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
                       setState(() => errorText2 = null);
                     }
 
-                    await ref
-                        .read(authServiceProvider.notifier)
-                        .changeMasterPassword(controller1.text);
+                    await ref.read(authServiceProvider).changeMasterPassword(controller1.text);
 
                     if (context.mounted) {
                       showSuccessSnackbar(

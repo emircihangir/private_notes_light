@@ -38,7 +38,7 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
     if ((state == AppLifecycleState.inactive) && !filePickerRunning) {
       log('The app lost focus. Logging out.', name: 'INFO');
       logoutOnResume = true;
-      ref.read(authServiceProvider.notifier).logout();
+      ref.read(authServiceProvider).logout();
     }
 
     if (state == AppLifecycleState.resumed && logoutOnResume) {
@@ -63,7 +63,7 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            ref.read(authServiceProvider.notifier).logout();
+            ref.read(authServiceProvider).logout();
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const LoginScreen()),
               (route) => false,

@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/authentication/domain/credentials_data.dart';
 import 'package:private_notes_light/features/encryption/application/encryption_service.dart';
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
@@ -8,25 +9,24 @@ import 'package:encrypt/encrypt.dart' as enc;
 
 part 'auth_service.g.dart';
 
-@riverpod
-class AuthService extends _$AuthService {
-  @override
-  FutureOr<void> build() {}
+class AuthService {
+  final Ref ref;
+  AuthService(this.ref);
 
   Future<void> signup(String masterPassword) async {
     // * Derive key from the password input.
-    final salt = ref.read(encryptionServiceProvider.notifier).generateSalt();
+    final salt = ref.read(encryptionServiceProvider).generateSalt();
     final userKey = await ref
-        .read(encryptionServiceProvider.notifier)
+        .read(encryptionServiceProvider)
         .deriveKeyFromPassword(masterPassword, salt);
 
     // * Generate random master key.
-    final masterKeyBytes = ref.read(encryptionServiceProvider.notifier).generateRandomBytes(32);
+    final masterKeyBytes = ref.read(encryptionServiceProvider).generateRandomBytes(32);
     final masterKey = enc.Key(Uint8List.fromList(masterKeyBytes));
 
     // * Encrypt the generated master key.
     var encrypted = ref
-        .read(encryptionServiceProvider.notifier)
+        .read(encryptionServiceProvider)
         .encryptText(text: masterKey.base64, key: userKey);
     final encryptedMasterKeyString = encrypted.encryptedText;
     final encryptionIVstring = encrypted.encryptionIV;
@@ -53,14 +53,14 @@ class AuthService extends _$AuthService {
     );
 
     // * Derive newUserKey from password input and newSalt.
-    final newSalt = ref.read(encryptionServiceProvider.notifier).generateSalt();
+    final newSalt = ref.read(encryptionServiceProvider).generateSalt();
     final newUserKey = await ref
-        .read(encryptionServiceProvider.notifier)
+        .read(encryptionServiceProvider)
         .deriveKeyFromPassword(newMasterPassword, newSalt);
 
     // * Encrypt currentMasterKey with newUserKey.
     var encrypted = ref
-        .read(encryptionServiceProvider.notifier)
+        .read(encryptionServiceProvider)
         .encryptText(text: currentMasterKey!.base64, key: newUserKey);
     final encryptedMasterKeyString = encrypted.encryptedText;
     final newIVstring = encrypted.encryptionIV;
@@ -82,12 +82,12 @@ class AuthService extends _$AuthService {
     final CredentialsData credentialsData = await authRepository.readCredentials();
 
     final derivedKey = await ref
-        .read(encryptionServiceProvider.notifier)
+        .read(encryptionServiceProvider)
         .deriveKeyFromPassword(passwordInput, credentialsData.salt);
 
     try {
       final masterKeyString = ref
-          .read(encryptionServiceProvider.notifier)
+          .read(encryptionServiceProvider)
           .decryptText(
             encryptedText: credentialsData.encryptedMasterKey,
             key: derivedKey,
@@ -105,3 +105,6 @@ class AuthService extends _$AuthService {
     ref.read(masterKeyProvider.notifier).clear();
   }
 }
+
+@riverpod
+AuthService authService(Ref ref) => AuthService(ref);

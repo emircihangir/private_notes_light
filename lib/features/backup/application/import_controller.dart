@@ -59,7 +59,7 @@ class ImportController extends _$ImportController {
 
   bool _keyCanDecryptNotes(BackupData backupData, enc.Key key) {
     // * Try to decrypt first note's content with key.
-    final encryptionService = ref.watch(encryptionServiceProvider.notifier);
+    final encryptionService = ref.watch(encryptionServiceProvider);
     final NoteDto firstNote = backupData.notesData.first;
     try {
       encryptionService.decryptText(
@@ -99,7 +99,7 @@ class ImportController extends _$ImportController {
     required BackupData backupData,
     required enc.Key backupsMasterKey,
   }) async {
-    final encryptionService = ref.watch(encryptionServiceProvider.notifier);
+    final encryptionService = ref.watch(encryptionServiceProvider);
     final currentMasterKey = ref.read(masterKeyProvider)!;
 
     final currentNotesList = List<NoteDto>.from(backupData.notesData);
@@ -143,7 +143,7 @@ class ImportController extends _$ImportController {
   }
 
   enc.Key? decryptBackupCredentials({required BackupData backupData, required enc.Key key}) {
-    final encryptionService = ref.read(encryptionServiceProvider.notifier);
+    final encryptionService = ref.read(encryptionServiceProvider);
     final backupCredentials = backupData.credentialsData;
 
     try {
@@ -163,7 +163,7 @@ class ImportController extends _$ImportController {
 
   Future<BackupData?> submitPassword(BackupData backupData, String password) async {
     final enc.Key derivedKey = await ref
-        .read(encryptionServiceProvider.notifier)
+        .read(encryptionServiceProvider)
         .deriveKeyFromPassword(password, backupData.credentialsData.salt);
 
     final decryptedBackupKey = decryptBackupCredentials(backupData: backupData, key: derivedKey);

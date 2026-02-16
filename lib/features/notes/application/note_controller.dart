@@ -32,7 +32,7 @@ class NoteController extends _$NoteController {
     required String content,
     DateTime? date,
   }) async {
-    final encrypted = ref.read(encryptionServiceProvider.notifier).encryptWithMasterKey(content);
+    final encrypted = ref.read(encryptionServiceProvider).encryptWithMasterKey(content);
 
     Note encryptedNote = Note(
       id: id ?? Uuid().v4(),
@@ -71,7 +71,7 @@ class NoteController extends _$NoteController {
       id: dto.id,
       title: dto.title,
       content: ref
-          .read(encryptionServiceProvider.notifier)
+          .read(encryptionServiceProvider)
           .decryptWithMasterKey(dto.content, enc.IV.fromBase64(dto.iv)),
       dateCreated: DateTime.parse(dto.dateCreated),
     );

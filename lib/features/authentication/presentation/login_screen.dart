@@ -54,9 +54,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   if (isValid == false) return;
 
                   final passwordInput = passwordController.text;
-                  final loggedIn = await ref
-                      .read(authServiceProvider.notifier)
-                      .login(passwordInput);
+                  final loggedIn = await ref.read(authServiceProvider).login(passwordInput);
 
                   if (!context.mounted) return;
 

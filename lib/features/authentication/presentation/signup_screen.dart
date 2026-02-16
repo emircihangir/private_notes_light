@@ -80,7 +80,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
                     final passwordInput = controller2.text;
                     try {
-                      await ref.read(authServiceProvider.notifier).signup(passwordInput);
+                      await ref.read(authServiceProvider).signup(passwordInput);
                       if (context.mounted) {
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(builder: (context) => NotesPage()),

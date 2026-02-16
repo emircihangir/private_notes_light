@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 
 part 'encryption_service.g.dart';
 
-@riverpod
-class EncryptionService extends _$EncryptionService {
-  @override
-  void build() {}
+class EncryptionService {
+  final Ref ref;
+  EncryptionService(this.ref);
 
   String generateSalt() => base64Url.encode(generateRandomBytes(16));
 
@@ -80,3 +80,6 @@ Future<enc.Key> deriveKeyBackground(Map<String, Uint8List> args) async {
 
   return enc.Key(Uint8List.fromList(newSecretKeyBytes));
 }
+
+@riverpod
+EncryptionService encryptionService(Ref ref) => EncryptionService(ref);
