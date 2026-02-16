@@ -48,3 +48,4 @@ sample_export.json
 
 *.g.dart
 *.freezed.dart
+*.mocks.dart
