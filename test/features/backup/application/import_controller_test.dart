@@ -117,5 +117,202 @@ void main() {
       // Verify
       expect(valueHistory, [true, false]);
     });
+
+    group('validateImportFile works', () {
+      test('Disallows non-JSON files.', () async {
+        // Set up
+        final tempDir = Directory.systemTemp;
+        final dummyFile = File('${tempDir.path}/dummy.png');
+        final invalidBytes = [0xFF, 0xFE, 0xFD];
+        await dummyFile.writeAsBytes(invalidBytes);
+        PlatformFile dummyPlatformFile = PlatformFile(
+          name: 'dummy.png',
+          size: await dummyFile.length(),
+          bytes: await dummyFile.readAsBytes(),
+          path: dummyFile.path,
+        );
+        container.listen(importControllerProvider, (previous, next) {});
+
+        // Act
+        await container
+            .read(importControllerProvider.notifier)
+            .validateImportFile(dummyPlatformFile);
+
+        // Verify
+        final controllerState = container.read(importControllerProvider);
+        expect(
+          controllerState?.maybeWhen(showError: (errorKind) => errorKind, orElse: () => null),
+          ImportErrorKind.invalidFileType,
+        );
+      });
+
+      test('Detects invalid JSON syntax.', () async {
+        // Set up
+        final tempDir = Directory.systemTemp;
+        final dummyFile = File('${tempDir.path}/dummyFile.json');
+        final invalidJsonContent = "{someinvalidKey : someInvalidValue}";
+        await dummyFile.writeAsString(invalidJsonContent);
+        PlatformFile dummyPlatformFile = PlatformFile(
+          name: 'dummyFile.json',
+          size: await dummyFile.length(),
+          bytes: await dummyFile.readAsBytes(),
+          path: dummyFile.path,
+        );
+        container.listen(importControllerProvider, (previous, next) {});
+
+        // Act
+        await container
+            .read(importControllerProvider.notifier)
+            .validateImportFile(dummyPlatformFile);
+
+        // Verify
+        expect(
+          container
+              .read(importControllerProvider)
+              ?.maybeWhen(showError: (errorKind) => errorKind, orElse: () => null),
+          ImportErrorKind.couldNotParseJson,
+        );
+      });
+
+      test('Detects corrupt file data.', () async {
+        // Set up
+        final tempDir = Directory.systemTemp;
+        final dummyFile = File('${tempDir.path}/dummyFile.json');
+        final invalidContent =
+            '{"asdasdasd":{"salt":"-ffh_zaHtWAMXxMi39vU2w==","i":"1dN0Z0FeAcw5XyTNr3A3Xw==","encrypteasterKey":"Qzl95zRzDvjoz9JlvQ5bXShmXNc1XyKcE/nlNlaLIS83BopBUkDBL6wkylNOSkUW"},"qweqewqwe":{"exportSuggestions":true,"exportWarnings":true,"theme":"system"},"3eho1uhe1e":[{"id":"70e0c1e0-a912-44d6-9990-0a8a65c9fa10","title":"asdasda","content":"7r7ShtHFMEjh6vVNsKBYsw==","iv":"BlT181v8X28rFOIt6qPibQ==","dateCreated":"2026-02-13T15:24:29.538453"}]}';
+        await dummyFile.writeAsString(invalidContent);
+        PlatformFile dummyPlatformFile = PlatformFile(
+          name: 'dummyFile.json',
+          size: await dummyFile.length(),
+          bytes: await dummyFile.readAsBytes(),
+          path: dummyFile.path,
+        );
+        container.listen(importControllerProvider, (previous, next) {});
+
+        // Act
+        await container
+            .read(importControllerProvider.notifier)
+            .validateImportFile(dummyPlatformFile);
+
+        // Verify
+        expect(
+          container
+              .read(importControllerProvider)
+              ?.maybeWhen(showError: (errorKind) => errorKind, orElse: () => null),
+          ImportErrorKind.fileIsCorrupt,
+        );
+      });
+
+      test('Shows settings dialog if backup data is decryptable', () async {
+        // Setup
+        final firstNoteContent = 'firstNoteContent';
+        final firstNoteIv = enc.IV.fromLength(16);
+        final dummyKey = enc.Key.fromLength(32);
+        final dummyBackupData = BackupData(
+          credentialsData: CredentialsData(
+            salt: 'salt',
+            iv: 'iviv',
+            encryptedMasterKey: 'encryptedMasterKey',
+          ),
+          settingsData: SettingsData(
+            exportSuggestions: true,
+            exportWarnings: true,
+            theme: ThemeMode.system,
+          ),
+          notesData: [
+            NoteDto(
+              id: 'id',
+              title: 'title',
+              content: firstNoteContent,
+              iv: firstNoteIv.base64,
+              dateCreated: 'dateCreated',
+            ),
+          ],
+        );
+        container.read(masterKeyProvider.notifier).set(dummyKey);
+        when(
+          mockEncryptionService.keyCanDecrypt(firstNoteContent, dummyKey, firstNoteIv),
+        ).thenReturn(true);
+
+        final tempDir = Directory.systemTemp;
+        final dummyFile = File('${tempDir.path}/dummyFile.json');
+        await dummyFile.writeAsString(jsonEncode(dummyBackupData.toJson()));
+        PlatformFile dummyPlatformFile = PlatformFile(
+          name: 'dummyFile.json',
+          size: await dummyFile.length(),
+          bytes: await dummyFile.readAsBytes(),
+          path: dummyFile.path,
+        );
+        container.listen(importControllerProvider, (previous, next) {});
+
+        // Act
+        await container
+            .read(importControllerProvider.notifier)
+            .validateImportFile(dummyPlatformFile);
+
+        expect(
+          container
+              .read(importControllerProvider)
+              ?.maybeWhen(askForSettings: (_) => true, orElse: () => false),
+          isTrue,
+        );
+      });
+
+      test('Shows password dialog if backup data is not decryptable', () async {
+        // Setup
+        final firstNoteContent = 'firstNoteContent';
+        final firstNoteIv = enc.IV.fromLength(16);
+        final dummyKey = enc.Key.fromLength(32);
+        final dummyBackupData = BackupData(
+          credentialsData: CredentialsData(
+            salt: 'salt',
+            iv: 'iviv',
+            encryptedMasterKey: 'encryptedMasterKey',
+          ),
+          settingsData: SettingsData(
+            exportSuggestions: true,
+            exportWarnings: true,
+            theme: ThemeMode.system,
+          ),
+          notesData: [
+            NoteDto(
+              id: 'id',
+              title: 'title',
+              content: firstNoteContent,
+              iv: firstNoteIv.base64,
+              dateCreated: 'dateCreated',
+            ),
+          ],
+        );
+        container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        when(
+          mockEncryptionService.keyCanDecrypt(firstNoteContent, dummyKey, firstNoteIv),
+        ).thenReturn(false);
+
+        final tempDir = Directory.systemTemp;
+        final dummyFile = File('${tempDir.path}/dummyFile.json');
+        await dummyFile.writeAsString(jsonEncode(dummyBackupData.toJson()));
+        PlatformFile dummyPlatformFile = PlatformFile(
+          name: 'dummyFile.json',
+          size: await dummyFile.length(),
+          bytes: await dummyFile.readAsBytes(),
+          path: dummyFile.path,
+        );
+        container.listen(importControllerProvider, (previous, next) {});
+
+        // Act
+        await container
+            .read(importControllerProvider.notifier)
+            .validateImportFile(dummyPlatformFile);
+
+        expect(
+          container
+              .read(importControllerProvider)
+              ?.maybeWhen(showPasswordDialog: (_) => true, orElse: () => false),
+          isTrue,
+        );
+      });
+    });
   });
 }
