@@ -100,5 +100,22 @@ void main() {
         expect(container.read(importControllerProvider), isNull);
       });
     });
+
+    test('showFilePicker modifies filePickerRunningProvider', () async {
+      // Set up
+      when(
+        mockFilePickerService.pickFiles(dialogTitle: anyNamed('dialogTitle')),
+      ).thenAnswer((_) async => null);
+      final List<bool> valueHistory = [];
+      container.listen(filePickerRunningProvider, (previous, next) => valueHistory.add(next));
+
+      // Act
+      await container
+          .read(importControllerProvider.notifier)
+          .showFilePicker(dialogTitle: 'dialogTitle');
+
+      // Verify
+      expect(valueHistory, [true, false]);
+    });
   });
 }
