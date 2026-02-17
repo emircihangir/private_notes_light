@@ -25,7 +25,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
     controller1.dispose();
     controller2.dispose();
     super.dispose();
-    log('Disposed the text field controllers in ChangePasswordSheet');
+    log('Disposed the text field controllers in ChangePasswordSheet', name: 'INFO');
   }
 
   @override

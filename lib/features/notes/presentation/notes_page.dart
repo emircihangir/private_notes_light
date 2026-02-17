@@ -89,7 +89,7 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
       body: SafeArea(
         child: fullNotesList.when(
           error: (error, stackTrace) {
-            log('ERROR', error: error, stackTrace: stackTrace);
+            log('', error: error, stackTrace: stackTrace, name: 'ERROR');
             return const Center(child: GenericErrorWidget());
           },
           loading: () => const Center(child: CircularProgressIndicator()),

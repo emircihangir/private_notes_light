@@ -55,7 +55,7 @@ void main() {
   });
 
   group('Import Controller Tests', () {
-    group('startImport', () {
+    group('startImport works', () {
       test('startImport warns about overwrites', () async {
         // Set up
         when(mockNoteRepo.getNotes()).thenAnswer(
@@ -101,7 +101,7 @@ void main() {
       });
     });
 
-    test('showFilePicker modifies filePickerRunningProvider', () async {
+    test('showFilePicker works', () async {
       // Set up
       when(
         mockFilePickerService.pickFiles(dialogTitle: anyNamed('dialogTitle')),
