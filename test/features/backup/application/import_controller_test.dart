@@ -314,5 +314,60 @@ void main() {
         );
       });
     });
+
+    test('performKeyRotation works', () async {
+      // Setup
+      final oldKey = enc.Key.fromLength(32);
+      final currentKey = enc.Key.fromLength(32);
+      final oldIvString = enc.IV.fromLength(16).base64;
+      final newIvString = enc.IV.fromLength(16).base64;
+      const oldContent = 'oldEncryptedContent';
+      const decryptedContent = 'decryptedContent';
+      const newContent = 'newEncryptedContent';
+      container.read(masterKeyProvider.notifier).set(currentKey);
+      final note = NoteDto(
+        id: '1',
+        title: 'Test Note',
+        content: oldContent,
+        iv: oldIvString,
+        dateCreated: DateTime.now().toIso8601String(),
+      );
+      final backupData = BackupData(
+        credentialsData: CredentialsData(salt: 's', iv: 'i', encryptedMasterKey: 'k'),
+        settingsData: SettingsData(
+          exportSuggestions: true,
+          exportWarnings: true,
+          theme: ThemeMode.system,
+        ),
+        notesData: [note],
+      );
+      when(
+        mockEncryptionService.decryptText(
+          encryptedText: oldContent,
+          key: oldKey,
+          iv: anyNamed('iv'),
+        ),
+      ).thenReturn(decryptedContent);
+      when(
+        mockEncryptionService.encryptText(text: decryptedContent, key: currentKey),
+      ).thenReturn((encryptedText: newContent, encryptionIV: newIvString));
+
+      // Act
+      final result = await container
+          .read(importControllerProvider.notifier)
+          .performKeyRotation(backupData: backupData, backupsMasterKey: oldKey);
+
+      // Verify
+      expect(result.notesData.first.content, newContent);
+      expect(result.notesData.first.iv, newIvString);
+      verify(
+        mockEncryptionService.decryptText(
+          encryptedText: oldContent,
+          key: oldKey,
+          iv: argThat(isA<enc.IV>(), named: 'iv'),
+        ),
+      ).called(1);
+      verify(mockEncryptionService.encryptText(text: decryptedContent, key: currentKey)).called(1);
+    });
   });
 }
