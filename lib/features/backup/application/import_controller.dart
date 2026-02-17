@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:file_picker/file_picker.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
+import 'package:private_notes_light/features/backup/application/file_picker_service.dart';
 import 'package:private_notes_light/features/backup/data/backup_repository.dart';
 import 'package:private_notes_light/features/backup/domain/backup_data.dart';
 import 'package:private_notes_light/features/backup/domain/import_controller_state.dart';
@@ -76,7 +77,9 @@ class ImportController extends _$ImportController {
 
   Future<void> showFilePicker({required String dialogTitle}) async {
     ref.read(filePickerRunningProvider.notifier).set(true);
-    final pickerResult = await FilePicker.platform.pickFiles(dialogTitle: dialogTitle);
+    final pickerResult = await ref
+        .read(filePickerServiceProvider)
+        .pickFiles(dialogTitle: dialogTitle);
     ref.read(filePickerRunningProvider.notifier).set(false);
 
     if (pickerResult == null || pickerResult.count == 0) return;
