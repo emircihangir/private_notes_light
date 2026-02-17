@@ -38,7 +38,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               spacing: 16,
               children: [
                 SizedBox(
@@ -53,7 +53,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
                   canBeToggled: false,
                   hintText: AppLocalizations.of(context)!.newPassword,
                   autoFocus: true,
-                  textInputAction: .next,
+                  textInputAction: TextInputAction.next,
                 ),
                 PasswordTextField(
                   controller: controller2,

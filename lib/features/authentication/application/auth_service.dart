@@ -52,16 +52,17 @@ class AuthService {
       "Master key must not be null when changeMasterPassword function is called",
     );
 
+    final encryptionService = ref.read(encryptionServiceProvider);
+
     // * Derive newUserKey from password input and newSalt.
-    final newSalt = ref.read(encryptionServiceProvider).generateSalt();
-    final newUserKey = await ref
-        .read(encryptionServiceProvider)
-        .deriveKeyFromPassword(newMasterPassword, newSalt);
+    final newSalt = encryptionService.generateSalt();
+    final newUserKey = await encryptionService.deriveKeyFromPassword(newMasterPassword, newSalt);
 
     // * Encrypt currentMasterKey with newUserKey.
-    var encrypted = ref
-        .read(encryptionServiceProvider)
-        .encryptText(text: currentMasterKey!.base64, key: newUserKey);
+    final encrypted = encryptionService.encryptText(
+      text: currentMasterKey!.base64,
+      key: newUserKey,
+    );
     final encryptedMasterKeyString = encrypted.encryptedText;
     final newIVstring = encrypted.encryptionIV;
 
