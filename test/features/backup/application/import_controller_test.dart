@@ -54,5 +54,51 @@ void main() {
     addTearDown(container.dispose);
   });
 
-  group('Import Controller Tests', () {});
+  group('Import Controller Tests', () {
+    group('startImport', () {
+      test('startImport warns about overwrites', () async {
+        // Set up
+        when(mockNoteRepo.getNotes()).thenAnswer(
+          (_) async => [
+            NoteDto(
+              id: 'id',
+              title: 'title',
+              content: 'content',
+              iv: 'iv',
+              dateCreated: 'dateCreated',
+            ),
+          ],
+        );
+
+        // Act
+        await container
+            .read(importControllerProvider.notifier)
+            .startImport(dialogTitle: 'dialogTitle');
+
+        // Verify
+        expect(
+          container
+              .read(importControllerProvider)
+              ?.maybeWhen(showOverwriteWarning: () => true, orElse: () => false),
+          isTrue,
+        );
+      });
+
+      test('startImport omits overwrite warning if there are no notes', () async {
+        // Set up
+        when(mockNoteRepo.getNotes()).thenAnswer((_) async => []);
+        when(
+          mockFilePickerService.pickFiles(dialogTitle: anyNamed('dialogTitle')),
+        ).thenAnswer((_) async => null);
+
+        // Act
+        await container
+            .read(importControllerProvider.notifier)
+            .startImport(dialogTitle: 'dialogTitle');
+
+        // Verify
+        expect(container.read(importControllerProvider), isNull);
+      });
+    });
+  });
 }
