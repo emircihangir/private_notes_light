@@ -519,6 +519,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid file type. Please choose a JSON file.'**
   String get invalidFileType;
+
+  /// No description provided for @noNotesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes found'**
+  String get noNotesFound;
 }
 
 class _AppLocalizationsDelegate

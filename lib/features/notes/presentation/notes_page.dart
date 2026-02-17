@@ -93,9 +93,9 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
             return const Center(child: GenericErrorWidget());
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          data: (_) => Padding(
+          data: (data) => Padding(
             padding: const EdgeInsets.all(12),
-            child: filteredNotes.isNotEmpty
+            child: data.isNotEmpty
                 ? Column(
                     children: [
                       SearchBar(
@@ -103,60 +103,7 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
                         hintText: AppLocalizations.of(context)!.searchHint,
                         onChanged: (value) => ref.read(searchQueryProvider.notifier).set(value),
                       ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: filteredNotes.length,
-                          itemBuilder: (context, index) {
-                            final ({String noteID, String noteTitle}) note = filteredNotes[index];
-
-                            return Dismissible(
-                              onDismissed: (direction) async {
-                                try {
-                                  await ref
-                                      .read(noteControllerProvider.notifier)
-                                      .removeNote(note.noteID);
-                                } catch (e) {
-                                  if (context.mounted) showErrorSnackbar(context);
-                                }
-                              },
-                              confirmDismiss: (direction) async {
-                                final bool? shouldDelete = await showDialog<bool>(
-                                  context: context,
-                                  builder: (context) => const ConfirmDeleteDialog(),
-                                );
-
-                                return shouldDelete ?? false;
-                              },
-                              key: ValueKey(note.noteID),
-                              direction: DismissDirection.endToStart,
-                              background: Container(
-                                color: Theme.of(context).colorScheme.errorContainer,
-                                padding: const EdgeInsets.only(right: 8),
-                                alignment: Alignment.centerRight,
-                                child: Icon(
-                                  Icons.clear_rounded,
-                                  color: Theme.of(context).colorScheme.onErrorContainer,
-                                ),
-                              ),
-                              child: ListTile(
-                                title: Text(note.noteTitle),
-                                onTap: () async {
-                                  final result = await ref
-                                      .read(noteControllerProvider.notifier)
-                                      .openNote(note.noteID);
-                                  if (context.mounted) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ViewNotePage(note: result),
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                      filteredNotes.isNotEmpty ? NotesList() : NoNotesFoundWidget(),
                     ],
                   )
                 : EmptyNotesWidget(),
@@ -170,6 +117,74 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+}
+
+class NoNotesFoundWidget extends StatelessWidget {
+  const NoNotesFoundWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(child: Center(child: Text(AppLocalizations.of(context)!.noNotesFound)));
+  }
+}
+
+class NotesList extends ConsumerWidget {
+  const NotesList({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filteredNotes = ref.watch(filteredNotesListProvider);
+    return Expanded(
+      child: ListView.builder(
+        itemCount: filteredNotes.length,
+        itemBuilder: (context, index) {
+          final ({String noteID, String noteTitle}) note = filteredNotes[index];
+
+          return Dismissible(
+            onDismissed: (direction) async {
+              try {
+                await ref.read(noteControllerProvider.notifier).removeNote(note.noteID);
+              } catch (e) {
+                if (context.mounted) showErrorSnackbar(context);
+              }
+            },
+            confirmDismiss: (direction) async {
+              final bool? shouldDelete = await showDialog<bool>(
+                context: context,
+                builder: (context) => const ConfirmDeleteDialog(),
+              );
+
+              return shouldDelete ?? false;
+            },
+            key: ValueKey(note.noteID),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              color: Theme.of(context).colorScheme.errorContainer,
+              padding: const EdgeInsets.only(right: 8),
+              alignment: Alignment.centerRight,
+              child: Icon(
+                Icons.clear_rounded,
+                color: Theme.of(context).colorScheme.onErrorContainer,
+              ),
+            ),
+            child: ListTile(
+              title: Text(note.noteTitle),
+              onTap: () async {
+                final result = await ref
+                    .read(noteControllerProvider.notifier)
+                    .openNote(note.noteID);
+                if (context.mounted) {
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => ViewNotePage(note: result)));
+                }
+              },
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 

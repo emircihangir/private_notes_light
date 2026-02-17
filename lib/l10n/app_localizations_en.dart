@@ -227,4 +227,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invalidFileType => 'Invalid file type. Please choose a JSON file.';
+
+  @override
+  String get noNotesFound => 'No notes found';
 }

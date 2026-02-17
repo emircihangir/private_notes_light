@@ -261,5 +261,7 @@
   "importPasswordDialogContent" : "The import file could not be decrypted with the current master key. Please enter a password to decrypt the import file.",
   "@importPasswordDialogContent": {},
   "invalidFileType" : "Invalid file type. Please choose a JSON file.",
-  "@invalidFileType": {}
+  "@invalidFileType": {},
+  "noNotesFound" : "No notes found",
+  "@noNotesFound": {}
 }
