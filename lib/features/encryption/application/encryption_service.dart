@@ -53,6 +53,16 @@ class EncryptionService {
     return encrypter.decrypt(enc.Encrypted.fromBase64(encryptedText), iv: iv);
   }
 
+  bool keyCanDecrypt(String text, enc.Key key, enc.IV iv) {
+    // * Try to decrypt first note's content with key.
+    try {
+      decryptText(encryptedText: text, key: key, iv: iv);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   String decryptWithMasterKey(String encryptedText, enc.IV iv) {
     final key = ref.read(masterKeyProvider)!;
 

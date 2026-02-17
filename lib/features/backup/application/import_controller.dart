@@ -49,29 +49,20 @@ class ImportController extends _$ImportController {
       return;
     }
 
-    final isDecryptable = _keyCanDecryptNotes(backupData, ref.read(masterKeyProvider)!);
+    final firstNote = backupData.notesData.first;
+
+    final isDecryptable = ref
+        .read(encryptionServiceProvider)
+        .keyCanDecrypt(
+          firstNote.content,
+          ref.read(masterKeyProvider)!,
+          enc.IV.fromBase64(firstNote.iv),
+        );
 
     if (isDecryptable) {
       askForSettings(backupData);
     } else {
       state = ImportControllerState.showPasswordDialog(backupData);
-    }
-  }
-
-  bool _keyCanDecryptNotes(BackupData backupData, enc.Key key) {
-    // * Try to decrypt first note's content with key.
-    final encryptionService = ref.watch(encryptionServiceProvider);
-    final NoteDto firstNote = backupData.notesData.first;
-    try {
-      encryptionService.decryptText(
-        encryptedText: firstNote.content,
-        key: key,
-        iv: enc.IV.fromBase64(firstNote.iv),
-      );
-
-      return true;
-    } catch (e) {
-      return false;
     }
   }
 
@@ -98,7 +89,7 @@ class ImportController extends _$ImportController {
     state = ImportControllerState.showSuccess();
   }
 
-  Future<BackupData> _performKeyRotation({
+  Future<BackupData> performKeyRotation({
     required BackupData backupData,
     required enc.Key backupsMasterKey,
   }) async {
@@ -172,7 +163,7 @@ class ImportController extends _$ImportController {
     final decryptedBackupKey = decryptBackupCredentials(backupData: backupData, key: derivedKey);
 
     if (decryptedBackupKey != null) {
-      final rotatedBackupData = await _performKeyRotation(
+      final rotatedBackupData = await performKeyRotation(
         backupData: backupData,
         backupsMasterKey: decryptedBackupKey,
       );
