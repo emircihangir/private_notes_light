@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:private_notes_light/core/fade_page_route_builder.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/notes/presentation/notes_page.dart';
 import 'package:private_notes_light/features/authentication/presentation/password_text_field.dart';
@@ -82,10 +83,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     try {
                       await ref.read(authServiceProvider).signup(passwordInput);
                       if (context.mounted) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => NotesPage()),
-                          (route) => false,
-                        );
+                        Navigator.of(
+                          context,
+                        ).pushAndRemoveUntil(fadePageRouteBuilder(NotesPage()), (route) => false);
                       }
                     } catch (e) {
                       if (context.mounted) {

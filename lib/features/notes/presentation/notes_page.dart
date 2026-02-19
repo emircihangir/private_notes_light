@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:private_notes_light/core/fade_page_route_builder.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
 import 'package:private_notes_light/features/notes/application/filtered_notes_list.dart';
@@ -43,10 +44,9 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
 
     if (state == AppLifecycleState.resumed && logoutOnResume) {
       log('Forcing the user to login again.', name: 'INFO');
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-        (route) => false,
-      );
+      Navigator.of(
+        context,
+      ).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
       showInfoSnackbar(context, content: AppLocalizations.of(context)!.sessionExpiredMessage);
       logoutOnResume = false;
     }
@@ -64,10 +64,9 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
         leading: IconButton(
           onPressed: () {
             ref.read(authServiceProvider).logout();
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
-              (route) => false,
-            );
+            Navigator.of(
+              context,
+            ).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
           },
           icon: const Icon(Icons.logout_rounded),
         ),
