@@ -4,6 +4,7 @@ import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/notes/domain/note.dart';
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
+import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:encrypt/encrypt.dart' as enc;
@@ -64,6 +65,11 @@ class NoteController extends _$NoteController {
       ref.invalidateSelf();
       rethrow;
     }
+  }
+
+  Future<bool> getExportSuggestionPref() async {
+    final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
+    return settingsRepo.getSettings().exportSuggestions;
   }
 
   Future<Note> openNote(String noteId) async {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/fade_page_route_builder.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
+import 'package:private_notes_light/features/backup/application/export_service.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
 import 'package:private_notes_light/features/notes/application/filtered_notes_list.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
@@ -54,9 +55,89 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
   }
 
   @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Side effects
+    Future<void> suggestExportIfPreferred() async {
+      final exportSuggestionPreferred = await ref
+          .read(noteControllerProvider.notifier)
+          .getExportSuggestionPref();
+      if (!context.mounted) return;
+      if (exportSuggestionPreferred) {
+        showExportSuggestionSnackbar(
+          context,
+          () async => await ref.watch(exportServiceProvider.future),
+        );
+      }
+    }
+
+    // Handlers
+    void handleDismiss(DismissDirection direction, NoteWidgetData note) async {
+      try {
+        await ref.read(noteControllerProvider.notifier).removeNote(note.noteId);
+        suggestExportIfPreferred();
+      } catch (e) {
+        if (context.mounted) showErrorSnackbar(context);
+      }
+    }
+
+    Future<bool> handleConfirmDismiss(DismissDirection direction) async {
+      final bool? shouldDelete = await showDialog<bool>(
+        context: context,
+        builder: (context) => const ConfirmDeleteDialog(),
+      );
+      return shouldDelete ?? false;
+    }
+
+    void handleNoteWidgetTap(NoteWidgetData noteWidgetData) async {
+      final result = await ref
+          .read(noteControllerProvider.notifier)
+          .openNote(noteWidgetData.noteId);
+      if (context.mounted) {
+        final madeChanges = await Navigator.of(
+          context,
+        ).push(MaterialPageRoute<bool>(builder: (context) => ViewNotePage(note: result)));
+        if (madeChanges == true) suggestExportIfPreferred();
+      }
+    }
+
     final filteredNotes = ref.watch(filteredNotesListProvider);
     final fullNotesList = ref.watch(noteControllerProvider);
+
+    // Widgets
+    Widget notesList() => Expanded(
+      child: ListView.builder(
+        itemCount: filteredNotes.length,
+        itemBuilder: (context, index) {
+          final NoteWidgetData noteWidgetData = filteredNotes[index];
+
+          return Dismissible(
+            onDismissed: (direction) => handleDismiss(direction, noteWidgetData),
+            confirmDismiss: handleConfirmDismiss,
+            key: ValueKey(noteWidgetData.noteId),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              color: Theme.of(context).colorScheme.errorContainer,
+              padding: const EdgeInsets.only(right: 8),
+              alignment: Alignment.centerRight,
+              child: Icon(
+                Icons.clear_rounded,
+                color: Theme.of(context).colorScheme.onErrorContainer,
+              ),
+            ),
+            child: ListTile(
+              title: Text(noteWidgetData.noteTitle),
+              onTap: () => handleNoteWidgetTap(noteWidgetData),
+            ),
+          );
+        },
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -79,9 +160,12 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
             icon: const Icon(Icons.settings_outlined),
           ),
           IconButton(
-            onPressed: () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (context) => const ViewNotePage())),
+            onPressed: () async {
+              final madeChanges = await Navigator.of(
+                context,
+              ).push(MaterialPageRoute<bool>(builder: (context) => ViewNotePage()));
+              if (madeChanges == true) suggestExportIfPreferred();
+            },
             icon: const Icon(Icons.add_rounded),
           ),
         ],
@@ -103,7 +187,7 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
                         hintText: AppLocalizations.of(context)!.searchHint,
                         onChanged: (value) => ref.read(searchQueryProvider.notifier).set(value),
                       ),
-                      filteredNotes.isNotEmpty ? NotesList() : NoNotesFoundWidget(),
+                      filteredNotes.isNotEmpty ? notesList() : NoNotesFoundWidget(),
                     ],
                   )
                 : EmptyNotesWidget(),
@@ -111,12 +195,6 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
   }
 }
 
@@ -126,65 +204,6 @@ class NoNotesFoundWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(child: Center(child: Text(AppLocalizations.of(context)!.noNotesFound)));
-  }
-}
-
-class NotesList extends ConsumerWidget {
-  const NotesList({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final filteredNotes = ref.watch(filteredNotesListProvider);
-    return Expanded(
-      child: ListView.builder(
-        itemCount: filteredNotes.length,
-        itemBuilder: (context, index) {
-          final NoteWidgetData note = filteredNotes[index];
-
-          return Dismissible(
-            onDismissed: (direction) async {
-              try {
-                await ref.read(noteControllerProvider.notifier).removeNote(note.noteId);
-              } catch (e) {
-                if (context.mounted) showErrorSnackbar(context);
-              }
-            },
-            confirmDismiss: (direction) async {
-              final bool? shouldDelete = await showDialog<bool>(
-                context: context,
-                builder: (context) => const ConfirmDeleteDialog(),
-              );
-
-              return shouldDelete ?? false;
-            },
-            key: ValueKey(note.noteId),
-            direction: DismissDirection.endToStart,
-            background: Container(
-              color: Theme.of(context).colorScheme.errorContainer,
-              padding: const EdgeInsets.only(right: 8),
-              alignment: Alignment.centerRight,
-              child: Icon(
-                Icons.clear_rounded,
-                color: Theme.of(context).colorScheme.onErrorContainer,
-              ),
-            ),
-            child: ListTile(
-              title: Text(note.noteTitle),
-              onTap: () async {
-                final result = await ref
-                    .read(noteControllerProvider.notifier)
-                    .openNote(note.noteId);
-                if (context.mounted) {
-                  Navigator.of(
-                    context,
-                  ).push(MaterialPageRoute(builder: (context) => ViewNotePage(note: result)));
-                }
-              },
-            ),
-          );
-        },
-      ),
-    );
   }
 }
 

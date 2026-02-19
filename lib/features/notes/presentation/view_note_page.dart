@@ -50,6 +50,30 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
         borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
       ),
     );
+
+    void handleSaveTap() async {
+      if (titleInputController.text.isEmpty) {
+        showErrorSnackbar(context, content: AppLocalizations.of(context)!.titleEmptyError);
+        return;
+      }
+      if (contentInputController.text.isEmpty) {
+        showErrorSnackbar(context, content: AppLocalizations.of(context)!.contentEmptyError);
+        return;
+      }
+
+      await ref
+          .read(noteControllerProvider.notifier)
+          .createNote(
+            id: widget.note?.id,
+            title: titleInputController.text,
+            content: contentInputController.text,
+            date: widget.note?.dateCreated,
+          );
+
+      if (!context.mounted) return;
+      Navigator.of(context).pop(true);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -85,35 +109,7 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
                   controller: contentInputController,
                 ),
                 FilledButton(
-                  onPressed: () async {
-                    if (titleInputController.text.isEmpty) {
-                      showErrorSnackbar(
-                        context,
-                        content: AppLocalizations.of(context)!.titleEmptyError,
-                      );
-                      return;
-                    }
-                    if (contentInputController.text.isEmpty) {
-                      showErrorSnackbar(
-                        context,
-                        content: AppLocalizations.of(context)!.contentEmptyError,
-                      );
-                      return;
-                    }
-
-                    await ref
-                        .read(noteControllerProvider.notifier)
-                        .createNote(
-                          id: widget.note?.id,
-                          title: titleInputController.text,
-                          content: contentInputController.text,
-                          date: widget.note?.dateCreated,
-                        );
-
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
+                  onPressed: handleSaveTap,
                   child: Text(AppLocalizations.of(context)!.save),
                 ),
               ],
@@ -140,7 +136,9 @@ class DeleteNoteButton extends ConsumerWidget {
 
         if (result == true) {
           await ref.read(noteControllerProvider.notifier).removeNote(noteID);
-          if (context.mounted) Navigator.of(context).pop();
+
+          if (!context.mounted) return;
+          Navigator.of(context).pop(true);
         }
       },
       icon: const Icon(Icons.delete_rounded),

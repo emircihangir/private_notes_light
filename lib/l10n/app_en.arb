@@ -267,5 +267,11 @@
   "invalidFileType": "Invalid file type. Please choose a JSON file.",
   "@invalidFileType": {},
   "noNotesFound": "No notes found",
-  "@noNotesFound": {}
+  "@noNotesFound": {},
+  "exportSuggestionSnackbar" : "Would you like to export?",
+  "@exportSuggestionSnackbar": {},
+  "failedToDeleteNote" : "Failed to delete note.",
+  "@failedToDeleteNote": {},
+  "failedToCreateNote" : "Failed to create note.",
+  "@failedToCreateNote": {}
 }

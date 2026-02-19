@@ -531,6 +531,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No notes found'**
   String get noNotesFound;
+
+  /// No description provided for @exportSuggestionSnackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to export?'**
+  String get exportSuggestionSnackbar;
+
+  /// No description provided for @failedToDeleteNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete note.'**
+  String get failedToDeleteNote;
+
+  /// No description provided for @failedToCreateNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create note.'**
+  String get failedToCreateNote;
 }
 
 class _AppLocalizationsDelegate

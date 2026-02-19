@@ -233,4 +233,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noNotesFound => 'No notes found';
+
+  @override
+  String get exportSuggestionSnackbar => 'Would you like to export?';
+
+  @override
+  String get failedToDeleteNote => 'Failed to delete note.';
+
+  @override
+  String get failedToCreateNote => 'Failed to create note.';
 }
