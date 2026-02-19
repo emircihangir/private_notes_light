@@ -415,7 +415,7 @@ abstract class AppLocalizations {
   /// The name of the application.
   ///
   /// In en, this message translates to:
-  /// **'Private Notes Light'**
+  /// **'Private Notes'**
   String get appName;
 
   /// Static version and date string.

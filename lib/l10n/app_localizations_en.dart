@@ -172,7 +172,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get supportDevelopmentSubtitle => 'Buy me a coffee';
 
   @override
-  String get appName => 'Private Notes Light';
+  String get appName => 'Private Notes';
 
   @override
   String get appVersionInfo => 'Version 1.0.0 • February 2026';
