@@ -27,6 +27,7 @@ class NotesPage extends ConsumerStatefulWidget {
 class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserver {
   bool logoutOnResume = false;
 
+  // Lifecyle management
   @override
   void initState() {
     super.initState();
@@ -36,7 +37,7 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    final filePickerRunning = ref.watch(filePickerRunningProvider);
+    final filePickerRunning = ref.read(filePickerRunningProvider);
 
     if ((state == AppLifecycleState.inactive) && !filePickerRunning) {
       log('The app lost focus. Logging out.', name: 'INFO');
@@ -60,114 +61,77 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
     super.dispose();
   }
 
+  // Helpers
+  Future<void> suggestExportIfPreferred() async {
+    final exportSuggestionPreferred = await ref
+        .read(noteControllerProvider.notifier)
+        .getExportSuggestionPref();
+
+    if (mounted && exportSuggestionPreferred) {
+      showExportSuggestionSnackbar(
+        context,
+        () async => await ref.read(exportServiceProvider.future),
+      );
+    }
+  }
+
+  // Handlers
+  Future<void> handleDismiss(DismissDirection direction, NoteWidgetData note) async {
+    try {
+      await ref.read(noteControllerProvider.notifier).removeNote(note.noteId);
+      await suggestExportIfPreferred();
+    } catch (e) {
+      if (mounted) showErrorSnackbar(context);
+    }
+  }
+
+  Future<void> handlePlusTap() async {
+    final madeChanges = await Navigator.of(
+      context,
+    ).push(MaterialPageRoute<bool>(builder: (context) => ViewNotePage()));
+    if (madeChanges == true) await suggestExportIfPreferred();
+  }
+
+  void handleSettingsTap() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SettingsPage()));
+  }
+
+  void handleLogout() {
+    ref.read(authServiceProvider).logout();
+    Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
+  }
+
+  Future<bool> handleConfirmDismiss(DismissDirection direction) async {
+    final bool? shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => const ConfirmDeleteDialog(),
+    );
+    return shouldDelete ?? false;
+  }
+
+  Future<void> handleNoteWidgetTap(NoteWidgetData noteWidgetData) async {
+    final result = await ref.read(noteControllerProvider.notifier).openNote(noteWidgetData.noteId);
+    if (mounted) {
+      final madeChanges = await Navigator.of(
+        context,
+      ).push(MaterialPageRoute<bool>(builder: (context) => ViewNotePage(note: result)));
+      if (madeChanges == true) await suggestExportIfPreferred();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Side effects
-    Future<void> suggestExportIfPreferred() async {
-      final exportSuggestionPreferred = await ref
-          .read(noteControllerProvider.notifier)
-          .getExportSuggestionPref();
-      if (!context.mounted) return;
-      if (exportSuggestionPreferred) {
-        showExportSuggestionSnackbar(
-          context,
-          () async => await ref.watch(exportServiceProvider.future),
-        );
-      }
-    }
-
-    // Handlers
-    void handleDismiss(DismissDirection direction, NoteWidgetData note) async {
-      try {
-        await ref.read(noteControllerProvider.notifier).removeNote(note.noteId);
-        suggestExportIfPreferred();
-      } catch (e) {
-        if (context.mounted) showErrorSnackbar(context);
-      }
-    }
-
-    Future<bool> handleConfirmDismiss(DismissDirection direction) async {
-      final bool? shouldDelete = await showDialog<bool>(
-        context: context,
-        builder: (context) => const ConfirmDeleteDialog(),
-      );
-      return shouldDelete ?? false;
-    }
-
-    void handleNoteWidgetTap(NoteWidgetData noteWidgetData) async {
-      final result = await ref
-          .read(noteControllerProvider.notifier)
-          .openNote(noteWidgetData.noteId);
-      if (context.mounted) {
-        final madeChanges = await Navigator.of(
-          context,
-        ).push(MaterialPageRoute<bool>(builder: (context) => ViewNotePage(note: result)));
-        if (madeChanges == true) suggestExportIfPreferred();
-      }
-    }
-
     final filteredNotes = ref.watch(filteredNotesListProvider);
     final fullNotesList = ref.watch(noteControllerProvider);
-
-    // Widgets
-    Widget notesList() => Expanded(
-      child: ListView.builder(
-        itemCount: filteredNotes.length,
-        itemBuilder: (context, index) {
-          final NoteWidgetData noteWidgetData = filteredNotes[index];
-
-          return Dismissible(
-            onDismissed: (direction) => handleDismiss(direction, noteWidgetData),
-            confirmDismiss: handleConfirmDismiss,
-            key: ValueKey(noteWidgetData.noteId),
-            direction: DismissDirection.endToStart,
-            background: Container(
-              color: Theme.of(context).colorScheme.errorContainer,
-              padding: const EdgeInsets.only(right: 8),
-              alignment: Alignment.centerRight,
-              child: Icon(
-                Icons.clear_rounded,
-                color: Theme.of(context).colorScheme.onErrorContainer,
-              ),
-            ),
-            child: ListTile(
-              title: Text(noteWidgetData.noteTitle),
-              onTap: () => handleNoteWidgetTap(noteWidgetData),
-            ),
-          );
-        },
-      ),
-    );
 
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.notesTitle),
         centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            ref.read(authServiceProvider).logout();
-            Navigator.of(
-              context,
-            ).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
-          },
-          icon: const Icon(Icons.logout_rounded),
-        ),
+        leading: IconButton(onPressed: handleLogout, icon: const Icon(Icons.logout_rounded)),
         actions: [
-          IconButton(
-            onPressed: () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (context) => const SettingsPage())),
-            icon: const Icon(Icons.settings_outlined),
-          ),
-          IconButton(
-            onPressed: () async {
-              final madeChanges = await Navigator.of(
-                context,
-              ).push(MaterialPageRoute<bool>(builder: (context) => ViewNotePage()));
-              if (madeChanges == true) suggestExportIfPreferred();
-            },
-            icon: const Icon(Icons.add_rounded),
-          ),
+          IconButton(onPressed: handleSettingsTap, icon: const Icon(Icons.settings_outlined)),
+          IconButton(onPressed: handlePlusTap, icon: const Icon(Icons.add_rounded)),
         ],
       ),
       body: SafeArea(
@@ -187,12 +151,67 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
                         hintText: AppLocalizations.of(context)!.searchHint,
                         onChanged: (value) => ref.read(searchQueryProvider.notifier).set(value),
                       ),
-                      filteredNotes.isNotEmpty ? notesList() : NoNotesFoundWidget(),
+                      filteredNotes.isNotEmpty
+                          ? NotesList(
+                              confirmDismiss: handleConfirmDismiss,
+                              filteredNotes: filteredNotes,
+                              onDismissed: (direction, noteWidgetData) =>
+                                  handleDismiss(direction, noteWidgetData),
+                              onTap: handleNoteWidgetTap,
+                            )
+                          : NoNotesFoundWidget(),
                     ],
                   )
                 : EmptyNotesWidget(),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class NotesList extends StatelessWidget {
+  final List<NoteWidgetData> filteredNotes;
+  final Future<void> Function(DismissDirection, NoteWidgetData) onDismissed;
+  final ConfirmDismissCallback confirmDismiss;
+  final Future<void> Function(NoteWidgetData) onTap;
+
+  const NotesList({
+    super.key,
+    required this.filteredNotes,
+    required this.onDismissed,
+    required this.confirmDismiss,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: filteredNotes.length,
+        itemBuilder: (context, index) {
+          final NoteWidgetData noteWidgetData = filteredNotes[index];
+
+          return Dismissible(
+            onDismissed: (direction) => onDismissed(direction, noteWidgetData),
+            confirmDismiss: confirmDismiss,
+            key: ValueKey(noteWidgetData.noteId),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              color: Theme.of(context).colorScheme.errorContainer,
+              padding: const EdgeInsets.only(right: 8),
+              alignment: Alignment.centerRight,
+              child: Icon(
+                Icons.clear_rounded,
+                color: Theme.of(context).colorScheme.onErrorContainer,
+              ),
+            ),
+            child: ListTile(
+              title: Text(noteWidgetData.noteTitle),
+              onTap: () => onTap(noteWidgetData),
+            ),
+          );
+        },
       ),
     );
   }

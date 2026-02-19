@@ -32,48 +32,47 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final inputDecoration = InputDecoration(
-      contentPadding: const EdgeInsets.all(16),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(3),
-        borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.inversePrimary),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.error),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
-      ),
-    );
-
-    void handleSaveTap() async {
-      if (titleInputController.text.isEmpty) {
-        showErrorSnackbar(context, content: AppLocalizations.of(context)!.titleEmptyError);
-        return;
-      }
-      if (contentInputController.text.isEmpty) {
-        showErrorSnackbar(context, content: AppLocalizations.of(context)!.contentEmptyError);
-        return;
-      }
-
-      await ref
-          .read(noteControllerProvider.notifier)
-          .createNote(
-            id: widget.note?.id,
-            title: titleInputController.text,
-            content: contentInputController.text,
-            date: widget.note?.dateCreated,
-          );
-
-      if (!context.mounted) return;
-      Navigator.of(context).pop(true);
+  Future<void> handleSaveTap() async {
+    if (titleInputController.text.isEmpty) {
+      showErrorSnackbar(context, content: AppLocalizations.of(context)!.titleEmptyError);
+      return;
+    }
+    if (contentInputController.text.isEmpty) {
+      showErrorSnackbar(context, content: AppLocalizations.of(context)!.contentEmptyError);
+      return;
     }
 
+    await ref
+        .read(noteControllerProvider.notifier)
+        .createNote(
+          id: widget.note?.id,
+          title: titleInputController.text,
+          content: contentInputController.text,
+          date: widget.note?.dateCreated,
+        );
+
+    if (mounted) Navigator.of(context).pop(true);
+  }
+
+  InputDecoration inputDecoration() => InputDecoration(
+    contentPadding: const EdgeInsets.all(16),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(3),
+      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.inversePrimary),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.error),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -92,7 +91,7 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
               spacing: 16,
               children: [
                 TextField(
-                  decoration: inputDecoration.copyWith(
+                  decoration: inputDecoration().copyWith(
                     hintText: AppLocalizations.of(context)!.noteTitleLabel,
                     labelText: AppLocalizations.of(context)!.noteTitleLabel,
                   ),
@@ -101,7 +100,7 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
                   autofocus: widget.note == null,
                 ),
                 TextField(
-                  decoration: inputDecoration.copyWith(
+                  decoration: inputDecoration().copyWith(
                     hintText: AppLocalizations.of(context)!.noteContentLabel,
                     labelText: AppLocalizations.of(context)!.noteContentLabel,
                   ),
