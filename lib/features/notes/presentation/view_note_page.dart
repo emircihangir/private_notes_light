@@ -28,6 +28,22 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
 
   @override
   Widget build(BuildContext context) {
+    final inputDecoration = InputDecoration(
+      contentPadding: const EdgeInsets.all(16),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(3),
+        borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.inversePrimary),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.error),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -41,26 +57,23 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
       body: SingleChildScrollView(
         child: Center(
           child: Container(
-            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
-            padding: const EdgeInsets.only(top: 16),
+            padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
             child: Column(
               spacing: 16,
               children: [
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: inputDecoration.copyWith(
                     hintText: AppLocalizations.of(context)!.noteTitleLabel,
                     labelText: AppLocalizations.of(context)!.noteTitleLabel,
-                    contentPadding: const EdgeInsets.all(16),
                   ),
                   controller: titleInputController,
                   textInputAction: TextInputAction.next,
                   autofocus: widget.note == null,
                 ),
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: inputDecoration.copyWith(
                     hintText: AppLocalizations.of(context)!.noteContentLabel,
                     labelText: AppLocalizations.of(context)!.noteContentLabel,
-                    contentPadding: const EdgeInsets.all(16),
                   ),
                   maxLines: null,
                   controller: contentInputController,
