@@ -100,6 +100,12 @@ abstract class AppLocalizations {
   /// **'Welcome'**
   String get welcome;
 
+  /// Main title on login screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes Are Locked'**
+  String get notesAreLocked;
+
   /// Disclaimer text explaining the importance of the master password.
   ///
   /// In en, this message translates to:
@@ -136,11 +142,11 @@ abstract class AppLocalizations {
   /// **'Signup failed. Please try again.'**
   String get signupGenericError;
 
-  /// Label for the login button.
+  /// Label for the unlock button.
   ///
   /// In en, this message translates to:
-  /// **'Login'**
-  String get login;
+  /// **'Unlock'**
+  String get unlock;
 
   /// Error message when password field is empty during login.
   ///

@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome => 'Welcome';
 
   @override
+  String get notesAreLocked => 'Notes Are Locked';
+
+  @override
   String get masterPasswordSetupWarning =>
       'Please set up a master password. Be careful, there is no way to unlock your notes without the master password.';
 
@@ -32,7 +35,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signupGenericError => 'Signup failed. Please try again.';
 
   @override
-  String get login => 'Login';
+  String get unlock => 'Unlock';
 
   @override
   String get passwordEmptyError => 'Please enter a password.';

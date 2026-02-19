@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:private_notes_light/core/fade_page_route_builder.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/notes/presentation/notes_page.dart';
@@ -35,8 +36,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 32,
             children: [
+              SvgPicture.asset(
+                Theme.of(context).brightness == Brightness.light
+                    ? 'assets/images/app_icon_light.svg'
+                    : 'assets/images/app_icon_dark.svg',
+                height: 150,
+              ),
               Text(
-                AppLocalizations.of(context)!.welcome,
+                AppLocalizations.of(context)!.notesAreLocked,
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
               Form(
@@ -67,7 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     setState(() => errorText = AppLocalizations.of(context)!.wrongPasswordError);
                   }
                 },
-                child: Text(AppLocalizations.of(context)!.login),
+                child: Text(AppLocalizations.of(context)!.unlock),
               ),
             ],
           ),

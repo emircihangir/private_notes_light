@@ -4,6 +4,10 @@
   "@welcome": {
     "description": "Main title greeting on the auth screens."
   },
+  "notesAreLocked": "Notes Are Locked",
+  "@notesAreLocked": {
+    "description": "Main title on login screen."
+  },
   "masterPasswordSetupWarning": "Please set up a master password. Be careful, there is no way to unlock your notes without the master password.",
   "@masterPasswordSetupWarning": {
     "description": "Disclaimer text explaining the importance of the master password."
@@ -12,7 +16,7 @@
   "@masterPasswordHint": {
     "description": "Hint text displayed inside the password text field."
   },
-  "masterPasswordConfirm" : "Confirm master password",
+  "masterPasswordConfirm": "Confirm master password",
   "@masterPasswordConfirm": {},
   "masterPasswordEmptyError": "Master password input cannot be empty.",
   "@masterPasswordEmptyError": {
@@ -26,9 +30,9 @@
   "@signupGenericError": {
     "description": "Generic error snackbar message when the sign-up process fails."
   },
-  "login": "Login",
-  "@login": {
-    "description": "Label for the login button."
+  "unlock": "Unlock",
+  "@unlock": {
+    "description": "Label for the unlock button."
   },
   "passwordEmptyError": "Please enter a password.",
   "@passwordEmptyError": {
@@ -242,26 +246,26 @@
   "@submitButton": {
     "description": "Title for the submit button on the change master password bottom sheet"
   },
-  "newPassword" : "New password",
+  "newPassword": "New password",
   "@newPassword": {},
-  "newPasswordConfirm" : "Confirm new password",
+  "newPasswordConfirm": "Confirm new password",
   "@newPasswordConfirm": {},
-  "newPasswordWarning" : "Caution: Do not forget the new password, as there is no way to recover your notes without it.",
+  "newPasswordWarning": "Caution: Do not forget the new password, as there is no way to recover your notes without it.",
   "@newPasswordWarning": {},
-  "passwordsDontMatch" : "Passwords do not match.",
+  "passwordsDontMatch": "Passwords do not match.",
   "@passwordsDontMatch": {},
-  "changedPasswordSuccessfully" : "Password change successful.",
+  "changedPasswordSuccessfully": "Password change successful.",
   "@changedPasswordSuccessfully": {},
-  "couldNotParseJson" : "Could not parse the selected file. Make sure the file follows JSON syntax.",
+  "couldNotParseJson": "Could not parse the selected file. Make sure the file follows JSON syntax.",
   "@couldNotParseJson": {},
-  "fileIsCorrupt" : "File is corrupt. Failed to retrieve data.",
+  "fileIsCorrupt": "File is corrupt. Failed to retrieve data.",
   "@fileIsCorrupt": {},
-  "importPasswordDialogTitle" : "Enter Password",
+  "importPasswordDialogTitle": "Enter Password",
   "@importPasswordDialogTitle": {},
-  "importPasswordDialogContent" : "The import file could not be decrypted with the current master key. Please enter a password to decrypt the import file.",
+  "importPasswordDialogContent": "The import file could not be decrypted with the current master key. Please enter a password to decrypt the import file.",
   "@importPasswordDialogContent": {},
-  "invalidFileType" : "Invalid file type. Please choose a JSON file.",
+  "invalidFileType": "Invalid file type. Please choose a JSON file.",
   "@invalidFileType": {},
-  "noNotesFound" : "No notes found",
+  "noNotesFound": "No notes found",
   "@noNotesFound": {}
 }
