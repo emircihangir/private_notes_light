@@ -8,6 +8,7 @@ import 'package:private_notes_light/features/notes/application/filtered_notes_li
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
 import 'package:private_notes_light/features/notes/application/search_query.dart';
 import 'package:private_notes_light/features/authentication/presentation/login_screen.dart';
+import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
 import 'package:private_notes_light/features/notes/presentation/confirm_delete_dialog.dart';
 import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
 import 'package:private_notes_light/features/notes/presentation/view_note_page.dart';
@@ -138,12 +139,12 @@ class NotesList extends ConsumerWidget {
       child: ListView.builder(
         itemCount: filteredNotes.length,
         itemBuilder: (context, index) {
-          final ({String noteID, String noteTitle}) note = filteredNotes[index];
+          final NoteWidgetData note = filteredNotes[index];
 
           return Dismissible(
             onDismissed: (direction) async {
               try {
-                await ref.read(noteControllerProvider.notifier).removeNote(note.noteID);
+                await ref.read(noteControllerProvider.notifier).removeNote(note.noteId);
               } catch (e) {
                 if (context.mounted) showErrorSnackbar(context);
               }
@@ -156,7 +157,7 @@ class NotesList extends ConsumerWidget {
 
               return shouldDelete ?? false;
             },
-            key: ValueKey(note.noteID),
+            key: ValueKey(note.noteId),
             direction: DismissDirection.endToStart,
             background: Container(
               color: Theme.of(context).colorScheme.errorContainer,
@@ -172,7 +173,7 @@ class NotesList extends ConsumerWidget {
               onTap: () async {
                 final result = await ref
                     .read(noteControllerProvider.notifier)
-                    .openNote(note.noteID);
+                    .openNote(note.noteId);
                 if (context.mounted) {
                   Navigator.of(
                     context,

@@ -21,9 +21,15 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
   @override
   void initState() {
     super.initState();
-
     titleInputController = TextEditingController(text: widget.note?.title ?? '');
     contentInputController = TextEditingController(text: widget.note?.content ?? '');
+  }
+
+  @override
+  void dispose() {
+    titleInputController.dispose();
+    contentInputController.dispose();
+    super.dispose();
   }
 
   @override
@@ -116,14 +122,6 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    titleInputController.dispose();
-    contentInputController.dispose();
-
-    super.dispose();
   }
 }
 

@@ -3,6 +3,7 @@ import 'package:private_notes_light/features/encryption/application/master_key.d
 import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/notes/domain/note.dart';
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
+import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:encrypt/encrypt.dart' as enc;
@@ -12,15 +13,15 @@ part 'note_controller.g.dart';
 @riverpod
 class NoteController extends _$NoteController {
   @override
-  Future<List<({String noteID, String noteTitle})>> build() async {
+  Future<List<NoteWidgetData>> build() async {
     final masterKeyString = ref.watch(masterKeyProvider);
     if (masterKeyString == null) return [];
 
     final List<NoteDto> dtos = await ref.read(noteRepositoryProvider).getNotes();
 
-    final List<({String noteID, String noteTitle})> result = [];
+    final List<NoteWidgetData> result = [];
     for (NoteDto dto in dtos) {
-      result.add((noteID: dto.id, noteTitle: dto.title));
+      result.add(NoteWidgetData(noteId: dto.id, noteTitle: dto.title));
     }
 
     return result;
@@ -52,21 +53,21 @@ class NoteController extends _$NoteController {
     ref.invalidateSelf();
   }
 
-  Future<void> removeNote(String noteID) async {
+  Future<void> removeNote(String noteId) async {
     final currentList = state.value;
     if (currentList == null) return;
 
-    state = AsyncValue.data(currentList.where((element) => element.noteID != noteID).toList());
+    state = AsyncValue.data(currentList.where((element) => element.noteId != noteId).toList());
     try {
-      await ref.read(noteRepositoryProvider).removeNote(noteID);
+      await ref.read(noteRepositoryProvider).removeNote(noteId);
     } catch (e) {
       ref.invalidateSelf();
       rethrow;
     }
   }
 
-  Future<Note> openNote(String noteID) async {
-    final NoteDto dto = await ref.read(noteRepositoryProvider).getNote(noteID);
+  Future<Note> openNote(String noteId) async {
+    final NoteDto dto = await ref.read(noteRepositoryProvider).getNote(noteId);
     return Note(
       id: dto.id,
       title: dto.title,
