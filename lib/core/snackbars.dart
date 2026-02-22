@@ -33,9 +33,9 @@ void showExportSuggestionSnackbar(BuildContext context, VoidCallback onPressed) 
     SnackBar(
       content: Text(
         AppLocalizations.of(context)!.exportSuggestionSnackbar,
-        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.inverseSurface,
       action: SnackBarAction(label: 'Export', onPressed: onPressed),
       showCloseIcon: true,
     ),

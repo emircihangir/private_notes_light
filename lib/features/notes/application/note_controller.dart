@@ -71,7 +71,14 @@ class NoteController extends _$NoteController {
   }
 
   Future<void> triggerExport() async {
-    await ref.read(exportServiceProvider.future);
+    final exportResult = await ref.read(exportServiceProvider.future);
+    if (exportResult == true) {
+      state = AsyncValue.data(state.valueOrNull?.copyWith(showExportSuccessful: true));
+    }
+  }
+
+  void consumeExportSuccess() {
+    state = AsyncValue.data(state.valueOrNull?.copyWith(showExportSuccessful: false));
   }
 
   Future<void> removeNote(String noteId) async {

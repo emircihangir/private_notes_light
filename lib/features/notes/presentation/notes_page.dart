@@ -77,10 +77,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
     final noteController = ref.watch(noteControllerProvider);
 
     ref.listen(noteControllerProvider, (previous, next) {
-      final previousSuggestExport = previous?.asData?.value?.suggestExport;
-      final nextSuggestExport = next.asData?.value?.suggestExport;
-
-      if (previousSuggestExport == false && nextSuggestExport == true) {
+      if (next.asData?.value?.suggestExport == true) {
         showExportSuggestionSnackbar(
           context,
           () async => await ref.read(noteControllerProvider.notifier).triggerExport(),
@@ -91,6 +88,11 @@ class _NotesPageState extends ConsumerState<NotesPage> {
       if (next.asData?.value?.showError == true) {
         showErrorSnackbar(context);
         ref.read(noteControllerProvider.notifier).consumeError();
+      }
+
+      if (next.asData?.value?.showExportSuccessful == true) {
+        showSuccessSnackbar(context, content: AppLocalizations.of(context)!.exportSuccess);
+        ref.read(noteControllerProvider.notifier).consumeExportSuccess();
       }
     });
 
