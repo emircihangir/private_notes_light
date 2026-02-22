@@ -94,6 +94,13 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         showSuccessSnackbar(context, content: AppLocalizations.of(context)!.exportSuccess);
         ref.read(noteControllerProvider.notifier).consumeExportSuccess();
       }
+      if (nextValue?.warnExport == true) {
+        showExportWarningSnackbar(
+          context,
+          () async => await ref.read(noteControllerProvider.notifier).triggerExport(),
+        );
+        ref.read(noteControllerProvider.notifier).consumeExportWarning();
+      }
     });
 
     return Scaffold(

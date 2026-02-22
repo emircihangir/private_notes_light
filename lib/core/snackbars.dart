@@ -39,8 +39,21 @@ void showExportSuggestionSnackbar(BuildContext context, VoidCallback onPressed) 
         style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
       ),
       backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-      action: SnackBarAction(label: 'Export', onPressed: onPressed),
+      action: SnackBarAction(label: AppLocalizations.of(context)!.export, onPressed: onPressed),
       showCloseIcon: true,
+    ),
+  );
+}
+
+void showExportWarningSnackbar(BuildContext context, VoidCallback onPressed) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        AppLocalizations.of(context)!.exportWarningSnackbar,
+        style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+      action: SnackBarAction(label: AppLocalizations.of(context)!.export, onPressed: onPressed),
     ),
   );
 }

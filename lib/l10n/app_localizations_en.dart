@@ -248,4 +248,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get confirmPassword => 'Confirm password';
+
+  @override
+  String get exportWarningSnackbar =>
+      'Last export was more than a week ago. Export recommended.';
+
+  @override
+  String get export => 'Export';
 }

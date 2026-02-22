@@ -9,6 +9,7 @@ import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:path/path.dart' as p;
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'backup_repository.g.dart';
 
@@ -17,6 +18,7 @@ class BackupRepository {
   final SettingsRepository settingsRepo;
   final NoteRepository noteRepo;
   final FilePickerService filePickerService;
+  final _lastExportDateKey = 'lastExportDate';
 
   BackupRepository({
     required this.settingsRepo,
@@ -40,7 +42,27 @@ class BackupRepository {
       bytes: await file.readAsBytes(),
     );
 
-    return pickerResult != null;
+    final operationResult = pickerResult != null;
+    if (operationResult == true) {
+      _setLastExportDate();
+    }
+
+    return operationResult;
+  }
+
+  Future<void> _setLastExportDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_lastExportDateKey, DateTime.now().toIso8601String());
+  }
+
+  Future<DateTime?> getLastExportDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    final dateString = prefs.getString(_lastExportDateKey);
+    if (dateString == null) {
+      return null;
+    } else {
+      return DateTime.tryParse(dateString);
+    }
   }
 
   Future<void> import(BackupData importData, bool alsoImportSettings) async {

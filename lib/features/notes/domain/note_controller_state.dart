@@ -12,6 +12,7 @@ abstract class NoteControllerState with _$NoteControllerState {
     NoteErrorKind? errorKind,
     @Default(false) bool showError,
     @Default(false) bool suggestExport,
+    @Default(false) bool warnExport,
     @Default(false) bool showExportSuccessful,
   }) = _NoteControllerState;
 }

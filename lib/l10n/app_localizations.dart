@@ -561,6 +561,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm password'**
   String get confirmPassword;
+
+  /// No description provided for @exportWarningSnackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Last export was more than a week ago. Export recommended.'**
+  String get exportWarningSnackbar;
+
+  /// No description provided for @export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get export;
 }
 
 class _AppLocalizationsDelegate

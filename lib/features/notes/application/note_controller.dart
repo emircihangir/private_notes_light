@@ -1,5 +1,6 @@
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/backup/application/export_service.dart';
+import 'package:private_notes_light/features/backup/data/backup_repository.dart';
 import 'package:private_notes_light/features/encryption/application/encryption_service.dart';
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
 import 'package:private_notes_light/features/notes/data/note_repository.dart';
@@ -56,6 +57,7 @@ class NoteController extends _$NoteController {
     final newList = [...previousList, NoteWidgetData(noteId: newNote.id, noteTitle: newNote.title)];
     state = AsyncValue.data(state.value!.copyWith(data: newList));
     await suggestExportIfPreferred();
+    await warnExportIfValid();
   }
 
   Future<void> suggestExportIfPreferred() async {
@@ -64,6 +66,25 @@ class NoteController extends _$NoteController {
     if (preferred) {
       state = AsyncValue.data(state.valueOrNull?.copyWith(suggestExport: true));
     }
+  }
+
+  Future<void> warnExportIfValid() async {
+    final settingsRepo = await ref.read(settingsRepositoryProvider.future);
+    if (settingsRepo.getSettings().exportWarnings == false) return;
+
+    final backupRepo = await ref.read(backupRepositoryProvider.future);
+    final lastExportDate = await backupRepo.getLastExportDate();
+    if (lastExportDate == null) return;
+
+    final now = DateTime.now();
+    final diff = now.difference(lastExportDate);
+    if (diff > Duration(days: 7)) {
+      state = AsyncValue.data(state.valueOrNull?.copyWith(warnExport: true));
+    }
+  }
+
+  void consumeExportWarning() {
+    state = AsyncValue.data(state.valueOrNull?.copyWith(warnExport: false));
   }
 
   void consumeExportSuggestion() {
@@ -89,7 +110,8 @@ class NoteController extends _$NoteController {
     state = AsyncValue.data(state.value!.copyWith(data: newList));
     try {
       await ref.read(noteRepositoryProvider).removeNote(noteId);
-      suggestExportIfPreferred();
+      await suggestExportIfPreferred();
+      await warnExportIfValid();
     } catch (e) {
       state = AsyncValue.data(
         state.value?.copyWith(showError: true, errorKind: NoteErrorKind.failedToDeleteNote),

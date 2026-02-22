@@ -277,5 +277,9 @@
   "password" : "Password",
   "@password": {},
   "confirmPassword" : "Confirm password",
-  "@confirmPassword": {}
+  "@confirmPassword": {},
+  "exportWarningSnackbar" : "Last export was more than a week ago. Export recommended.",
+  "@exportWarningSnackbar": {},
+  "export" : "Export",
+  "@export": {}
 }
