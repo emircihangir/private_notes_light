@@ -325,13 +325,13 @@ abstract class AppLocalizations {
   /// Validation error when saving a note without a title.
   ///
   /// In en, this message translates to:
-  /// **'Title input cannot be empty.'**
+  /// **'Please enter a title.'**
   String get titleEmptyError;
 
   /// Validation error when saving a note without content.
   ///
   /// In en, this message translates to:
-  /// **'Content input cannot be empty.'**
+  /// **'Please write some content.'**
   String get contentEmptyError;
 
   /// Generic save button text.

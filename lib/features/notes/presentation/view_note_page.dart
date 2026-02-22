@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:private_notes_light/core/snackbars.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
 import 'package:private_notes_light/features/notes/domain/note.dart';
 import 'package:private_notes_light/features/notes/presentation/confirm_delete_dialog.dart';
@@ -17,6 +16,7 @@ class ViewNotePage extends ConsumerStatefulWidget {
 class _ViewNotePageState extends ConsumerState<ViewNotePage> {
   late final TextEditingController titleInputController;
   late final TextEditingController contentInputController;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -34,15 +34,7 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
 
   // Handlers
   Future<void> handleSaveTap() async {
-    // TODO
-    if (titleInputController.text.isEmpty) {
-      showErrorSnackbar(context, content: AppLocalizations.of(context)!.titleEmptyError);
-      return;
-    }
-    if (contentInputController.text.isEmpty) {
-      showErrorSnackbar(context, content: AppLocalizations.of(context)!.contentEmptyError);
-      return;
-    }
+    if (_formKey.currentState!.validate() == false) return;
 
     final noteControllerNotifier = ref.read(noteControllerProvider.notifier);
     await noteControllerNotifier.createNote(
@@ -102,31 +94,48 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
         child: Center(
           child: Container(
             padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-            child: Column(
-              spacing: 16,
-              children: [
-                TextField(
-                  decoration: inputDecoration().copyWith(
-                    hintText: AppLocalizations.of(context)!.noteTitleLabel,
-                    labelText: AppLocalizations.of(context)!.noteTitleLabel,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                spacing: 16,
+                children: [
+                  TextFormField(
+                    decoration: inputDecoration().copyWith(
+                      hintText: AppLocalizations.of(context)!.noteTitleLabel,
+                      labelText: AppLocalizations.of(context)!.noteTitleLabel,
+                    ),
+                    controller: titleInputController,
+                    textInputAction: TextInputAction.next,
+                    autofocus: widget.note == null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppLocalizations.of(context)!.titleEmptyError;
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  controller: titleInputController,
-                  textInputAction: TextInputAction.next,
-                  autofocus: widget.note == null,
-                ),
-                TextField(
-                  decoration: inputDecoration().copyWith(
-                    hintText: AppLocalizations.of(context)!.noteContentLabel,
-                    labelText: AppLocalizations.of(context)!.noteContentLabel,
+                  TextFormField(
+                    decoration: inputDecoration().copyWith(
+                      hintText: AppLocalizations.of(context)!.noteContentLabel,
+                      labelText: AppLocalizations.of(context)!.noteContentLabel,
+                    ),
+                    maxLines: null,
+                    controller: contentInputController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppLocalizations.of(context)!.contentEmptyError;
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  maxLines: null,
-                  controller: contentInputController,
-                ),
-                FilledButton(
-                  onPressed: handleSaveTap,
-                  child: Text(AppLocalizations.of(context)!.save),
-                ),
-              ],
+                  FilledButton(
+                    onPressed: handleSaveTap,
+                    child: Text(AppLocalizations.of(context)!.save),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -127,10 +127,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noteContentLabel => 'Content';
 
   @override
-  String get titleEmptyError => 'Title input cannot be empty.';
+  String get titleEmptyError => 'Please enter a title.';
 
   @override
-  String get contentEmptyError => 'Content input cannot be empty.';
+  String get contentEmptyError => 'Please write some content.';
 
   @override
   String get save => 'Save';

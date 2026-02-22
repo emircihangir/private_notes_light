@@ -150,11 +150,11 @@
   "@noteContentLabel": {
     "description": "Label and hint text for the note content input field."
   },
-  "titleEmptyError": "Title input cannot be empty.",
+  "titleEmptyError": "Please enter a title.",
   "@titleEmptyError": {
     "description": "Validation error when saving a note without a title."
   },
-  "contentEmptyError": "Content input cannot be empty.",
+  "contentEmptyError": "Please write some content.",
   "@contentEmptyError": {
     "description": "Validation error when saving a note without content."
   },
