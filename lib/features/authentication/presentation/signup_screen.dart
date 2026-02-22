@@ -55,14 +55,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 PasswordTextField(
                   controller: controller1,
                   canBeToggled: false,
-                  hintText: AppLocalizations.of(context)!.masterPasswordHint,
+
+                  labelText: AppLocalizations.of(context)!.password,
                   textInputAction: TextInputAction.next,
                 ),
                 PasswordTextField(
                   controller: controller2,
                   canBeToggled: false,
-                  hintText: AppLocalizations.of(context)!.masterPasswordConfirm,
                   errorText: errorText2,
+                  labelText: AppLocalizations.of(context)!.confirmPassword,
                   onChanged: (value) {
                     if (errorText2 != null) setState(() => errorText2 = null);
                   },

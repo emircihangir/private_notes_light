@@ -51,14 +51,14 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
                 PasswordTextField(
                   controller: controller1,
                   canBeToggled: false,
-                  hintText: AppLocalizations.of(context)!.newPassword,
+                  labelText: AppLocalizations.of(context)!.newPassword,
                   autoFocus: true,
                   textInputAction: TextInputAction.next,
                 ),
                 PasswordTextField(
                   controller: controller2,
                   canBeToggled: false,
-                  hintText: AppLocalizations.of(context)!.newPasswordConfirm,
+                  labelText: AppLocalizations.of(context)!.confirmPassword,
                   errorText: errorText2,
                   onChanged: (value) {
                     if (errorText2 != null) setState(() => errorText2 = null);

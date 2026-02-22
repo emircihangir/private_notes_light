@@ -549,6 +549,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to create note.'**
   String get failedToCreateNote;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirmPassword;
 }
 
 class _AppLocalizationsDelegate

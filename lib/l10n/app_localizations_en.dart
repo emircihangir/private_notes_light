@@ -242,4 +242,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToCreateNote => 'Failed to create note.';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get confirmPassword => 'Confirm password';
 }

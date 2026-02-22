@@ -51,6 +51,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: PasswordTextField(
                   controller: passwordController,
                   errorText: errorText,
+                  labelText: AppLocalizations.of(context)!.password,
                   onChanged: (value) {
                     if (errorText != null) setState(() => errorText = null);
                   },

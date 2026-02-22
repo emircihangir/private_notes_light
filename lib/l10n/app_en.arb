@@ -273,5 +273,9 @@
   "failedToDeleteNote" : "Failed to delete note.",
   "@failedToDeleteNote": {},
   "failedToCreateNote" : "Failed to create note.",
-  "@failedToCreateNote": {}
+  "@failedToCreateNote": {},
+  "password" : "Password",
+  "@password": {},
+  "confirmPassword" : "Confirm password",
+  "@confirmPassword": {}
 }
