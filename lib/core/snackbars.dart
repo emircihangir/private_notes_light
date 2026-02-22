@@ -13,8 +13,11 @@ void showErrorSnackbar(BuildContext context, {String content = 'Error occurred.'
 void showInfoSnackbar(BuildContext context, {required String content}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(content, style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface)),
-      backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
+      content: Text(
+        content,
+        style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.inverseSurface,
     ),
   );
 }
