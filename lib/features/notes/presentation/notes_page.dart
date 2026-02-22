@@ -2,13 +2,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/fade_page_route_builder.dart';
-import 'package:private_notes_light/features/authentication/application/auth_service.dart';
-import 'package:private_notes_light/features/backup/application/export_service.dart';
-import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
 import 'package:private_notes_light/features/notes/application/filtered_notes_list.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
 import 'package:private_notes_light/features/notes/application/search_query.dart';
 import 'package:private_notes_light/features/authentication/presentation/login_screen.dart';
+import 'package:private_notes_light/features/notes/application/session_expired.dart';
 import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
 import 'package:private_notes_light/features/notes/presentation/confirm_delete_dialog.dart';
 import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
@@ -24,72 +22,14 @@ class NotesPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _NotesPageState();
 }
 
-class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserver {
-  bool logoutOnResume = false;
-
-  // Lifecyle management
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    final filePickerRunning = ref.read(filePickerRunningProvider);
-
-    if ((state == AppLifecycleState.inactive) && !filePickerRunning) {
-      log('The app lost focus. Logging out.', name: 'INFO');
-      logoutOnResume = true;
-      ref.read(authServiceProvider).logout();
-    }
-
-    if (state == AppLifecycleState.resumed && logoutOnResume) {
-      log('Forcing the user to login again.', name: 'INFO');
-      Navigator.of(
-        context,
-      ).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
-      showInfoSnackbar(context, content: AppLocalizations.of(context)!.sessionExpiredMessage);
-      logoutOnResume = false;
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  // Helpers
-  Future<void> suggestExportIfPreferred() async {
-    final exportSuggestionPreferred = await ref
-        .read(noteControllerProvider.notifier)
-        .getExportSuggestionPref();
-
-    if (mounted && exportSuggestionPreferred) {
-      showExportSuggestionSnackbar(
-        context,
-        () async => await ref.read(exportServiceProvider.future),
-      );
-    }
-  }
-
+class _NotesPageState extends ConsumerState<NotesPage> {
   // Handlers
   Future<void> handleDismiss(DismissDirection direction, NoteWidgetData note) async {
-    try {
-      await ref.read(noteControllerProvider.notifier).removeNote(note.noteId);
-      await suggestExportIfPreferred();
-    } catch (e) {
-      if (mounted) showErrorSnackbar(context);
-    }
+    await ref.read(noteControllerProvider.notifier).removeNote(note.noteId);
   }
 
-  Future<void> handlePlusTap() async {
-    final madeChanges = await Navigator.of(
-      context,
-    ).push(MaterialPageRoute<bool>(builder: (context) => ViewNotePage()));
-    if (madeChanges == true) await suggestExportIfPreferred();
+  void handlePlusTap() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewNotePage()));
   }
 
   void handleSettingsTap() {
@@ -97,7 +37,7 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
   }
 
   void handleLogout() {
-    ref.read(authServiceProvider).logout();
+    ref.read(noteControllerProvider.notifier).logout();
     Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
   }
 
@@ -110,19 +50,49 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
   }
 
   Future<void> handleNoteWidgetTap(NoteWidgetData noteWidgetData) async {
-    final result = await ref.read(noteControllerProvider.notifier).openNote(noteWidgetData.noteId);
+    final openedNote = await ref
+        .read(noteControllerProvider.notifier)
+        .openNote(noteWidgetData.noteId);
     if (mounted) {
-      final madeChanges = await Navigator.of(
+      Navigator.of(
         context,
-      ).push(MaterialPageRoute<bool>(builder: (context) => ViewNotePage(note: result)));
-      if (madeChanges == true) await suggestExportIfPreferred();
+      ).push(MaterialPageRoute(builder: (context) => ViewNotePage(note: openedNote)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(sessionLifecycleProvider);
+    ref.listen<bool>(sessionExpiredProvider, (previous, next) {
+      if (next == true) {
+        Navigator.of(
+          context,
+        ).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
+        showInfoSnackbar(context, content: AppLocalizations.of(context)!.sessionExpiredMessage);
+        ref.read(sessionExpiredProvider.notifier).setExpired(false);
+      }
+    });
+
     final filteredNotes = ref.watch(filteredNotesListProvider);
-    final fullNotesList = ref.watch(noteControllerProvider);
+    final noteController = ref.watch(noteControllerProvider);
+
+    ref.listen(noteControllerProvider, (previous, next) {
+      final previousSuggestExport = previous?.asData?.value?.suggestExport;
+      final nextSuggestExport = next.asData?.value?.suggestExport;
+
+      if (previousSuggestExport == false && nextSuggestExport == true) {
+        showExportSuggestionSnackbar(
+          context,
+          () async => await ref.read(noteControllerProvider.notifier).triggerExport(),
+        );
+        ref.read(noteControllerProvider.notifier).consumeExportSuggestion();
+      }
+
+      if (next.asData?.value?.showError == true) {
+        showErrorSnackbar(context);
+        ref.read(noteControllerProvider.notifier).consumeError();
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -135,35 +105,40 @@ class _NotesPageState extends ConsumerState<NotesPage> with WidgetsBindingObserv
         ],
       ),
       body: SafeArea(
-        child: fullNotesList.when(
+        child: noteController.when(
           error: (error, stackTrace) {
             log('', error: error, stackTrace: stackTrace, name: 'ERROR');
             return const Center(child: GenericErrorWidget());
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          data: (data) => Padding(
-            padding: const EdgeInsets.all(12),
-            child: data.isNotEmpty
-                ? Column(
-                    children: [
-                      SearchBar(
-                        leading: const Icon(Icons.search),
-                        hintText: AppLocalizations.of(context)!.searchHint,
-                        onChanged: (value) => ref.read(searchQueryProvider.notifier).set(value),
-                      ),
-                      filteredNotes.isNotEmpty
-                          ? NotesList(
-                              confirmDismiss: handleConfirmDismiss,
-                              filteredNotes: filteredNotes,
-                              onDismissed: (direction, noteWidgetData) =>
-                                  handleDismiss(direction, noteWidgetData),
-                              onTap: handleNoteWidgetTap,
-                            )
-                          : NoNotesFoundWidget(),
-                    ],
-                  )
-                : EmptyNotesWidget(),
-          ),
+          data: (noteControllerState) {
+            final data = noteControllerState?.data;
+            final hasData = (data != null && data.isNotEmpty);
+
+            return Padding(
+              padding: const EdgeInsets.all(12),
+              child: hasData
+                  ? Column(
+                      children: [
+                        SearchBar(
+                          leading: const Icon(Icons.search),
+                          hintText: AppLocalizations.of(context)!.searchHint,
+                          onChanged: (value) => ref.read(searchQueryProvider.notifier).set(value),
+                        ),
+                        filteredNotes.isNotEmpty
+                            ? NotesList(
+                                confirmDismiss: handleConfirmDismiss,
+                                filteredNotes: filteredNotes,
+                                onDismissed: (direction, noteWidgetData) =>
+                                    handleDismiss(direction, noteWidgetData),
+                                onTap: handleNoteWidgetTap,
+                              )
+                            : NoNotesFoundWidget(),
+                      ],
+                    )
+                  : EmptyNotesWidget(),
+            );
+          },
         ),
       ),
     );

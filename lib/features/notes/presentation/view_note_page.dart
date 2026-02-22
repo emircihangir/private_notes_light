@@ -32,7 +32,9 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
     super.dispose();
   }
 
+  // Handlers
   Future<void> handleSaveTap() async {
+    // TODO
     if (titleInputController.text.isEmpty) {
       showErrorSnackbar(context, content: AppLocalizations.of(context)!.titleEmptyError);
       return;
@@ -42,16 +44,27 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
       return;
     }
 
-    await ref
-        .read(noteControllerProvider.notifier)
-        .createNote(
-          id: widget.note?.id,
-          title: titleInputController.text,
-          content: contentInputController.text,
-          date: widget.note?.dateCreated,
-        );
+    final noteControllerNotifier = ref.read(noteControllerProvider.notifier);
+    await noteControllerNotifier.createNote(
+      id: widget.note?.id,
+      title: titleInputController.text,
+      content: contentInputController.text,
+      date: widget.note?.dateCreated,
+    );
 
-    if (mounted) Navigator.of(context).pop(true);
+    if (mounted) Navigator.of(context).pop();
+  }
+
+  Future<void> handleDeleteTap(String noteId) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (_) => const ConfirmDeleteDialog(),
+    );
+
+    if (result == true) {
+      await ref.read(noteControllerProvider.notifier).removeNote(noteId);
+      if (mounted) Navigator.of(context).pop();
+    }
   }
 
   InputDecoration inputDecoration() => InputDecoration(
@@ -80,7 +93,9 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
               ? AppLocalizations.of(context)!.createNoteTitle
               : AppLocalizations.of(context)!.editNoteTitle,
         ),
-        actions: widget.note != null ? [DeleteNoteButton(widget.note!.id)] : null,
+        actions: widget.note != null
+            ? [DeleteNoteButton(widget.note!.id, handleDeleteTap: handleDeleteTap)]
+            : null,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -120,26 +135,15 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
   }
 }
 
-class DeleteNoteButton extends ConsumerWidget {
-  final String noteID;
-  const DeleteNoteButton(this.noteID, {super.key});
+class DeleteNoteButton extends StatelessWidget {
+  final String noteId;
+  final Function(String noteId) handleDeleteTap;
+  const DeleteNoteButton(this.noteId, {super.key, required this.handleDeleteTap});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () async {
-        final result = await showDialog<bool>(
-          context: context,
-          builder: (_) => const ConfirmDeleteDialog(),
-        );
-
-        if (result == true) {
-          await ref.read(noteControllerProvider.notifier).removeNote(noteID);
-
-          if (!context.mounted) return;
-          Navigator.of(context).pop(true);
-        }
-      },
+      onPressed: () => handleDeleteTap(noteId),
       icon: const Icon(Icons.delete_rounded),
     );
   }

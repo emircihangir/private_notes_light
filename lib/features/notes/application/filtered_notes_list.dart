@@ -9,10 +9,8 @@ part 'filtered_notes_list.g.dart';
 @riverpod
 List<NoteWidgetData> filteredNotesList(Ref ref) {
   final searchQuery = ref.watch(searchQueryProvider);
-  final notesListAsync = ref.watch(noteControllerProvider);
-
-  final notesList = notesListAsync.valueOrNull ?? [];
-
+  final noteController = ref.watch(noteControllerProvider);
+  final notesList = noteController.valueOrNull?.data ?? [];
   if (searchQuery.isEmpty) return notesList;
 
   return notesList
