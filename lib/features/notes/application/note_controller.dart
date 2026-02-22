@@ -54,7 +54,7 @@ class NoteController extends _$NoteController {
     // * Update the state.
     final previousList = state.valueOrNull?.data;
     if (previousList == null) return;
-    final newList = [...previousList, NoteWidgetData(noteId: newNote.id, noteTitle: newNote.title)];
+    final newList = [NoteWidgetData(noteId: newNote.id, noteTitle: newNote.title), ...previousList];
     state = AsyncValue.data(state.value!.copyWith(data: newList));
     await suggestExportIfPreferred();
     await warnExportIfValid();
