@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
 import 'package:private_notes_light/features/notes/domain/note.dart';
-import 'package:private_notes_light/features/notes/presentation/confirm_delete_dialog.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class ViewNotePage extends ConsumerStatefulWidget {
@@ -48,15 +47,8 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
   }
 
   Future<void> handleDeleteTap(String noteId) async {
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (_) => const ConfirmDeleteDialog(),
-    );
-
-    if (result == true) {
-      await ref.read(noteControllerProvider.notifier).removeNote(noteId);
-      if (mounted) Navigator.of(context).pop();
-    }
+    await ref.read(noteControllerProvider.notifier).removeNote(noteId);
+    if (mounted) Navigator.of(context).pop();
   }
 
   InputDecoration inputDecoration() => InputDecoration(

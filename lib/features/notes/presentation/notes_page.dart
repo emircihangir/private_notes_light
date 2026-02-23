@@ -8,7 +8,6 @@ import 'package:private_notes_light/features/notes/application/search_query.dart
 import 'package:private_notes_light/features/authentication/presentation/login_screen.dart';
 import 'package:private_notes_light/features/notes/application/session_expired.dart';
 import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
-import 'package:private_notes_light/features/notes/presentation/confirm_delete_dialog.dart';
 import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
 import 'package:private_notes_light/features/notes/presentation/view_note_page.dart';
 import 'package:private_notes_light/core/generic_error_widget.dart';
@@ -39,14 +38,6 @@ class _NotesPageState extends ConsumerState<NotesPage> {
   void handleLogout() {
     ref.read(noteControllerProvider.notifier).logout();
     Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
-  }
-
-  Future<bool> handleConfirmDismiss(DismissDirection direction) async {
-    final bool? shouldDelete = await showDialog<bool>(
-      context: context,
-      builder: (context) => const ConfirmDeleteDialog(),
-    );
-    return shouldDelete ?? false;
   }
 
   Future<void> handleNoteWidgetTap(NoteWidgetData noteWidgetData) async {
@@ -136,7 +127,6 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                         ),
                         filteredNotes.isNotEmpty
                             ? NotesList(
-                                confirmDismiss: handleConfirmDismiss,
                                 filteredNotes: filteredNotes,
                                 onDismissed: (direction, noteWidgetData) =>
                                     handleDismiss(direction, noteWidgetData),
@@ -157,14 +147,12 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 class NotesList extends StatelessWidget {
   final List<NoteWidgetData> filteredNotes;
   final Future<void> Function(DismissDirection, NoteWidgetData) onDismissed;
-  final ConfirmDismissCallback confirmDismiss;
   final Future<void> Function(NoteWidgetData) onTap;
 
   const NotesList({
     super.key,
     required this.filteredNotes,
     required this.onDismissed,
-    required this.confirmDismiss,
     required this.onTap,
   });
 
@@ -178,7 +166,6 @@ class NotesList extends StatelessWidget {
 
           return Dismissible(
             onDismissed: (direction) => onDismissed(direction, noteWidgetData),
-            confirmDismiss: confirmDismiss,
             key: ValueKey(noteWidgetData.noteId),
             direction: DismissDirection.endToStart,
             background: Container(
