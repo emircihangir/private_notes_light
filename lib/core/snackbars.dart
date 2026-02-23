@@ -57,3 +57,18 @@ void showExportWarningSnackbar(BuildContext context, VoidCallback onPressed) {
     ),
   );
 }
+
+void showNoteDeletedSnackbar(BuildContext context, VoidCallback onPressed) {
+  ScaffoldMessenger.of(context).clearSnackBars();
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        AppLocalizations.of(context)!.noteDeleted,
+        style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+      action: SnackBarAction(label: AppLocalizations.of(context)!.undo, onPressed: onPressed),
+      persist: false,
+    ),
+  );
+}

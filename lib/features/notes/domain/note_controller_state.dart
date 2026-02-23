@@ -5,6 +5,8 @@ part 'note_controller_state.freezed.dart';
 
 enum NoteErrorKind { failedToDeleteNote }
 
+enum InfoKind { noteDeleted }
+
 @freezed
 abstract class NoteControllerState with _$NoteControllerState {
   const factory NoteControllerState({
@@ -14,5 +16,7 @@ abstract class NoteControllerState with _$NoteControllerState {
     @Default(false) bool suggestExport,
     @Default(false) bool warnExport,
     @Default(false) bool showExportSuccessful,
+    InfoKind? infoKind,
+    @Default(false) bool showInfo,
   }) = _NoteControllerState;
 }

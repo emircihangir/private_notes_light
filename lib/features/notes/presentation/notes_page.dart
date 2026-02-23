@@ -7,7 +7,10 @@ import 'package:private_notes_light/features/notes/application/note_controller.d
 import 'package:private_notes_light/features/notes/application/search_query.dart';
 import 'package:private_notes_light/features/authentication/presentation/login_screen.dart';
 import 'package:private_notes_light/features/notes/application/session_expired.dart';
+import 'package:private_notes_light/features/notes/application/trashed_notes.dart';
+import 'package:private_notes_light/features/notes/domain/note_controller_state.dart';
 import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
+import 'package:private_notes_light/features/notes/presentation/trashed_notes_sheet.dart';
 import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
 import 'package:private_notes_light/features/notes/presentation/view_note_page.dart';
 import 'package:private_notes_light/core/generic_error_widget.dart';
@@ -23,21 +26,33 @@ class NotesPage extends ConsumerStatefulWidget {
 
 class _NotesPageState extends ConsumerState<NotesPage> {
   // Handlers
-  Future<void> handleDismiss(DismissDirection direction, NoteWidgetData note) async {
-    await ref.read(noteControllerProvider.notifier).removeNote(note.noteId);
+  void handleDismiss(DismissDirection direction, NoteWidgetData noteWidgetData) {
+    log('Note list tile dismissed.', name: 'INFO');
+    ref.read(noteControllerProvider.notifier).moveNoteToTrash(noteWidgetData);
   }
 
   void handlePlusTap() {
+    ScaffoldMessenger.of(context).clearSnackBars();
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewNotePage()));
   }
 
   void handleSettingsTap() {
+    ScaffoldMessenger.of(context).clearSnackBars();
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SettingsPage()));
   }
 
   void handleLogout() {
     ref.read(noteControllerProvider.notifier).logout();
+    ScaffoldMessenger.of(context).clearSnackBars();
     Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
+  }
+
+  Future<void> handleTrashTap() async {
+    await showModalBottomSheet(
+      showDragHandle: true,
+      context: context,
+      builder: (context) => TrashedNotesSheet(),
+    );
   }
 
   Future<void> handleNoteWidgetTap(NoteWidgetData noteWidgetData) async {
@@ -45,6 +60,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         .read(noteControllerProvider.notifier)
         .openNote(noteWidgetData.noteId);
     if (mounted) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (context) => ViewNotePage(note: openedNote)));
@@ -56,6 +72,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
     ref.watch(sessionLifecycleProvider);
     ref.listen<bool>(sessionExpiredProvider, (previous, next) {
       if (next == true) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         Navigator.of(
           context,
         ).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
@@ -69,36 +86,56 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 
     ref.listen(noteControllerProvider, (previous, next) {
       final nextValue = next.asData?.value;
+      final noteControllerNotifier = ref.read(noteControllerProvider.notifier);
 
       if (nextValue?.suggestExport == true) {
         showExportSuggestionSnackbar(
           context,
-          () async => await ref.read(noteControllerProvider.notifier).triggerExport(),
+          () async => await noteControllerNotifier.triggerExport(),
         );
-        ref.read(noteControllerProvider.notifier).consumeExportSuggestion();
+        noteControllerNotifier.consumeExportSuggestion();
       }
       if (nextValue?.showError == true) {
         showErrorSnackbar(context);
-        ref.read(noteControllerProvider.notifier).consumeError();
+        noteControllerNotifier.consumeError();
       }
       if (nextValue?.showExportSuccessful == true) {
         showSuccessSnackbar(context, content: AppLocalizations.of(context)!.exportSuccess);
-        ref.read(noteControllerProvider.notifier).consumeExportSuccess();
+        noteControllerNotifier.consumeExportSuccess();
       }
       if (nextValue?.warnExport == true) {
         showExportWarningSnackbar(
           context,
-          () async => await ref.read(noteControllerProvider.notifier).triggerExport(),
+          () async => await noteControllerNotifier.triggerExport(),
         );
-        ref.read(noteControllerProvider.notifier).consumeExportWarning();
+        noteControllerNotifier.consumeExportWarning();
+      }
+      if (nextValue?.showInfo == true) {
+        if (nextValue?.infoKind == InfoKind.noteDeleted) {
+          showNoteDeletedSnackbar(context, noteControllerNotifier.undoDelete);
+          noteControllerNotifier.consumeInfoSnackbar();
+        }
       }
     });
+
+    final trashedNotes = ref.watch(trashedNotesProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.notesTitle),
         centerTitle: true,
-        leading: IconButton(onPressed: handleLogout, icon: const Icon(Icons.logout_rounded)),
+        leadingWidth: 96,
+        leading: Row(
+          children: [
+            IconButton(onPressed: handleLogout, icon: const Icon(Icons.logout_rounded)),
+            trashedNotes.isNotEmpty
+                ? IconButton(
+                    onPressed: () async => await handleTrashTap(),
+                    icon: const Icon(Icons.delete_outline_rounded),
+                  )
+                : SizedBox(),
+          ],
+        ),
         actions: [
           IconButton(onPressed: handleSettingsTap, icon: const Icon(Icons.settings_outlined)),
           IconButton(onPressed: handlePlusTap, icon: const Icon(Icons.add_rounded)),
@@ -146,7 +183,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 
 class NotesList extends StatelessWidget {
   final List<NoteWidgetData> filteredNotes;
-  final Future<void> Function(DismissDirection, NoteWidgetData) onDismissed;
+  final void Function(DismissDirection, NoteWidgetData) onDismissed;
   final Future<void> Function(NoteWidgetData) onTap;
 
   const NotesList({
@@ -212,9 +249,12 @@ class EmptyNotesWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           TextButton(
-            onPressed: () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (context) => const ViewNotePage())),
+            onPressed: () {
+              ScaffoldMessenger.of(context).clearSnackBars();
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => const ViewNotePage()));
+            },
             child: Text(AppLocalizations.of(context)!.createNoteButton),
           ),
         ],

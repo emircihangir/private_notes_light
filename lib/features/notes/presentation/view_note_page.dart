@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
 import 'package:private_notes_light/features/notes/domain/note.dart';
+import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class ViewNotePage extends ConsumerStatefulWidget {
@@ -43,12 +44,20 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
       date: widget.note?.dateCreated,
     );
 
-    if (mounted) Navigator.of(context).pop();
+    if (mounted) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      Navigator.of(context).pop();
+    }
   }
 
-  Future<void> handleDeleteTap(String noteId) async {
-    await ref.read(noteControllerProvider.notifier).removeNote(noteId);
-    if (mounted) Navigator.of(context).pop();
+  void handleDeleteTap() {
+    ref
+        .read(noteControllerProvider.notifier)
+        .moveNoteToTrash(NoteWidgetData(noteId: widget.note!.id, noteTitle: widget.note!.title));
+    if (mounted) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      Navigator.of(context).pop();
+    }
   }
 
   InputDecoration inputDecoration() => InputDecoration(
@@ -138,7 +147,7 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
 
 class DeleteNoteButton extends StatelessWidget {
   final String noteId;
-  final Function(String noteId) handleDeleteTap;
+  final Function handleDeleteTap;
   const DeleteNoteButton(this.noteId, {super.key, required this.handleDeleteTap});
 
   @override

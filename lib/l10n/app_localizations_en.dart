@@ -255,4 +255,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get export => 'Export';
+
+  @override
+  String get noteDeleted => 'Note deleted.';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get trashedNotes => 'Trashed Notes';
+
+  @override
+  String get putBack => 'Put Back';
+
+  @override
+  String get trashedNotesExplainer =>
+      'These are permanently deleted on logout.';
 }

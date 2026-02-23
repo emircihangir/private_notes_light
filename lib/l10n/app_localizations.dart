@@ -573,6 +573,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export'**
   String get export;
+
+  /// No description provided for @noteDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Note deleted.'**
+  String get noteDeleted;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @trashedNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Trashed Notes'**
+  String get trashedNotes;
+
+  /// No description provided for @putBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Put Back'**
+  String get putBack;
+
+  /// No description provided for @trashedNotesExplainer.
+  ///
+  /// In en, this message translates to:
+  /// **'These are permanently deleted on logout.'**
+  String get trashedNotesExplainer;
 }
 
 class _AppLocalizationsDelegate

@@ -281,5 +281,15 @@
   "exportWarningSnackbar" : "Last export was more than a week ago. Export recommended.",
   "@exportWarningSnackbar": {},
   "export" : "Export",
-  "@export": {}
+  "@export": {},
+  "noteDeleted" : "Note deleted.",
+  "@noteDeleted": {},
+  "undo" : "Undo",
+  "@undo": {},
+  "trashedNotes" : "Trashed Notes",
+  "@trashedNotes": {},
+  "putBack" : "Put Back",
+  "@putBack": {},
+  "trashedNotesExplainer" : "These are permanently deleted on logout.",
+  "@trashedNotesExplainer": {}
 }

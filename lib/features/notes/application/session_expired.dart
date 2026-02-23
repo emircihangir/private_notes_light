@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
+import 'package:private_notes_light/features/notes/application/note_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'session_expired.g.dart';
@@ -34,7 +34,7 @@ class SessionLifecycleObserver extends WidgetsBindingObserver {
     if (state == AppLifecycleState.inactive && !filePickerRunning) {
       log('The app lost focus. Logging out.', name: 'INFO');
       logoutOnResume = true;
-      ref.read(authServiceProvider).logout();
+      ref.read(noteControllerProvider.notifier).logout();
     }
 
     if (state == AppLifecycleState.resumed && logoutOnResume) {

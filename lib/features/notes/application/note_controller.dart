@@ -1,13 +1,16 @@
+import 'dart:developer';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/backup/application/export_service.dart';
 import 'package:private_notes_light/features/backup/data/backup_repository.dart';
 import 'package:private_notes_light/features/encryption/application/encryption_service.dart';
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
+import 'package:private_notes_light/features/notes/application/trashed_notes.dart';
 import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/notes/domain/note.dart';
 import 'package:private_notes_light/features/notes/domain/note_controller_state.dart';
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
+import 'package:private_notes_light/features/notes/domain/trashed_note_data.dart';
 import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -39,14 +42,12 @@ class NoteController extends _$NoteController {
     DateTime? date,
   }) async {
     final encrypted = ref.read(encryptionServiceProvider).encryptWithMasterKey(content);
-
     Note newNote = Note(
       id: id ?? Uuid().v4(),
       title: title,
       content: encrypted.encryptedText,
       dateCreated: date ?? DateTime.now(),
     );
-
     final NoteDto dto = NoteDto.fromDomain(newNote, newNote.content, encrypted.encryptionIV);
 
     await ref.read(noteRepositoryProvider).addNote(dto);
@@ -102,28 +103,84 @@ class NoteController extends _$NoteController {
     state = AsyncValue.data(state.valueOrNull?.copyWith(showExportSuccessful: false));
   }
 
-  Future<void> removeNote(String noteId) async {
+  void moveNoteToTrash(NoteWidgetData noteWidgetData) {
     final currentList = state.valueOrNull?.data;
     if (currentList == null) return;
 
-    final newList = currentList.where((element) => element.noteId != noteId).toList();
-    state = AsyncValue.data(state.value!.copyWith(data: newList));
-    try {
-      await ref.read(noteRepositoryProvider).removeNote(noteId);
-      await suggestExportIfPreferred();
-      await warnExportIfValid();
-    } catch (e) {
+    final trashdNoteData = TrashedNoteData(noteWidgetData, currentList.indexOf(noteWidgetData));
+    ref.read(trashedNotesProvider.notifier).add(trashdNoteData);
+    final newList = currentList
+        .where((element) => element.noteId != noteWidgetData.noteId)
+        .toList();
+    state = AsyncValue.data(state.valueOrNull?.copyWith(data: newList));
+    if (state.valueOrNull?.showInfo != true) {
       state = AsyncValue.data(
-        state.value?.copyWith(showError: true, errorKind: NoteErrorKind.failedToDeleteNote),
+        state.valueOrNull?.copyWith(showInfo: true, infoKind: InfoKind.noteDeleted),
       );
     }
+
+    log('Note with the title "${noteWidgetData.noteTitle}" trashed.', name: 'INFO');
+  }
+
+  Future<void> emptyTrash() async {
+    final trashedNotes = ref.read(trashedNotesProvider);
+    for (TrashedNoteData trashedNote in trashedNotes) {
+      await ref.read(noteRepositoryProvider).removeNote(trashedNote.noteWidgetData.noteId);
+    }
+    ref.read(trashedNotesProvider.notifier).clear();
+    log('Emptied the trash.', name: 'INFO');
+  }
+
+  void undoDelete() {
+    final currentList = state.valueOrNull?.data;
+    if (currentList == null) return;
+
+    final lastDeletedNote = ref.read(trashedNotesProvider.notifier).undoLast();
+    final newList = List<NoteWidgetData>.from(currentList);
+    newList.insert(lastDeletedNote.index, lastDeletedNote.noteWidgetData);
+    state = AsyncValue.data(state.valueOrNull?.copyWith(data: newList));
+
+    log(
+      'Put back the note with title "${lastDeletedNote.noteWidgetData.noteTitle}".',
+      name: 'INFO',
+    );
+  }
+
+  void putNoteBack(TrashedNoteData trashedNote) {
+    final currentList = state.valueOrNull?.data;
+    if (currentList == null) return;
+
+    final newList = List<NoteWidgetData>.from(currentList);
+    late final int noteIndex;
+    if (trashedNote.index > newList.length) {
+      noteIndex = newList.length;
+    } else {
+      noteIndex = trashedNote.index;
+    }
+
+    newList.insert(noteIndex, trashedNote.noteWidgetData);
+    state = AsyncValue.data(state.valueOrNull?.copyWith(data: newList));
+
+    ref.read(trashedNotesProvider.notifier).remove(trashedNote);
+
+    log('Put back the note with title "${trashedNote.noteWidgetData.noteTitle}".', name: 'INFO');
+  }
+
+  void consumeInfoSnackbar() {
+    state = AsyncValue.data(state.value?.copyWith(showInfo: false, infoKind: null));
   }
 
   void consumeError() {
     state = AsyncValue.data(state.value?.copyWith(showError: false, errorKind: null));
   }
 
-  void logout() => ref.read(authServiceProvider).logout();
+  Future<void> logout() async {
+    if (ref.read(trashedNotesProvider).isNotEmpty) {
+      log('Logout called, emptying the trash...', name: 'INFO');
+      await emptyTrash();
+    }
+    ref.read(authServiceProvider).logout();
+  }
 
   Future<bool> getExportSuggestionPref() async {
     final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
