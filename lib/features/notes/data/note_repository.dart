@@ -8,6 +8,7 @@ part 'note_repository.g.dart';
 
 class NoteRepository {
   Database? _database;
+  static const int _dbVersion = 1;
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -20,7 +21,7 @@ class NoteRepository {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: _dbVersion, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
