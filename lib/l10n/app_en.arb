@@ -214,10 +214,8 @@
   "@appName": {
     "description": "The name of the application."
   },
-  "appVersionInfo": "Version 1.0.0 • February 2026",
-  "@appVersionInfo": {
-    "description": "Static version and date string."
-  },
+  "version" : "Version",
+  "@version": {},
   "developedBy": "Developed by Muhammed Emir Cihangir",
   "@developedBy": {
     "description": "Developer credit text."

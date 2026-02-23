@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/backup/presentation/export_list_tile.dart';
 import 'package:private_notes_light/features/backup/presentation/import_list_tile.dart';
+import 'package:private_notes_light/features/settings/application/app_version.dart';
 import 'package:private_notes_light/features/settings/application/settings_controller.dart';
 import 'package:private_notes_light/core/snackbars.dart';
 import 'package:private_notes_light/features/settings/presentation/change_password_sheet.dart';
@@ -14,6 +15,8 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsControllerAsync = ref.watch(settingsControllerProvider);
+    final appVersion = ref.watch(appVersionProvider);
+    final String versionNumber = appVersion.valueOrNull ?? '';
 
     return Scaffold(
       appBar: AppBar(
@@ -117,7 +120,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    AppLocalizations.of(context)!.appVersionInfo,
+                    "${AppLocalizations.of(context)!.version} $versionNumber",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   Text(

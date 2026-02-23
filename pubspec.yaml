@@ -33,6 +33,7 @@ dependencies:
   cryptography: ^2.9.0
   cryptography_flutter: ^2.3.4
   flutter_svg: ^2.2.3
+  package_info_plus: ^9.0.0
 
 dev_dependencies:
   flutter_test:

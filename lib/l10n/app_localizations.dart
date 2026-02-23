@@ -418,11 +418,11 @@ abstract class AppLocalizations {
   /// **'Private Notes'**
   String get appName;
 
-  /// Static version and date string.
+  /// No description provided for @version.
   ///
   /// In en, this message translates to:
-  /// **'Version 1.0.0 • February 2026'**
-  String get appVersionInfo;
+  /// **'Version'**
+  String get version;
 
   /// Developer credit text.
   ///
