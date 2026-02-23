@@ -24,7 +24,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void dispose() {
     passwordController.dispose();
     super.dispose();
-    log('Disposed the password text field controller.', name: 'INFO');
+    log('Disposed the password text field controller in login screen.', name: 'INFO');
   }
 
   @override
@@ -68,6 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   if (!context.mounted) return;
 
                   if (loggedIn) {
+                    ScaffoldMessenger.of(context).clearSnackBars();
                     Navigator.of(
                       context,
                     ).pushAndRemoveUntil(fadePageRouteBuilder(NotesPage()), (route) => false);

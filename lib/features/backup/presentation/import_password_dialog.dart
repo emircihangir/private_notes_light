@@ -22,7 +22,7 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
   void dispose() {
     controller.dispose();
     super.dispose();
-    log('Disposed the password text field controller.', name: 'INFO');
+    log('Disposed the password text field controller in import password dialog.', name: 'INFO');
   }
 
   @override

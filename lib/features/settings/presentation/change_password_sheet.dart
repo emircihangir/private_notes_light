@@ -25,7 +25,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
     controller1.dispose();
     controller2.dispose();
     super.dispose();
-    log('Disposed the text field controllers in ChangePasswordSheet', name: 'INFO');
+    log('Disposed the password text field controllers in change password sheet.', name: 'INFO');
   }
 
   @override
@@ -83,6 +83,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
                         context,
                         content: AppLocalizations.of(context)!.changedPasswordSuccessfully,
                       );
+                      ScaffoldMessenger.of(context).clearSnackBars();
                       Navigator.of(context).pop();
                     }
                   },

@@ -27,7 +27,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     controller1.dispose();
     controller2.dispose();
     super.dispose();
-    log('Disposed the password text field controllers.', name: 'INFO');
+    log('Disposed the password text field controllers in signup screen.', name: 'INFO');
   }
 
   @override
