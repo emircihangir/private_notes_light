@@ -52,11 +52,7 @@ class NoteController extends _$NoteController {
 
     await ref.read(noteRepositoryProvider).addNote(dto);
 
-    // * Update the state.
-    final previousList = state.valueOrNull?.data;
-    if (previousList == null) return;
-    final newList = [NoteWidgetData(noteId: newNote.id, noteTitle: newNote.title), ...previousList];
-    state = AsyncValue.data(state.value!.copyWith(data: newList));
+    ref.invalidateSelf();
     await suggestExportIfPreferred();
     await warnExportIfValid();
   }
