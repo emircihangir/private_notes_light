@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
+import 'package:private_notes_light/features/notes/application/title_warning_pref.dart';
 import 'package:private_notes_light/features/notes/domain/note.dart';
 import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
@@ -45,7 +46,6 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
     );
 
     if (mounted) {
-      ScaffoldMessenger.of(context).clearSnackBars();
       Navigator.of(context).pop();
     }
   }
@@ -55,7 +55,6 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
         .read(noteControllerProvider.notifier)
         .moveNoteToTrash(NoteWidgetData(noteId: widget.note!.id, noteTitle: widget.note!.title));
     if (mounted) {
-      ScaffoldMessenger.of(context).clearSnackBars();
       Navigator.of(context).pop();
     }
   }
@@ -79,6 +78,9 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
 
   @override
   Widget build(BuildContext context) {
+    final titleWarningPref = ref.watch(titleWarningPrefProvider);
+    final showTitleWarning = (titleWarningPref.valueOrNull == true);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -135,6 +137,35 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
                     onPressed: handleSaveTap,
                     child: Text(AppLocalizations.of(context)!.save),
                   ),
+                  showTitleWarning
+                      ? Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                Text(AppLocalizations.of(context)!.titleWarning),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      onPressed: ref
+                                          .read(titleWarningPrefProvider.notifier)
+                                          .dismiss,
+                                      child: Text(AppLocalizations.of(context)!.dismiss),
+                                    ),
+                                    TextButton(
+                                      onPressed: ref
+                                          .read(titleWarningPrefProvider.notifier)
+                                          .dontShowAgain,
+                                      child: Text(AppLocalizations.of(context)!.dontShowAgain),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),
@@ -147,14 +178,11 @@ class _ViewNotePageState extends ConsumerState<ViewNotePage> {
 
 class DeleteNoteButton extends StatelessWidget {
   final String noteId;
-  final Function handleDeleteTap;
+  final VoidCallback handleDeleteTap;
   const DeleteNoteButton(this.noteId, {super.key, required this.handleDeleteTap});
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () => handleDeleteTap(noteId),
-      icon: const Icon(Icons.delete_rounded),
-    );
+    return IconButton(onPressed: handleDeleteTap, icon: const Icon(Icons.delete_rounded));
   }
 }

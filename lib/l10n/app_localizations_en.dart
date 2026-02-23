@@ -271,4 +271,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get trashedNotesExplainer =>
       'These are permanently deleted on logout.';
+
+  @override
+  String get titleWarning =>
+      'Warning: Note titles are not encrypted. Do not write sensitive information in titles.';
+
+  @override
+  String get dismiss => 'Dismiss';
+
+  @override
+  String get dontShowAgain => 'Don\'t show again';
 }

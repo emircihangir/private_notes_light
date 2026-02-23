@@ -603,6 +603,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'These are permanently deleted on logout.'**
   String get trashedNotesExplainer;
+
+  /// No description provided for @titleWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning: Note titles are not encrypted. Do not write sensitive information in titles.'**
+  String get titleWarning;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
+
+  /// No description provided for @dontShowAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show again'**
+  String get dontShowAgain;
 }
 
 class _AppLocalizationsDelegate

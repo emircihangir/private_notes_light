@@ -86,5 +86,7 @@ ThemeData appTheme(Brightness brightness) {
     bottomSheetTheme: BottomSheetThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
     ),
+
+    cardTheme: CardThemeData(elevation: 0),
   );
 }
