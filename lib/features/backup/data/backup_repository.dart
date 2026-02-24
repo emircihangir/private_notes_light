@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_service.dart';
+import 'package:private_notes_light/features/backup/application/path_service.dart';
 import 'package:private_notes_light/features/backup/domain/backup_data.dart';
 import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/settings/data/settings_repository.dart';
@@ -18,20 +18,23 @@ class BackupRepository {
   final SettingsRepository settingsRepo;
   final NoteRepository noteRepo;
   final FilePickerService filePickerService;
+  final Directory tempDirectory;
   final _lastExportDateKey = 'lastExportDate';
 
   BackupRepository({
     required this.settingsRepo,
     required this.noteRepo,
     required this.filePickerService,
+    required this.tempDirectory,
   });
 
-  Future<bool?> export(Map<String, dynamic> exportDataMap) async {
+  static String get lastExportDateKey => 'lastExportDate';
+
+  Future<bool> export(Map<String, dynamic> exportDataMap) async {
     final exportJsonString = jsonEncode(exportDataMap);
 
-    final tempDir = await getTemporaryDirectory();
     final fileName = 'private_notes_export_${dateFormat.format(DateTime.now())}.json';
-    final filePath = p.join(tempDir.path, fileName);
+    final filePath = p.join(tempDirectory.path, fileName);
     final file = File(filePath);
 
     await file.writeAsString(exportJsonString);
@@ -76,10 +79,12 @@ Future<BackupRepository> backupRepository(Ref ref) async {
   final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
   final noteRepo = ref.watch(noteRepositoryProvider);
   final filePickerService = ref.read(filePickerServiceProvider);
+  final tempDirectory = await ref.read(pathServiceProvider).getTempDirectory();
 
   return BackupRepository(
     settingsRepo: settingsRepo,
     noteRepo: noteRepo,
     filePickerService: filePickerService,
+    tempDirectory: tempDirectory,
   );
 }

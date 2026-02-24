@@ -20,6 +20,7 @@ import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:private_notes_light/features/settings/domain/settings_data.dart';
 import 'package:encrypt/encrypt.dart' as enc;
+import '../../../core/dummy_backup_data.dart';
 
 @GenerateNiceMocks([
   MockSpec<BackupRepository>(),
@@ -208,27 +209,6 @@ void main() {
         final firstNoteContent = 'firstNoteContent';
         final firstNoteIv = enc.IV.fromLength(16);
         final dummyKey = enc.Key.fromLength(32);
-        final dummyBackupData = BackupData(
-          credentialsData: CredentialsData(
-            salt: 'salt',
-            iv: 'iviv',
-            encryptedMasterKey: 'encryptedMasterKey',
-          ),
-          settingsData: SettingsData(
-            exportSuggestions: true,
-            exportWarnings: true,
-            theme: ThemeMode.system,
-          ),
-          notesData: [
-            NoteDto(
-              id: 'id',
-              title: 'title',
-              content: firstNoteContent,
-              iv: firstNoteIv.base64,
-              dateCreated: 'dateCreated',
-            ),
-          ],
-        );
         container.read(masterKeyProvider.notifier).set(dummyKey);
         when(
           mockEncryptionService.keyCanDecrypt(firstNoteContent, dummyKey, firstNoteIv),
@@ -236,7 +216,7 @@ void main() {
 
         final tempDir = Directory.systemTemp;
         final dummyFile = File('${tempDir.path}/dummyFile.json');
-        await dummyFile.writeAsString(jsonEncode(dummyBackupData.toJson()));
+        await dummyFile.writeAsString(jsonEncode(dummyBackupData().toJson()));
         PlatformFile dummyPlatformFile = PlatformFile(
           name: 'dummyFile.json',
           size: await dummyFile.length(),
@@ -263,27 +243,6 @@ void main() {
         final firstNoteContent = 'firstNoteContent';
         final firstNoteIv = enc.IV.fromLength(16);
         final dummyKey = enc.Key.fromLength(32);
-        final dummyBackupData = BackupData(
-          credentialsData: CredentialsData(
-            salt: 'salt',
-            iv: 'iviv',
-            encryptedMasterKey: 'encryptedMasterKey',
-          ),
-          settingsData: SettingsData(
-            exportSuggestions: true,
-            exportWarnings: true,
-            theme: ThemeMode.system,
-          ),
-          notesData: [
-            NoteDto(
-              id: 'id',
-              title: 'title',
-              content: firstNoteContent,
-              iv: firstNoteIv.base64,
-              dateCreated: 'dateCreated',
-            ),
-          ],
-        );
         container.read(masterKeyProvider.notifier).set(dummyKey);
 
         when(
@@ -292,7 +251,7 @@ void main() {
 
         final tempDir = Directory.systemTemp;
         final dummyFile = File('${tempDir.path}/dummyFile.json');
-        await dummyFile.writeAsString(jsonEncode(dummyBackupData.toJson()));
+        await dummyFile.writeAsString(jsonEncode(dummyBackupData().toJson()));
         PlatformFile dummyPlatformFile = PlatformFile(
           name: 'dummyFile.json',
           size: await dummyFile.length(),
@@ -345,7 +304,7 @@ void main() {
         mockEncryptionService.decryptText(
           encryptedText: oldContent,
           key: oldKey,
-          iv: anyNamed('iv'),
+          iv: argThat(isA<enc.IV>(), named: 'iv'),
         ),
       ).thenReturn(decryptedContent);
       when(
