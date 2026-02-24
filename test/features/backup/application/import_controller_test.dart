@@ -17,7 +17,6 @@ import 'package:private_notes_light/features/encryption/application/encryption_s
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
 import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
-import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:private_notes_light/features/settings/domain/settings_data.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import '../../../core/dummy_backup_data.dart';
@@ -27,7 +26,6 @@ import '../../../core/dummy_backup_data.dart';
   MockSpec<EncryptionService>(),
   MockSpec<NoteRepository>(),
   MockSpec<FilePickerService>(),
-  MockSpec<SettingsRepository>(),
 ])
 import 'import_controller_test.mocks.dart';
 
