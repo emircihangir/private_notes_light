@@ -11,7 +11,7 @@ class ExportListTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     void triggerExport() async {
       try {
-        final exportResult = await ref.watch(exportServiceProvider.future);
+        final exportResult = await ref.read(exportServiceProvider.future);
         if (exportResult == true && context.mounted) {
           showSuccessSnackbar(context, content: AppLocalizations.of(context)!.exportSuccess);
         }
