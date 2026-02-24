@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 
-void showErrorSnackbar(BuildContext context, {String content = 'Error occurred.'}) {
+void showErrorSnackbar(BuildContext context, {String? content}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(content, style: TextStyle(color: Theme.of(context).colorScheme.onError)),
+      content: Text(
+        content ?? AppLocalizations.of(context)!.errorOccurred,
+        style: TextStyle(color: Theme.of(context).colorScheme.onError),
+      ),
       backgroundColor: Theme.of(context).colorScheme.error,
     ),
   );

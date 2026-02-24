@@ -281,4 +281,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dontShowAgain => 'Don\'t show again';
+
+  @override
+  String get errorOccurred => 'Error occurred.';
 }

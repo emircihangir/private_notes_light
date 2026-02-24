@@ -295,5 +295,7 @@
   "dismiss": "Dismiss",
   "@dismiss": {},
   "dontShowAgain": "Don't show again",
-  "@dontShowAgain": {}
+  "@dontShowAgain": {},
+  "errorOccurred" : "Error occurred.",
+  "@errorOccurred": {}
 }

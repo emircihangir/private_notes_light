@@ -621,6 +621,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Don\'t show again'**
   String get dontShowAgain;
+
+  /// No description provided for @errorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'Error occurred.'**
+  String get errorOccurred;
 }
 
 class _AppLocalizationsDelegate
