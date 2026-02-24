@@ -47,7 +47,7 @@ class BackupRepository {
 
     final operationResult = pickerResult != null;
     if (operationResult == true) {
-      _setLastExportDate();
+      await _setLastExportDate();
     }
 
     return operationResult;
