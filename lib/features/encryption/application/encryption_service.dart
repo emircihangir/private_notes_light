@@ -29,12 +29,12 @@ class EncryptionService {
     return List<int>.generate(length, (i) => random.nextInt(256));
   }
 
-  ({String encryptedText, String encryptionIV}) encryptWithMasterKey(String text, {enc.IV? iv}) {
+  ({String encryptedText, enc.IV encryptionIV}) encryptWithMasterKey(String text, {enc.IV? iv}) {
     final key = ref.read(masterKeyProvider)!;
     final encrypter = enc.Encrypter(enc.AES(key));
     final enc.IV ivValue = iv ?? enc.IV.fromLength(16);
     final encrypted = encrypter.encrypt(text, iv: ivValue);
-    return (encryptedText: encrypted.base64, encryptionIV: ivValue.base64);
+    return (encryptedText: encrypted.base64, encryptionIV: ivValue);
   }
 
   ({String encryptedText, String encryptionIV}) encryptText({
@@ -64,7 +64,10 @@ class EncryptionService {
   }
 
   String decryptWithMasterKey(String encryptedText, enc.IV iv) {
-    final key = ref.read(masterKeyProvider)!;
+    final masterKey = ref.read(masterKeyProvider);
+    assert(masterKey != null, 'masterKey cannot be null when decryptWithMasterKey executes.');
+
+    final key = masterKey!;
 
     final encrypter = enc.Encrypter(enc.AES(key));
     return encrypter.decrypt(enc.Encrypted.fromBase64(encryptedText), iv: iv);

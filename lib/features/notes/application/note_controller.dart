@@ -48,7 +48,7 @@ class NoteController extends _$NoteController {
       content: encrypted.encryptedText,
       dateCreated: date ?? DateTime.now(),
     );
-    final NoteDto dto = NoteDto.fromDomain(newNote, newNote.content, encrypted.encryptionIV);
+    final NoteDto dto = NoteDto.fromDomain(newNote, newNote.content, encrypted.encryptionIV.base64);
 
     await ref.read(noteRepositoryProvider).addNote(dto);
 
