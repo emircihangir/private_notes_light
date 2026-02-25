@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_service.dart';
 import 'package:private_notes_light/features/backup/data/backup_repository.dart';
@@ -21,6 +22,9 @@ part 'import_controller.g.dart';
 class ImportController extends _$ImportController {
   @override
   ImportControllerState? build() => null;
+
+  @visibleForTesting
+  void setState(ImportControllerState newState) => state = newState;
 
   Future<void> validateImportFile(PlatformFile importFile) async {
     late final String importString;

@@ -67,6 +67,7 @@ class ImportListTile extends ConsumerWidget {
     });
 
     return ListTile(
+      key: ValueKey('ImportListTile'),
       leading: const Icon(Icons.download_rounded),
       title: Text(AppLocalizations.of(context)!.importDataTitle),
       subtitle: Text(AppLocalizations.of(context)!.importDataSubtitle),

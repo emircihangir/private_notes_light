@@ -4,6 +4,7 @@ import 'package:private_notes_light/l10n/app_localizations.dart';
 void showErrorSnackbar(BuildContext context, {String? content}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
+      key: ValueKey('ErrorSnackbar'),
       content: Text(
         content ?? AppLocalizations.of(context)!.errorOccurred,
         style: TextStyle(color: Theme.of(context).colorScheme.onError),
@@ -28,6 +29,7 @@ void showInfoSnackbar(BuildContext context, {required String content}) {
 void showSuccessSnackbar(BuildContext context, {required String content}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
+      key: ValueKey('SuccessSnackbar'),
       content: Text(content, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
       backgroundColor: Theme.of(context).colorScheme.primary,
     ),
