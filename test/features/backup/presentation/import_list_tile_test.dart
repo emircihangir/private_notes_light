@@ -61,4 +61,32 @@ void main() {
       expect(find.byKey(ValueKey('ErrorSnackbar')), findsOne);
     }
   });
+
+  testWidgets('can show success snackbar.', (widgetTester) async {
+    // Setup
+    await widgetTester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: NotesPage(),
+        ),
+      ),
+    );
+    await widgetTester.pump();
+    final notesPageContext = widgetTester.element(find.byType(NotesPage));
+
+    await widgetTester.tap(find.byIcon(Icons.settings_outlined));
+    await widgetTester.pumpAndSettle();
+
+    final context = widgetTester.element(find.byType(SettingsPage));
+    final container = ProviderScope.containerOf(context);
+
+    // Act
+    container.read(importControllerProvider.notifier).setState(ImportControllerState.showSuccess());
+    await widgetTester.pumpAndSettle();
+
+    // Verify
+    expect(find.text(AppLocalizations.of(notesPageContext)!.importSuccess), findsOne);
+  });
 }
