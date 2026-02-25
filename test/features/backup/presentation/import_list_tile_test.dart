@@ -34,4 +34,31 @@ void main() {
     // Verify
     expect(find.byType(OverwriteWarningDialog), findsOne);
   });
+
+  testWidgets('can show error snackbars.', (widgetTester) async {
+    // Setup
+    await widgetTester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SettingsPage(),
+        ),
+      ),
+    );
+    await widgetTester.pump();
+    final context = widgetTester.element(find.byType(ImportListTile));
+    final container = ProviderScope.containerOf(context);
+
+    for (var errorKind in ImportErrorKind.values) {
+      // Act
+      container
+          .read(importControllerProvider.notifier)
+          .setState(ImportControllerState.showError(errorKind: errorKind));
+      await widgetTester.pumpAndSettle();
+
+      // Verify
+      expect(find.byKey(ValueKey('ErrorSnackbar')), findsOne);
+    }
+  });
 }
