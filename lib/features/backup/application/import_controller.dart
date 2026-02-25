@@ -117,7 +117,7 @@ class ImportController extends _$ImportController {
       );
       final updateNote = currentNote.copyWith(
         content: reEncrypted.encryptedText,
-        iv: reEncrypted.encryptionIV,
+        iv: reEncrypted.encryptionIV.base64,
       );
 
       updatedNotesList.add(updateNote);

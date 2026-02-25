@@ -30,14 +30,17 @@ class EncryptionService {
   }
 
   ({String encryptedText, enc.IV encryptionIV}) encryptWithMasterKey(String text, {enc.IV? iv}) {
-    final key = ref.read(masterKeyProvider)!;
+    final masterKey = ref.read(masterKeyProvider);
+    assert(masterKey != null, 'masterKey cannot be null when encryptWithMasterKey executes.');
+
+    final key = masterKey!;
     final encrypter = enc.Encrypter(enc.AES(key));
     final enc.IV ivValue = iv ?? enc.IV.fromLength(16);
     final encrypted = encrypter.encrypt(text, iv: ivValue);
     return (encryptedText: encrypted.base64, encryptionIV: ivValue);
   }
 
-  ({String encryptedText, String encryptionIV}) encryptText({
+  ({String encryptedText, enc.IV encryptionIV}) encryptText({
     required String text,
     required enc.Key key,
     enc.IV? iv,
@@ -45,7 +48,7 @@ class EncryptionService {
     final encrypter = enc.Encrypter(enc.AES(key));
     final enc.IV ivValue = iv ?? enc.IV.fromLength(16);
     final encrypted = encrypter.encrypt(text, iv: ivValue);
-    return (encryptedText: encrypted.base64, encryptionIV: ivValue.base64);
+    return (encryptedText: encrypted.base64, encryptionIV: ivValue);
   }
 
   String decryptText({required String encryptedText, required enc.Key key, required enc.IV iv}) {
@@ -54,7 +57,6 @@ class EncryptionService {
   }
 
   bool keyCanDecrypt(String text, enc.Key key, enc.IV iv) {
-    // * Try to decrypt first note's content with key.
     try {
       decryptText(encryptedText: text, key: key, iv: iv);
       return true;

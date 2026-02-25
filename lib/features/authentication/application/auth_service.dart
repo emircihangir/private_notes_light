@@ -29,7 +29,6 @@ class AuthService {
         .read(encryptionServiceProvider)
         .encryptText(text: masterKey.base64, key: userKey);
     final encryptedMasterKeyString = encrypted.encryptedText;
-    final encryptionIVstring = encrypted.encryptionIV;
 
     // * Save the encrypted master key along with salt and iv.
     await ref
@@ -37,7 +36,7 @@ class AuthService {
         .saveCredentials(
           CredentialsData(
             salt: salt,
-            iv: encryptionIVstring,
+            iv: encrypted.encryptionIV.base64,
             encryptedMasterKey: encryptedMasterKeyString,
           ),
         );
@@ -64,7 +63,6 @@ class AuthService {
       key: newUserKey,
     );
     final encryptedMasterKeyString = encrypted.encryptedText;
-    final newIVstring = encrypted.encryptionIV;
 
     // * Save the newly encrypted master key.
     await ref
@@ -72,7 +70,7 @@ class AuthService {
         .saveCredentials(
           CredentialsData(
             salt: newSalt,
-            iv: newIVstring,
+            iv: encrypted.encryptionIV.base64,
             encryptedMasterKey: encryptedMasterKeyString,
           ),
         );

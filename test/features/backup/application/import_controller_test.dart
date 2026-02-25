@@ -206,6 +206,13 @@ void main() {
         // Setup
         final firstNoteContent = 'firstNoteContent';
         final firstNoteIv = enc.IV.fromLength(16);
+        final dummyNoteDto = NoteDto(
+          id: 'id',
+          title: 'title',
+          content: firstNoteContent,
+          iv: firstNoteIv.base64,
+          dateCreated: 'dateCreated',
+        );
         final dummyKey = enc.Key.fromLength(32);
         container.read(masterKeyProvider.notifier).set(dummyKey);
         when(
@@ -214,7 +221,7 @@ void main() {
 
         final tempDir = Directory.systemTemp;
         final dummyFile = File('${tempDir.path}/dummyFile.json');
-        await dummyFile.writeAsString(jsonEncode(dummyBackupData().toJson()));
+        await dummyFile.writeAsString(jsonEncode(dummyBackupData(notes: [dummyNoteDto]).toJson()));
         PlatformFile dummyPlatformFile = PlatformFile(
           name: 'dummyFile.json',
           size: await dummyFile.length(),
@@ -228,6 +235,7 @@ void main() {
             .read(importControllerProvider.notifier)
             .validateImportFile(dummyPlatformFile);
 
+        // Verify
         expect(
           container
               .read(importControllerProvider)
@@ -240,6 +248,13 @@ void main() {
         // Setup
         final firstNoteContent = 'firstNoteContent';
         final firstNoteIv = enc.IV.fromLength(16);
+        final dummyNoteDto = NoteDto(
+          id: 'id',
+          title: 'title',
+          content: firstNoteContent,
+          iv: firstNoteIv.base64,
+          dateCreated: 'dateCreated',
+        );
         final dummyKey = enc.Key.fromLength(32);
         container.read(masterKeyProvider.notifier).set(dummyKey);
 
@@ -249,7 +264,7 @@ void main() {
 
         final tempDir = Directory.systemTemp;
         final dummyFile = File('${tempDir.path}/dummyFile.json');
-        await dummyFile.writeAsString(jsonEncode(dummyBackupData().toJson()));
+        await dummyFile.writeAsString(jsonEncode(dummyBackupData(notes: [dummyNoteDto]).toJson()));
         PlatformFile dummyPlatformFile = PlatformFile(
           name: 'dummyFile.json',
           size: await dummyFile.length(),
@@ -277,7 +292,7 @@ void main() {
       final oldKey = enc.Key.fromLength(32);
       final currentKey = enc.Key.fromLength(32);
       final oldIvString = enc.IV.fromLength(16).base64;
-      final newIvString = enc.IV.fromLength(16).base64;
+      final newIv = enc.IV.fromLength(16);
       const oldContent = 'oldEncryptedContent';
       const decryptedContent = 'decryptedContent';
       const newContent = 'newEncryptedContent';
@@ -307,7 +322,7 @@ void main() {
       ).thenReturn(decryptedContent);
       when(
         mockEncryptionService.encryptText(text: decryptedContent, key: currentKey),
-      ).thenReturn((encryptedText: newContent, encryptionIV: newIvString));
+      ).thenReturn((encryptedText: newContent, encryptionIV: newIv));
 
       // Act
       final result = await container
@@ -316,7 +331,7 @@ void main() {
 
       // Verify
       expect(result.notesData.first.content, newContent);
-      expect(result.notesData.first.iv, newIvString);
+      expect(result.notesData.first.iv, newIv.base64);
       verify(
         mockEncryptionService.decryptText(
           encryptedText: oldContent,

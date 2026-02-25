@@ -3,11 +3,12 @@ import 'package:private_notes_light/features/authentication/domain/credentials_d
 import 'package:private_notes_light/features/backup/domain/backup_data.dart';
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:private_notes_light/features/settings/domain/settings_data.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 
-BackupData dummyBackupData() => BackupData(
+BackupData dummyBackupData({enc.IV? credentialsIv, List<NoteDto>? notes}) => BackupData(
   credentialsData: CredentialsData(
     salt: 'salt',
-    iv: 'iviv',
+    iv: credentialsIv?.base64 ?? 'iviv',
     encryptedMasterKey: 'encryptedMasterKey',
   ),
   settingsData: SettingsData(
@@ -15,7 +16,15 @@ BackupData dummyBackupData() => BackupData(
     exportWarnings: true,
     theme: ThemeMode.system,
   ),
-  notesData: [
-    NoteDto(id: 'id', title: 'title', content: 'content', iv: 'iv', dateCreated: 'dateCreated'),
-  ],
+  notesData:
+      notes ??
+      [
+        NoteDto(
+          id: 'id',
+          title: 'title',
+          content: 'content',
+          iv: 'iviv',
+          dateCreated: 'dateCreated',
+        ),
+      ],
 );

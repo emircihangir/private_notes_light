@@ -30,7 +30,7 @@ void main() {
       final dummyBytes = List<int>.filled(32, 1);
       final dummyMasterKey = enc.Key(Uint8List.fromList(dummyBytes));
       const dummyEncryptedText = 'dummyEncryptedText';
-      const dummyEncryptionIV = 'dummyEncryptionIV';
+      final dummyEncryptionIV = enc.IV.fromLength(16);
 
       when(mockEncryptionService.generateSalt()).thenReturn(dummySalt);
       when(
@@ -185,7 +185,7 @@ void main() {
 
       final dummyEncryptedText = 'dummyEncryptedText';
       final dummyIv = enc.IV.fromLength(16);
-      final dummyReturnValue = (encryptedText: dummyEncryptedText, encryptionIV: dummyIv.base64);
+      final dummyReturnValue = (encryptedText: dummyEncryptedText, encryptionIV: dummyIv);
       when(
         mockEncryptionService.encryptText(text: dummyMasterKey.base64, key: dummyDerivedKey),
       ).thenReturn(dummyReturnValue);
