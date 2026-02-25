@@ -80,23 +80,11 @@ class NoteController extends _$NoteController {
     }
   }
 
-  void consumeExportWarning() {
-    state = AsyncValue.data(state.valueOrNull?.copyWith(warnExport: false));
-  }
-
-  void consumeExportSuggestion() {
-    state = AsyncValue.data(state.valueOrNull?.copyWith(suggestExport: false));
-  }
-
   Future<void> triggerExport() async {
     final exportResult = await ref.read(exportServiceProvider.future);
     if (exportResult == true) {
       state = AsyncValue.data(state.valueOrNull?.copyWith(showExportSuccessful: true));
     }
-  }
-
-  void consumeExportSuccess() {
-    state = AsyncValue.data(state.valueOrNull?.copyWith(showExportSuccessful: false));
   }
 
   void moveNoteToTrash(NoteWidgetData noteWidgetData) {
@@ -162,14 +150,6 @@ class NoteController extends _$NoteController {
     log('Put back the note with title "${trashedNote.noteWidgetData.noteTitle}".', name: 'INFO');
   }
 
-  void consumeInfoSnackbar() {
-    state = AsyncValue.data(state.value?.copyWith(showInfo: false, infoKind: null));
-  }
-
-  void consumeError() {
-    state = AsyncValue.data(state.value?.copyWith(showError: false, errorKind: null));
-  }
-
   Future<void> logout() async {
     if (ref.read(trashedNotesProvider).isNotEmpty) {
       log('Logout called, emptying the trash...', name: 'INFO');
@@ -193,5 +173,26 @@ class NoteController extends _$NoteController {
           .decryptWithMasterKey(dto.content, enc.IV.fromBase64(dto.iv)),
       dateCreated: DateTime.parse(dto.dateCreated),
     );
+  }
+
+  // Consume functions
+  void consumeExportWarning() {
+    state = AsyncValue.data(state.valueOrNull?.copyWith(warnExport: false));
+  }
+
+  void consumeExportSuggestion() {
+    state = AsyncValue.data(state.valueOrNull?.copyWith(suggestExport: false));
+  }
+
+  void consumeInfoSnackbar() {
+    state = AsyncValue.data(state.value?.copyWith(showInfo: false, infoKind: null));
+  }
+
+  void consumeError() {
+    state = AsyncValue.data(state.value?.copyWith(showError: false, errorKind: null));
+  }
+
+  void consumeExportSuccess() {
+    state = AsyncValue.data(state.valueOrNull?.copyWith(showExportSuccessful: false));
   }
 }
