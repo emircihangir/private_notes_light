@@ -149,8 +149,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
           },
           loading: () => const Center(child: CircularProgressIndicator()),
           data: (noteControllerState) {
-            final data = noteControllerState?.data;
-            if (data == null) return SizedBox();
+            final data = noteControllerState.data;
 
             return Padding(
               padding: const EdgeInsets.all(12),

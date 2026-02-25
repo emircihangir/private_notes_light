@@ -21,9 +21,9 @@ part 'note_controller.g.dart';
 @riverpod
 class NoteController extends _$NoteController {
   @override
-  Future<NoteControllerState?> build() async {
-    final masterKeyString = ref.watch(masterKeyProvider);
-    if (masterKeyString == null) return null;
+  Future<NoteControllerState> build() async {
+    final masterKey = ref.read(masterKeyProvider);
+    assert(masterKey != null, "masterKey cannot be null when NoteController initializes.");
 
     final List<NoteDto> dtos = await ref.read(noteRepositoryProvider).getNotes();
 
@@ -61,7 +61,7 @@ class NoteController extends _$NoteController {
     final preferred = await getExportSuggestionPref();
 
     if (preferred) {
-      state = AsyncValue.data(state.valueOrNull?.copyWith(suggestExport: true));
+      state = AsyncValue.data(state.value!.copyWith(suggestExport: true));
     }
   }
 
@@ -76,30 +76,29 @@ class NoteController extends _$NoteController {
     final now = DateTime.now();
     final diff = now.difference(lastExportDate);
     if (diff > Duration(days: 7)) {
-      state = AsyncValue.data(state.valueOrNull?.copyWith(warnExport: true));
+      state = AsyncValue.data(state.value!.copyWith(warnExport: true));
     }
   }
 
   Future<void> triggerExport() async {
     final exportResult = await ref.read(exportServiceProvider.future);
     if (exportResult == true) {
-      state = AsyncValue.data(state.valueOrNull?.copyWith(showExportSuccessful: true));
+      state = AsyncValue.data(state.value!.copyWith(showExportSuccessful: true));
     }
   }
 
   void moveNoteToTrash(NoteWidgetData noteWidgetData) {
-    final currentList = state.valueOrNull?.data;
-    if (currentList == null) return;
+    final currentList = state.value!.data;
 
     final trashdNoteData = TrashedNoteData(noteWidgetData, currentList.indexOf(noteWidgetData));
     ref.read(trashedNotesProvider.notifier).add(trashdNoteData);
     final newList = currentList
         .where((element) => element.noteId != noteWidgetData.noteId)
         .toList();
-    state = AsyncValue.data(state.valueOrNull?.copyWith(data: newList));
-    if (state.valueOrNull?.showInfo != true) {
+    state = AsyncValue.data(state.value!.copyWith(data: newList));
+    if (state.value!.showInfo != true) {
       state = AsyncValue.data(
-        state.valueOrNull?.copyWith(showInfo: true, infoKind: InfoKind.noteDeleted),
+        state.value!.copyWith(showInfo: true, infoKind: InfoKind.noteDeleted),
       );
     }
 
@@ -116,13 +115,12 @@ class NoteController extends _$NoteController {
   }
 
   void undoDelete() {
-    final currentList = state.valueOrNull?.data;
-    if (currentList == null) return;
+    final currentList = state.value!.data;
 
     final lastDeletedNote = ref.read(trashedNotesProvider.notifier).undoLast();
     final newList = List<NoteWidgetData>.from(currentList);
     newList.insert(lastDeletedNote.index, lastDeletedNote.noteWidgetData);
-    state = AsyncValue.data(state.valueOrNull?.copyWith(data: newList));
+    state = AsyncValue.data(state.value!.copyWith(data: newList));
 
     log(
       'Put back the note with title "${lastDeletedNote.noteWidgetData.noteTitle}".',
@@ -131,8 +129,7 @@ class NoteController extends _$NoteController {
   }
 
   void putNoteBack(TrashedNoteData trashedNote) {
-    final currentList = state.valueOrNull?.data;
-    if (currentList == null) return;
+    final currentList = state.value!.data;
 
     final newList = List<NoteWidgetData>.from(currentList);
     late final int noteIndex;
@@ -143,7 +140,7 @@ class NoteController extends _$NoteController {
     }
 
     newList.insert(noteIndex, trashedNote.noteWidgetData);
-    state = AsyncValue.data(state.valueOrNull?.copyWith(data: newList));
+    state = AsyncValue.data(state.value!.copyWith(data: newList));
 
     ref.read(trashedNotesProvider.notifier).remove(trashedNote);
 
@@ -177,22 +174,22 @@ class NoteController extends _$NoteController {
 
   // Consume functions
   void consumeExportWarning() {
-    state = AsyncValue.data(state.valueOrNull?.copyWith(warnExport: false));
+    state = AsyncValue.data(state.value!.copyWith(warnExport: false));
   }
 
   void consumeExportSuggestion() {
-    state = AsyncValue.data(state.valueOrNull?.copyWith(suggestExport: false));
+    state = AsyncValue.data(state.value!.copyWith(suggestExport: false));
   }
 
   void consumeInfoSnackbar() {
-    state = AsyncValue.data(state.value?.copyWith(showInfo: false, infoKind: null));
+    state = AsyncValue.data(state.value!.copyWith(showInfo: false, infoKind: null));
   }
 
   void consumeError() {
-    state = AsyncValue.data(state.value?.copyWith(showError: false, errorKind: null));
+    state = AsyncValue.data(state.value!.copyWith(showError: false, errorKind: null));
   }
 
   void consumeExportSuccess() {
-    state = AsyncValue.data(state.valueOrNull?.copyWith(showExportSuccessful: false));
+    state = AsyncValue.data(state.value!.copyWith(showExportSuccessful: false));
   }
 }
