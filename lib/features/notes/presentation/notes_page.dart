@@ -96,7 +96,17 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         noteControllerNotifier.consumeExportSuggestion();
       }
       if (nextValue?.showError == true) {
-        showErrorSnackbar(context);
+        final errorKind = nextValue!.errorKind!;
+
+        switch (errorKind) {
+          case NoteErrorKind.failedToDeleteNote:
+            showErrorSnackbar(context, content: AppLocalizations.of(context)!.failedToDeleteNote);
+            break;
+          case NoteErrorKind.failedToExport:
+            showErrorSnackbar(context, content: AppLocalizations.of(context)!.failedToExport);
+            break;
+        }
+
         noteControllerNotifier.consumeError();
       }
       if (nextValue?.showExportSuccessful == true) {

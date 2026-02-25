@@ -297,5 +297,7 @@
   "dontShowAgain": "Don't show again",
   "@dontShowAgain": {},
   "errorOccurred" : "Error occurred.",
-  "@errorOccurred": {}
+  "@errorOccurred": {},
+  "failedToExport" : "Export failed.",
+  "@failedToExport": {}
 }

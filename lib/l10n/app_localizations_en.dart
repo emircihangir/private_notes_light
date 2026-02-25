@@ -284,4 +284,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorOccurred => 'Error occurred.';
+
+  @override
+  String get failedToExport => 'Export failed.';
 }

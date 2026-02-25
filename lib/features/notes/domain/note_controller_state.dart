@@ -3,7 +3,7 @@ import 'package:private_notes_light/features/notes/domain/note_widget_data.dart'
 
 part 'note_controller_state.freezed.dart';
 
-enum NoteErrorKind { failedToDeleteNote }
+enum NoteErrorKind { failedToDeleteNote, failedToExport }
 
 enum InfoKind { noteDeleted }
 

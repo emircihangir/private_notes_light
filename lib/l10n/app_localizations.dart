@@ -627,6 +627,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error occurred.'**
   String get errorOccurred;
+
+  /// No description provided for @failedToExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed.'**
+  String get failedToExport;
 }
 
 class _AppLocalizationsDelegate

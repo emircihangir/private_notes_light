@@ -84,6 +84,10 @@ class NoteController extends _$NoteController {
     final exportResult = await ref.read(exportServiceProvider.future);
     if (exportResult == true) {
       state = AsyncValue.data(state.value!.copyWith(showExportSuccessful: true));
+    } else {
+      state = AsyncValue.data(
+        state.value!.copyWith(showError: true, errorKind: NoteErrorKind.failedToExport),
+      );
     }
   }
 
