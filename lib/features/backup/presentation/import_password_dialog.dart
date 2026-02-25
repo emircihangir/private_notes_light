@@ -16,6 +16,7 @@ class ImportPasswordDialog extends ConsumerStatefulWidget {
 
 class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
   final controller = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   String? errorText;
 
   @override
@@ -35,6 +36,7 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
         children: [
           Text(AppLocalizations.of(context)!.importPasswordDialogContent),
           Form(
+            key: _formKey,
             child: PasswordTextField(controller: controller, errorText: errorText),
           ),
         ],
@@ -46,6 +48,8 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
         ),
         TextButton(
           onPressed: () async {
+            if (_formKey.currentState!.validate() == false) return;
+
             final rotatedBackupData = await ref
                 .read(importControllerProvider.notifier)
                 .submitPassword(widget.backupData, controller.text);
