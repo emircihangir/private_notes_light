@@ -5,6 +5,7 @@ import 'package:private_notes_light/features/backup/application/import_controlle
 import 'package:private_notes_light/features/backup/domain/import_controller_state.dart';
 import 'package:private_notes_light/features/backup/presentation/import_list_tile.dart';
 import 'package:private_notes_light/features/backup/presentation/import_password_dialog.dart';
+import 'package:private_notes_light/features/backup/presentation/import_settings_dialog.dart';
 import 'package:private_notes_light/features/backup/presentation/overwrite_warning_dialog.dart';
 import 'package:private_notes_light/features/notes/presentation/notes_page.dart';
 import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
@@ -116,5 +117,30 @@ void main() {
 
     // Verify
     expect(find.byType(ImportPasswordDialog), findsOne);
+  });
+
+  testWidgets('can show ImportSettingsDialog', (widgetTester) async {
+    // Setup
+    await widgetTester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SettingsPage(),
+        ),
+      ),
+    );
+    await widgetTester.pump();
+    final context = widgetTester.element(find.byType(ImportListTile));
+    final container = ProviderScope.containerOf(context);
+
+    // Act
+    container
+        .read(importControllerProvider.notifier)
+        .setState(ImportControllerState.askForSettings(dummyBackupData()));
+    await widgetTester.pumpAndSettle();
+
+    // Verify
+    expect(find.byType(ImportSettingsDialog), findsOne);
   });
 }
