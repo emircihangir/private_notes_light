@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:meta/meta.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/backup/application/export_service.dart';
 import 'package:private_notes_light/features/backup/data/backup_repository.dart';
@@ -34,6 +35,9 @@ class NoteController extends _$NoteController {
 
     return NoteControllerState(data: result);
   }
+
+  @visibleForTesting
+  void setState(NoteControllerState newState) => state = AsyncValue.data(newState);
 
   Future<void> createNote({
     String? id,

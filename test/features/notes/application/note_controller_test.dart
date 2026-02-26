@@ -8,10 +8,13 @@ import 'package:private_notes_light/features/backup/data/backup_repository.dart'
 import 'package:private_notes_light/features/encryption/application/encryption_service.dart';
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
+import 'package:private_notes_light/features/notes/application/trashed_notes.dart';
 import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/notes/domain/note_controller_state.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
+import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
+import 'package:private_notes_light/features/notes/domain/trashed_note_data.dart';
 import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:private_notes_light/features/settings/domain/settings_data.dart';
 
@@ -243,6 +246,34 @@ void main() {
         final value = container.read(noteControllerProvider).value!.warnExport;
         expect(value, isFalse);
       });
+    });
+
+    test('moveNoteToTrash works', () {
+      // Setup
+      final noteToDelete = NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle');
+      final List<NoteWidgetData> dummyData = [
+        NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+        NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+        noteToDelete,
+        NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+      ];
+
+      final dummyKey = enc.Key.fromLength(32);
+      container.read(masterKeyProvider.notifier).set(dummyKey);
+
+      container
+          .read(noteControllerProvider.notifier)
+          .setState(NoteControllerState(data: dummyData));
+
+      // Act
+      container.read(noteControllerProvider.notifier).moveNoteToTrash(noteToDelete);
+
+      // Verify
+      final trashedNotes = container.read(trashedNotesProvider);
+      expect(trashedNotes.contains(TrashedNoteData(noteToDelete, 2)), isTrue);
+
+      final newState = container.read(noteControllerProvider).value!;
+      expect(newState.data.contains(noteToDelete), isFalse);
     });
   });
 }
