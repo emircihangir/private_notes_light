@@ -47,153 +47,67 @@ void main() {
     addTearDown(container.dispose);
   });
 
-  group('triggerExport works', () {
-    test('shows success if export result is true', () async {
-      // Setup
-      final container = ProviderContainer(
-        overrides: [
-          noteRepositoryProvider.overrideWith((ref) => mockNoteRepo),
-          exportServiceProvider.overrideWith((ref) async => true),
-        ],
-      );
-      addTearDown(container.dispose);
+  group('NoteController tests ->', () {
+    group('triggerExport tests ->', () {
+      test('shows success if export result is true', () async {
+        // Setup
+        final container = ProviderContainer(
+          overrides: [
+            noteRepositoryProvider.overrideWith((ref) => mockNoteRepo),
+            exportServiceProvider.overrideWith((ref) async => true),
+          ],
+        );
+        addTearDown(container.dispose);
 
-      final dummyKey = enc.Key.fromLength(32);
-      container.read(masterKeyProvider.notifier).set(dummyKey);
+        final dummyKey = enc.Key.fromLength(32);
+        container.read(masterKeyProvider.notifier).set(dummyKey);
 
-      // Act
-      await container.read(noteControllerProvider.notifier).triggerExport();
+        // Act
+        await container.read(noteControllerProvider.notifier).triggerExport();
 
-      // Verify
-      expect(container.read(noteControllerProvider).value!.showExportSuccessful, isTrue);
+        // Verify
+        expect(container.read(noteControllerProvider).value!.showExportSuccessful, isTrue);
+      });
+
+      test('shows error if export result is false', () async {
+        // Setup
+        final container = ProviderContainer(
+          overrides: [
+            noteRepositoryProvider.overrideWith((ref) => mockNoteRepo),
+            exportServiceProvider.overrideWith((ref) async => false),
+          ],
+        );
+        addTearDown(container.dispose);
+
+        final dummyKey = enc.Key.fromLength(32);
+        container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        // Act
+        await container.read(noteControllerProvider.notifier).triggerExport();
+
+        // Verify
+        expect(container.read(noteControllerProvider).value!.showError, isTrue);
+        expect(
+          container.read(noteControllerProvider).value!.errorKind,
+          NoteErrorKind.failedToExport,
+        );
+      });
     });
 
-    test('shows error if export result is false', () async {
+    test('createNote works', () async {
       // Setup
-      final container = ProviderContainer(
-        overrides: [
-          noteRepositoryProvider.overrideWith((ref) => mockNoteRepo),
-          exportServiceProvider.overrideWith((ref) async => false),
-        ],
-      );
-      addTearDown(container.dispose);
+      final dummyTitle = 'dummyTitle';
+      final dummyContent = 'dummyContent';
 
-      final dummyKey = enc.Key.fromLength(32);
-      container.read(masterKeyProvider.notifier).set(dummyKey);
-
-      // Act
-      await container.read(noteControllerProvider.notifier).triggerExport();
-
-      // Verify
-      expect(container.read(noteControllerProvider).value!.showError, isTrue);
-      expect(container.read(noteControllerProvider).value!.errorKind, NoteErrorKind.failedToExport);
-    });
-  });
-
-  test('createNote works', () async {
-    // Setup
-    final dummyTitle = 'dummyTitle';
-    final dummyContent = 'dummyContent';
-
-    final dummyIv = enc.IV.fromLength(16);
-    final dummyEncryptedText = 'encryptedText';
-    when(
-      mockEncryptionService.encryptWithMasterKey(dummyContent),
-    ).thenReturn((encryptedText: dummyEncryptedText, encryptionIV: dummyIv));
-
-    final dummyKey = enc.Key.fromLength(32);
-    container.read(masterKeyProvider.notifier).set(dummyKey);
-
-    var dummySettingsData = SettingsData(
-      exportSuggestions: false,
-      exportWarnings: false,
-      theme: ThemeMode.system,
-    );
-    when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
-
-    // Act
-    await container
-        .read(noteControllerProvider.notifier)
-        .createNote(title: dummyTitle, content: dummyContent);
-
-    // Verify
-    verify(mockEncryptionService.encryptWithMasterKey(argThat(isA<String?>()))).called(1);
-    verify(mockNoteRepo.addNote(argThat(isA<NoteDto>()))).called(1);
-    verify(mockSettingsRepo.getSettings()).called(2);
-  });
-
-  group('suggestExportIfPreferred aligns with preference', () {
-    test('suggests if true', () async {
-      // Setup
-      var dummySettingsData = SettingsData(
-        exportSuggestions: true,
-        exportWarnings: false,
-        theme: ThemeMode.system,
-      );
-      when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
-
-      final dummyKey = enc.Key.fromLength(32);
-      container.read(masterKeyProvider.notifier).set(dummyKey);
-
-      // Act
-      await container.read(noteControllerProvider.notifier).suggestExportIfPreferred();
-
-      // Verify
-      final value = container.read(noteControllerProvider).value!.suggestExport;
-      expect(value, isTrue);
-      verify(mockSettingsRepo.getSettings()).called(1);
-    });
-    test('does not suggest if false', () async {
-      // Setup
-      var dummySettingsData = SettingsData(
-        exportSuggestions: false,
-        exportWarnings: false,
-        theme: ThemeMode.system,
-      );
-      when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
-
-      final dummyKey = enc.Key.fromLength(32);
-      container.read(masterKeyProvider.notifier).set(dummyKey);
-
-      // Act
-      await container.read(noteControllerProvider.notifier).suggestExportIfPreferred();
-
-      // Verify
-      final value = container.read(noteControllerProvider).value!.suggestExport;
-      expect(value, isFalse);
-      verify(mockSettingsRepo.getSettings()).called(1);
-    });
-  });
-
-  group('warnExportIfValid tests', () {
-    test('-> warns if preferred and past seven days', () async {
-      // Setup
-      var dummySettingsData = SettingsData(
-        exportSuggestions: false,
-        exportWarnings: true,
-        theme: ThemeMode.system,
-      );
-      when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
-
-      final dummyLastExportDate = DateTime.now().add(Duration(days: -8));
+      final dummyIv = enc.IV.fromLength(16);
+      final dummyEncryptedText = 'encryptedText';
       when(
-        mockBackupRepo.getLastExportDate(),
-      ).thenAnswer((realInvocation) async => dummyLastExportDate);
+        mockEncryptionService.encryptWithMasterKey(dummyContent),
+      ).thenReturn((encryptedText: dummyEncryptedText, encryptionIV: dummyIv));
 
       final dummyKey = enc.Key.fromLength(32);
       container.read(masterKeyProvider.notifier).set(dummyKey);
 
-      // Act
-      await container.read(noteControllerProvider.notifier).warnExportIfValid();
-
-      // Verify
-      verify(mockSettingsRepo.getSettings()).called(1);
-      verify(mockBackupRepo.getLastExportDate()).called(1);
-      final value = container.read(noteControllerProvider).value!.warnExport;
-      expect(value, isTrue);
-    });
-    test('-> does not warn if not preferred', () async {
-      // Setup
       var dummySettingsData = SettingsData(
         exportSuggestions: false,
         exportWarnings: false,
@@ -201,43 +115,134 @@ void main() {
       );
       when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
-      final dummyKey = enc.Key.fromLength(32);
-      container.read(masterKeyProvider.notifier).set(dummyKey);
-
       // Act
-      await container.read(noteControllerProvider.notifier).warnExportIfValid();
+      await container
+          .read(noteControllerProvider.notifier)
+          .createNote(title: dummyTitle, content: dummyContent);
 
       // Verify
-      verify(mockSettingsRepo.getSettings()).called(1);
-      verifyNever(mockBackupRepo.getLastExportDate());
-      final value = container.read(noteControllerProvider).value!.warnExport;
-      expect(value, isFalse);
+      verify(mockEncryptionService.encryptWithMasterKey(argThat(isA<String?>()))).called(1);
+      verify(mockNoteRepo.addNote(argThat(isA<NoteDto>()))).called(1);
+      verify(mockSettingsRepo.getSettings()).called(2);
     });
-    test('-> does not warn if not past seven days', () async {
-      // Setup
-      var dummySettingsData = SettingsData(
-        exportSuggestions: false,
-        exportWarnings: true,
-        theme: ThemeMode.system,
-      );
-      when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
-      final dummyLastExportDate = DateTime.now().add(Duration(days: -4));
-      when(
-        mockBackupRepo.getLastExportDate(),
-      ).thenAnswer((realInvocation) async => dummyLastExportDate);
+    group('suggestExportIfPreferred aligns with preference ->', () {
+      test('suggests if true', () async {
+        // Setup
+        var dummySettingsData = SettingsData(
+          exportSuggestions: true,
+          exportWarnings: false,
+          theme: ThemeMode.system,
+        );
+        when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
-      final dummyKey = enc.Key.fromLength(32);
-      container.read(masterKeyProvider.notifier).set(dummyKey);
+        final dummyKey = enc.Key.fromLength(32);
+        container.read(masterKeyProvider.notifier).set(dummyKey);
 
-      // Act
-      await container.read(noteControllerProvider.notifier).warnExportIfValid();
+        // Act
+        await container.read(noteControllerProvider.notifier).suggestExportIfPreferred();
 
-      // Verify
-      verify(mockSettingsRepo.getSettings()).called(1);
-      verify(mockBackupRepo.getLastExportDate()).called(1);
-      final value = container.read(noteControllerProvider).value!.warnExport;
-      expect(value, isFalse);
+        // Verify
+        final value = container.read(noteControllerProvider).value!.suggestExport;
+        expect(value, isTrue);
+        verify(mockSettingsRepo.getSettings()).called(1);
+      });
+      test('does not suggest if false', () async {
+        // Setup
+        var dummySettingsData = SettingsData(
+          exportSuggestions: false,
+          exportWarnings: false,
+          theme: ThemeMode.system,
+        );
+        when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
+
+        final dummyKey = enc.Key.fromLength(32);
+        container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        // Act
+        await container.read(noteControllerProvider.notifier).suggestExportIfPreferred();
+
+        // Verify
+        final value = container.read(noteControllerProvider).value!.suggestExport;
+        expect(value, isFalse);
+        verify(mockSettingsRepo.getSettings()).called(1);
+      });
+    });
+
+    group('warnExportIfValid tests ->', () {
+      test('warns if preferred and past seven days', () async {
+        // Setup
+        var dummySettingsData = SettingsData(
+          exportSuggestions: false,
+          exportWarnings: true,
+          theme: ThemeMode.system,
+        );
+        when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
+
+        final dummyLastExportDate = DateTime.now().add(Duration(days: -8));
+        when(
+          mockBackupRepo.getLastExportDate(),
+        ).thenAnswer((realInvocation) async => dummyLastExportDate);
+
+        final dummyKey = enc.Key.fromLength(32);
+        container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        // Act
+        await container.read(noteControllerProvider.notifier).warnExportIfValid();
+
+        // Verify
+        verify(mockSettingsRepo.getSettings()).called(1);
+        verify(mockBackupRepo.getLastExportDate()).called(1);
+        final value = container.read(noteControllerProvider).value!.warnExport;
+        expect(value, isTrue);
+      });
+      test('does not warn if not preferred', () async {
+        // Setup
+        var dummySettingsData = SettingsData(
+          exportSuggestions: false,
+          exportWarnings: false,
+          theme: ThemeMode.system,
+        );
+        when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
+
+        final dummyKey = enc.Key.fromLength(32);
+        container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        // Act
+        await container.read(noteControllerProvider.notifier).warnExportIfValid();
+
+        // Verify
+        verify(mockSettingsRepo.getSettings()).called(1);
+        verifyNever(mockBackupRepo.getLastExportDate());
+        final value = container.read(noteControllerProvider).value!.warnExport;
+        expect(value, isFalse);
+      });
+      test('does not warn if preferred but not past seven days', () async {
+        // Setup
+        var dummySettingsData = SettingsData(
+          exportSuggestions: false,
+          exportWarnings: true,
+          theme: ThemeMode.system,
+        );
+        when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
+
+        final dummyLastExportDate = DateTime.now().add(Duration(days: -4));
+        when(
+          mockBackupRepo.getLastExportDate(),
+        ).thenAnswer((realInvocation) async => dummyLastExportDate);
+
+        final dummyKey = enc.Key.fromLength(32);
+        container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        // Act
+        await container.read(noteControllerProvider.notifier).warnExportIfValid();
+
+        // Verify
+        verify(mockSettingsRepo.getSettings()).called(1);
+        verify(mockBackupRepo.getLastExportDate()).called(1);
+        final value = container.read(noteControllerProvider).value!.warnExport;
+        expect(value, isFalse);
+      });
     });
   });
 }
