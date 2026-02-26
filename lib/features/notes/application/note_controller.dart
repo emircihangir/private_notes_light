@@ -113,15 +113,6 @@ class NoteController extends _$NoteController {
     log('Note with the title "${noteWidgetData.noteTitle}" trashed.', name: 'INFO');
   }
 
-  Future<void> emptyTrash() async {
-    final trashedNotes = ref.read(trashedNotesProvider);
-    for (TrashedNoteData trashedNote in trashedNotes) {
-      await ref.read(noteRepositoryProvider).removeNote(trashedNote.noteWidgetData.noteId);
-    }
-    ref.read(trashedNotesProvider.notifier).clear();
-    log('Emptied the trash.', name: 'INFO');
-  }
-
   void undoDelete() {
     final currentList = state.value!.data;
 
@@ -150,16 +141,13 @@ class NoteController extends _$NoteController {
     newList.insert(noteIndex, trashedNote.noteWidgetData);
     state = AsyncValue.data(state.value!.copyWith(data: newList));
 
-    ref.read(trashedNotesProvider.notifier).remove(trashedNote);
+    ref.read(trashedNotesProvider.notifier).putBack(trashedNote);
 
     log('Put back the note with title "${trashedNote.noteWidgetData.noteTitle}".', name: 'INFO');
   }
 
   Future<void> logout() async {
-    if (ref.read(trashedNotesProvider).isNotEmpty) {
-      log('Logout called, emptying the trash...', name: 'INFO');
-      await emptyTrash();
-    }
+    await ref.read(trashedNotesProvider.notifier).emptyTrash();
     ref.read(authServiceProvider).logout();
   }
 
@@ -170,12 +158,13 @@ class NoteController extends _$NoteController {
 
   Future<Note> openNote(String noteId) async {
     final NoteDto dto = await ref.read(noteRepositoryProvider).getNote(noteId);
+    final decryptedContent = ref
+        .read(encryptionServiceProvider)
+        .decryptWithMasterKey(dto.content, enc.IV.fromBase64(dto.iv));
     return Note(
       id: dto.id,
       title: dto.title,
-      content: ref
-          .read(encryptionServiceProvider)
-          .decryptWithMasterKey(dto.content, enc.IV.fromBase64(dto.iv)),
+      content: decryptedContent,
       dateCreated: DateTime.parse(dto.dateCreated),
     );
   }

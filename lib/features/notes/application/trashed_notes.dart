@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/notes/domain/trashed_note_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,7 +19,16 @@ class TrashedNotes extends _$TrashedNotes {
     return lastDeletedNote;
   }
 
-  void clear() => state = [];
+  Future<void> emptyTrash() async {
+    if (state.isEmpty) return;
 
-  void remove(TrashedNoteData value) => state = state.where((e) => e != value).toList();
+    for (TrashedNoteData trashedNote in state) {
+      // TODO: Utilize batch deletion for performance.
+      await ref.read(noteRepositoryProvider).removeNote(trashedNote.noteWidgetData.noteId);
+    }
+    state = [];
+    log('Emptied the trash.', name: 'INFO');
+  }
+
+  void putBack(TrashedNoteData value) => state = state.where((e) => e != value).toList();
 }
