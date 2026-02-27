@@ -15,8 +15,8 @@ void main() {
     mockAuthRepository = MockAuthRepository();
   });
 
-  group('appStartupProvider aligns with authRepositoryProvider', () {
-    test('appStartupProvider returns true if the user is signed up', () async {
+  group('appStartupProvider tests ->', () {
+    test('returns true if the user is signed up', () async {
       // * Stub mockAuthRepository.
       when(mockAuthRepository.userSignedUp).thenAnswer((_) async => true);
 
@@ -32,7 +32,7 @@ void main() {
       verify(mockAuthRepository.userSignedUp).called(1);
     });
 
-    test('appStartupProvider returns false if the user is not signed up', () async {
+    test('returns false if the user is not signed up', () async {
       // * Stub mockAuthRepository.
       when(mockAuthRepository.userSignedUp).thenAnswer((_) async => false);
 

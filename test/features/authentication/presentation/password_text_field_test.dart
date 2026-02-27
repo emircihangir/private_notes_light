@@ -5,7 +5,7 @@ import 'package:private_notes_light/features/authentication/presentation/login_s
 import 'package:private_notes_light/l10n/app_localizations.dart';
 
 void main() {
-  testWidgets('Password text field invalidates empty text', (widgetTester) async {
+  testWidgets('PasswordTextField invalidates empty text', (widgetTester) async {
     // Setup
     await widgetTester.pumpWidget(
       ProviderScope(

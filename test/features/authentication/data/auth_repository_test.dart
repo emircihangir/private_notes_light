@@ -5,59 +5,58 @@ import 'package:private_notes_light/features/authentication/domain/credentials_d
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  test('AuthRepository.saveCredentials works', () async {
-    // Setup
-    SharedPreferences.setMockInitialValues({});
-    final dummyCredentials = CredentialsData(
-      salt: 'salt',
-      iv: 'iv',
-      encryptedMasterKey: 'encryptedMasterKey',
-    );
+  group('AuthRepository tests ->', () {
+    test('saveCredentials works', () async {
+      // Setup
+      SharedPreferences.setMockInitialValues({});
+      final dummyCredentials = CredentialsData(
+        salt: 'salt',
+        iv: 'iv',
+        encryptedMasterKey: 'encryptedMasterKey',
+      );
 
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-    // Act
-    await container.read(authRepositoryProvider).saveCredentials(dummyCredentials);
+      // Act
+      await container.read(authRepositoryProvider).saveCredentials(dummyCredentials);
 
-    // Verify
-    final prefs = await SharedPreferences.getInstance();
-    final savedSalt = prefs.getString(CredentialsData.propertyNames.salt);
-    final savedIv = prefs.getString(CredentialsData.propertyNames.iv);
-    final savedEncryptedMasterKey = prefs.getString(
-      CredentialsData.propertyNames.encryptedMasterKey,
-    );
+      // Verify
+      final prefs = await SharedPreferences.getInstance();
+      final savedSalt = prefs.getString(CredentialsData.propertyNames.salt);
+      final savedIv = prefs.getString(CredentialsData.propertyNames.iv);
+      final savedEncryptedMasterKey = prefs.getString(
+        CredentialsData.propertyNames.encryptedMasterKey,
+      );
 
-    expect(savedSalt, isNotNull);
-    expect(savedIv, isNotNull);
-    expect(savedEncryptedMasterKey, isNotNull);
-  });
+      expect(savedSalt, isNotNull);
+      expect(savedIv, isNotNull);
+      expect(savedEncryptedMasterKey, isNotNull);
+    });
 
-  test('AuthRepository.readCredentials works', () async {
-    // Setup
-    SharedPreferences.setMockInitialValues({});
-    final dummyCredentials = CredentialsData(
-      salt: 'salt',
-      iv: 'iv',
-      encryptedMasterKey: 'encryptedMasterKey',
-    );
+    test('readCredentials works', () async {
+      // Setup
+      SharedPreferences.setMockInitialValues({});
+      final dummyCredentials = CredentialsData(
+        salt: 'salt',
+        iv: 'iv',
+        encryptedMasterKey: 'encryptedMasterKey',
+      );
 
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-    await container.read(authRepositoryProvider).saveCredentials(dummyCredentials);
+      await container.read(authRepositoryProvider).saveCredentials(dummyCredentials);
 
-    // Act
-    final loadedCredentials = await container.read(authRepositoryProvider).readCredentials();
+      // Act
+      final loadedCredentials = await container.read(authRepositoryProvider).readCredentials();
 
-    // Verify
-    expect(loadedCredentials, isA<CredentialsData>());
-  });
+      // Verify
+      expect(loadedCredentials, isA<CredentialsData>());
+    });
 
-  group('AuthRepository.userSignedUp works', () {
-    test(
-      'AuthRepository.userSignedUp returns false if encryptedMasterKey is not present in shared_preferences',
-      () async {
+    group('userSignedUp tests ->', () {
+      test('returns false if encryptedMasterKey is not present in shared_preferences', () async {
         // Setup
         SharedPreferences.setMockInitialValues({});
 
@@ -69,12 +68,9 @@ void main() {
 
         // Verify
         expect(userSignedUp, isFalse);
-      },
-    );
+      });
 
-    test(
-      'AuthRepository.userSignedUp returns true if encryptedMasterKey is present in shared_preferences',
-      () async {
+      test('returns true if encryptedMasterKey is present in shared_preferences', () async {
         // Setup
         SharedPreferences.setMockInitialValues({
           CredentialsData.propertyNames.encryptedMasterKey: 'dummyValue',
@@ -88,7 +84,7 @@ void main() {
 
         // Verify
         expect(userSignedUp, isTrue);
-      },
-    );
+      });
+    });
   });
 }

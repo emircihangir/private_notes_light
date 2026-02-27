@@ -8,7 +8,7 @@ import 'package:private_notes_light/features/authentication/presentation/signup_
 import 'package:private_notes_light/l10n/app_localizations.dart';
 
 void main() {
-  group('AuthGuard works', () {
+  group('AuthGuard tests ->', () {
     testWidgets('Login page opens if there is a saved encryptedMasterKey', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(

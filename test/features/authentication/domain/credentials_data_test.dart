@@ -8,25 +8,27 @@ void main() {
     encryptedMasterKey: 'encryptedMasterKey',
   );
 
-  test('Credentials data serializes', () {
-    final dummyCredentialsJson = dummyCredentials.toJson();
+  group('CredentialsData tests ->', () {
+    test('serializes', () {
+      final dummyCredentialsJson = dummyCredentials.toJson();
 
-    expect(dummyCredentialsJson, isA<Map<String, dynamic>>());
-  });
+      expect(dummyCredentialsJson, isA<Map<String, dynamic>>());
+    });
 
-  test('Credentials data deserializes', () {
-    final dummyCredentialsJson = dummyCredentials.toJson();
-    final deSerializedDummyCredentials = CredentialsData.fromJson(dummyCredentialsJson);
+    test('deserializes', () {
+      final dummyCredentialsJson = dummyCredentials.toJson();
+      final deSerializedDummyCredentials = CredentialsData.fromJson(dummyCredentialsJson);
 
-    expect(deSerializedDummyCredentials, isA<CredentialsData>());
-    expect(deSerializedDummyCredentials.encryptedMasterKey, dummyCredentials.encryptedMasterKey);
-    expect(deSerializedDummyCredentials.iv, dummyCredentials.iv);
-    expect(deSerializedDummyCredentials.salt, dummyCredentials.salt);
-  });
+      expect(deSerializedDummyCredentials, isA<CredentialsData>());
+      expect(deSerializedDummyCredentials.encryptedMasterKey, dummyCredentials.encryptedMasterKey);
+      expect(deSerializedDummyCredentials.iv, dummyCredentials.iv);
+      expect(deSerializedDummyCredentials.salt, dummyCredentials.salt);
+    });
 
-  test('CredentialsData class has propertyNames', () {
-    final propertyNames = CredentialsData.propertyNames;
+    test('has propertyNames', () {
+      final propertyNames = CredentialsData.propertyNames;
 
-    expect(propertyNames, isA<({String encryptedMasterKey, String iv, String salt})>());
+      expect(propertyNames, isA<({String encryptedMasterKey, String iv, String salt})>());
+    });
   });
 }

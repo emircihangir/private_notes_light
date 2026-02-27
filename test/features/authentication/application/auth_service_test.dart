@@ -21,7 +21,7 @@ void main() {
     mockAuthRepository = MockAuthRepository();
     mockEncryptionService = MockEncryptionService();
   });
-  group('AuthService Tests', () {
+  group('AuthService tests ->', () {
     test('signup works', () async {
       // Setup
       const dummyPassword = 'dummyPassword';
@@ -63,7 +63,7 @@ void main() {
       );
     });
 
-    group('login works', () {
+    group('login tests ->', () {
       test('returns true and sets master key when password is correct', () async {
         // Setup
         const password = 'correct_password';
