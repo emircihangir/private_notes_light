@@ -53,20 +53,24 @@ class ImportController extends _$ImportController {
       return;
     }
 
-    final firstNote = backupData.notesData.first;
+    if (backupData.notesData.isNotEmpty) {
+      final firstNote = backupData.notesData.first;
 
-    final isDecryptable = ref
-        .read(encryptionServiceProvider)
-        .keyCanDecrypt(
-          firstNote.content,
-          ref.read(masterKeyProvider)!,
-          enc.IV.fromBase64(firstNote.iv),
-        );
+      final isDecryptable = ref
+          .read(encryptionServiceProvider)
+          .keyCanDecrypt(
+            firstNote.content,
+            ref.read(masterKeyProvider)!,
+            enc.IV.fromBase64(firstNote.iv),
+          );
 
-    if (isDecryptable) {
-      askForSettings(backupData);
+      if (isDecryptable) {
+        askForSettings(backupData);
+      } else {
+        state = ImportControllerState.showPasswordDialog(backupData);
+      }
     } else {
-      state = ImportControllerState.showPasswordDialog(backupData);
+      askForSettings(backupData);
     }
   }
 
