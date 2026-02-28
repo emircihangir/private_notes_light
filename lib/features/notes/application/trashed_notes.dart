@@ -23,7 +23,6 @@ class TrashedNotes extends _$TrashedNotes {
     if (state.isEmpty) return;
 
     for (TrashedNoteData trashedNote in state) {
-      // TODO: Utilize batch deletion for performance.
       await ref.read(noteRepositoryProvider).removeNote(trashedNote.noteWidgetData.noteId);
     }
     state = [];
