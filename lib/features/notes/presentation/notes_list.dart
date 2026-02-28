@@ -35,7 +35,7 @@ class NotesList extends StatelessWidget {
               ),
             ),
             child: ListTile(
-              title: Text(noteWidgetData.noteTitle),
+              title: Text(noteWidgetData.noteTitle, maxLines: 1, overflow: TextOverflow.ellipsis),
               onTap: () => onTap(noteWidgetData),
             ),
           );
