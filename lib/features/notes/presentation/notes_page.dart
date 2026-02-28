@@ -10,9 +10,12 @@ import 'package:private_notes_light/features/notes/application/session_expired.d
 import 'package:private_notes_light/features/notes/application/trashed_notes.dart';
 import 'package:private_notes_light/features/notes/domain/note_controller_state.dart';
 import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
+import 'package:private_notes_light/features/notes/presentation/create_note_page.dart';
+import 'package:private_notes_light/features/notes/presentation/empty_notes_widget.dart';
+import 'package:private_notes_light/features/notes/presentation/notes_list.dart';
+import 'package:private_notes_light/features/notes/presentation/view_note_page.dart';
 import 'package:private_notes_light/features/notes/presentation/trashed_notes_sheet.dart';
 import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
-import 'package:private_notes_light/features/notes/presentation/view_note_page.dart';
 import 'package:private_notes_light/core/generic_error_widget.dart';
 import 'package:private_notes_light/core/snackbars.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
@@ -33,7 +36,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 
   void handlePlusTap() {
     ScaffoldMessenger.of(context).clearSnackBars();
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewNotePage()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateNotePage()));
   }
 
   void handleSettingsTap() {
@@ -190,84 +193,11 @@ class _NotesPageState extends ConsumerState<NotesPage> {
   }
 }
 
-class NotesList extends StatelessWidget {
-  final List<NoteWidgetData> filteredNotes;
-  final void Function(DismissDirection, NoteWidgetData) onDismissed;
-  final Future<void> Function(NoteWidgetData) onTap;
-
-  const NotesList({
-    super.key,
-    required this.filteredNotes,
-    required this.onDismissed,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: filteredNotes.length,
-        itemBuilder: (context, index) {
-          final NoteWidgetData noteWidgetData = filteredNotes[index];
-
-          return Dismissible(
-            onDismissed: (direction) => onDismissed(direction, noteWidgetData),
-            key: ValueKey(noteWidgetData.noteId),
-            direction: DismissDirection.endToStart,
-            background: Container(
-              color: Theme.of(context).colorScheme.errorContainer,
-              padding: const EdgeInsets.only(right: 8),
-              alignment: Alignment.centerRight,
-              child: Icon(
-                Icons.clear_rounded,
-                color: Theme.of(context).colorScheme.onErrorContainer,
-              ),
-            ),
-            child: ListTile(
-              title: Text(noteWidgetData.noteTitle),
-              onTap: () => onTap(noteWidgetData),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
 class NoNotesFoundWidget extends StatelessWidget {
   const NoNotesFoundWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Expanded(child: Center(child: Text(AppLocalizations.of(context)!.noNotesFound)));
-  }
-}
-
-class EmptyNotesWidget extends StatelessWidget {
-  const EmptyNotesWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 16,
-        children: [
-          Text(
-            AppLocalizations.of(context)!.noNotesTitle,
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          TextButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).clearSnackBars();
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => const ViewNotePage()));
-            },
-            child: Text(AppLocalizations.of(context)!.createNoteButton),
-          ),
-        ],
-      ),
-    );
   }
 }

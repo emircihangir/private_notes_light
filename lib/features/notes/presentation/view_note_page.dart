@@ -1,188 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:private_notes_light/features/notes/application/note_controller.dart';
-import 'package:private_notes_light/features/notes/application/title_warning_pref.dart';
 import 'package:private_notes_light/features/notes/domain/note.dart';
-import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
-import 'package:private_notes_light/l10n/app_localizations.dart';
+import 'package:private_notes_light/features/notes/domain/view_mode.dart';
+import 'package:private_notes_light/features/notes/presentation/edit_note_view.dart';
+import 'package:private_notes_light/features/notes/presentation/view_note_view.dart';
 
 class ViewNotePage extends ConsumerStatefulWidget {
-  final Note? note;
-  const ViewNotePage({super.key, this.note});
+  final Note note;
+  const ViewNotePage({super.key, required this.note});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ViewNotePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ViewNotePage();
 }
 
-class _ViewNotePageState extends ConsumerState<ViewNotePage> {
-  late final TextEditingController titleInputController;
-  late final TextEditingController contentInputController;
-  final _formKey = GlobalKey<FormState>();
+class _ViewNotePage extends ConsumerState<ViewNotePage> {
+  ViewMode _viewMode = ViewMode.view;
+  late Note noteLatestVersion;
 
   @override
   void initState() {
     super.initState();
-    titleInputController = TextEditingController(text: widget.note?.title ?? '');
-    contentInputController = TextEditingController(text: widget.note?.content ?? '');
+    noteLatestVersion = widget.note;
   }
-
-  @override
-  void dispose() {
-    titleInputController.dispose();
-    contentInputController.dispose();
-    super.dispose();
-  }
-
-  // Handlers
-  Future<void> handleSaveTap() async {
-    if (_formKey.currentState!.validate() == false) return;
-
-    final noteControllerNotifier = ref.read(noteControllerProvider.notifier);
-    await noteControllerNotifier.createNote(
-      id: widget.note?.id,
-      title: titleInputController.text,
-      content: contentInputController.text,
-      date: widget.note?.dateCreated,
-    );
-
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
-  }
-
-  void handleDeleteTap() {
-    ref
-        .read(noteControllerProvider.notifier)
-        .moveNoteToTrash(NoteWidgetData(noteId: widget.note!.id, noteTitle: widget.note!.title));
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
-  }
-
-  InputDecoration inputDecoration() => InputDecoration(
-    contentPadding: const EdgeInsets.all(16),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(3),
-      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.inversePrimary),
-    ),
-    errorBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.error),
-    ),
-    focusedErrorBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
-    final titleWarningPref = ref.watch(titleWarningPrefProvider);
-    final showTitleWarning = (titleWarningPref.valueOrNull == true);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.note == null
-              ? AppLocalizations.of(context)!.createNoteTitle
-              : AppLocalizations.of(context)!.editNoteTitle,
-        ),
-        actions: widget.note != null
-            ? [DeleteNoteButton(widget.note!.id, handleDeleteTap: handleDeleteTap)]
-            : null,
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Container(
-            padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                spacing: 16,
-                children: [
-                  TextFormField(
-                    decoration: inputDecoration().copyWith(
-                      hintText: AppLocalizations.of(context)!.noteTitleLabel,
-                      labelText: AppLocalizations.of(context)!.noteTitleLabel,
-                    ),
-                    controller: titleInputController,
-                    textInputAction: TextInputAction.next,
-                    autofocus: widget.note == null,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.titleEmptyError;
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                  TextFormField(
-                    decoration: inputDecoration().copyWith(
-                      hintText: AppLocalizations.of(context)!.noteContentLabel,
-                      labelText: AppLocalizations.of(context)!.noteContentLabel,
-                    ),
-                    maxLines: null,
-                    controller: contentInputController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.contentEmptyError;
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                  FilledButton(
-                    onPressed: handleSaveTap,
-                    child: Text(AppLocalizations.of(context)!.save),
-                  ),
-                  showTitleWarning
-                      ? Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              children: [
-                                Text(AppLocalizations.of(context)!.titleWarning),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    TextButton(
-                                      onPressed: ref
-                                          .read(titleWarningPrefProvider.notifier)
-                                          .dismiss,
-                                      child: Text(AppLocalizations.of(context)!.dismiss),
-                                    ),
-                                    TextButton(
-                                      onPressed: ref
-                                          .read(titleWarningPrefProvider.notifier)
-                                          .dontShowAgain,
-                                      child: Text(AppLocalizations.of(context)!.dontShowAgain),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : SizedBox(),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DeleteNoteButton extends StatelessWidget {
-  final String noteId;
-  final VoidCallback handleDeleteTap;
-  const DeleteNoteButton(this.noteId, {super.key, required this.handleDeleteTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(onPressed: handleDeleteTap, icon: const Icon(Icons.delete_rounded));
+    return _viewMode == ViewMode.view
+        ? ViewNoteView(
+            note: noteLatestVersion,
+            onEditPressed: () => setState(() => _viewMode = _viewMode.next),
+          )
+        : EditNoteView(
+            note: widget.note,
+            onCheckPressed: (updatedNote) => setState(() {
+              noteLatestVersion = updatedNote;
+              _viewMode = _viewMode.next;
+            }),
+          );
   }
 }
