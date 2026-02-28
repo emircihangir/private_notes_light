@@ -48,13 +48,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               Form(
                 key: _formKey,
-                child: PasswordTextField(
-                  controller: passwordController,
-                  errorText: errorText,
-                  labelText: AppLocalizations.of(context)!.password,
-                  onChanged: (value) {
-                    if (errorText != null) setState(() => errorText = null);
-                  },
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 333),
+                  child: PasswordTextField(
+                    controller: passwordController,
+                    errorText: errorText,
+                    labelText: AppLocalizations.of(context)!.password,
+                    onChanged: (value) {
+                      if (errorText != null) setState(() => errorText = null);
+                    },
+                  ),
                 ),
               ),
               FilledButton(

@@ -8,26 +8,29 @@ class TitleWarning extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Text(AppLocalizations.of(context)!.titleWarning),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: ref.read(titleWarningPrefProvider.notifier).dismiss,
-                  child: Text(AppLocalizations.of(context)!.dismiss),
-                ),
-                TextButton(
-                  onPressed: ref.read(titleWarningPrefProvider.notifier).dontShowAgain,
-                  child: Text(AppLocalizations.of(context)!.dontShowAgain),
-                ),
-              ],
-            ),
-          ],
+    return Container(
+      constraints: BoxConstraints(maxWidth: 400),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            children: [
+              Text(AppLocalizations.of(context)!.titleWarning),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: ref.read(titleWarningPrefProvider.notifier).dismiss,
+                    child: Text(AppLocalizations.of(context)!.dismiss),
+                  ),
+                  TextButton(
+                    onPressed: ref.read(titleWarningPrefProvider.notifier).dontShowAgain,
+                    child: Text(AppLocalizations.of(context)!.dontShowAgain),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

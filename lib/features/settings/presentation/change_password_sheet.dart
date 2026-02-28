@@ -32,7 +32,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom + 32;
     return Padding(
-      padding: EdgeInsets.only(bottom: bottomInset),
+      padding: EdgeInsets.only(bottom: bottomInset, left: 32, right: 32),
       child: SingleChildScrollView(
         child: Center(
           child: Form(
