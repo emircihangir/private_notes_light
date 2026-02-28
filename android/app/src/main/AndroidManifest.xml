@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="private_notes_light"
+        android:label="Private Notes"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
