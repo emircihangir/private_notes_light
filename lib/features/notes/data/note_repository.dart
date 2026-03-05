@@ -54,6 +54,15 @@ class NoteRepository {
     await batch.commit(noResult: true);
   }
 
+  Future<void> batchDelete(List<String> notes) async {
+    final db = await database;
+    Batch batch = db.batch();
+    for (var noteId in notes) {
+      batch.delete('notes', where: 'id = ?', whereArgs: [noteId]);
+    }
+    await batch.commit(noResult: true);
+  }
+
   Future<List<NoteDto>> getNotes() async {
     final db = await database;
     final notes = await db.query('notes', orderBy: 'dateCreated DESC');

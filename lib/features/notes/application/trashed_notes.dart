@@ -22,9 +22,8 @@ class TrashedNotes extends _$TrashedNotes {
   Future<void> emptyTrash() async {
     if (state.isEmpty) return;
 
-    for (TrashedNoteData trashedNote in state) {
-      await ref.read(noteRepositoryProvider).removeNote(trashedNote.noteWidgetData.noteId);
-    }
+    List<String> trashedNoteIds = state.map((e) => e.noteWidgetData.noteId).toList();
+    await ref.read(noteRepositoryProvider).batchDelete(trashedNoteIds);
     state = [];
     log('Emptied the trash.', name: 'INFO');
   }
