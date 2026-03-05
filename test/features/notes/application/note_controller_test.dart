@@ -327,5 +327,56 @@ void main() {
       expect(currentNotesList.contains(deletedNote1.noteWidgetData), isTrue);
     });
 
+    test('putNoteBack works', () {
+      // Setup
+      final dummyKey = enc.Key.fromLength(32);
+      container.read(masterKeyProvider.notifier).set(dummyKey);
+
+      final List<NoteWidgetData> dummyData = [
+        NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+        NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+        NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+      ];
+      container
+          .read(noteControllerProvider.notifier)
+          .setState(NoteControllerState(data: dummyData));
+
+      final deletedNote1 = TrashedNoteData(
+        NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
+        2,
+      );
+      final deletedNote2 = TrashedNoteData(
+        NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
+        4,
+      );
+      container.read(trashedNotesProvider).add(deletedNote1);
+      container.read(trashedNotesProvider).add(deletedNote2);
+
+      // Act
+      container.read(noteControllerProvider.notifier).putNoteBack(deletedNote1);
+
+      // Verify
+      var trashedNotes = container.read(trashedNotesProvider);
+      expect(trashedNotes.contains(deletedNote2), isTrue);
+      expect(trashedNotes.contains(deletedNote1), isFalse);
+      expect(trashedNotes.length, 1);
+
+      var currentNotesList = container.read(noteControllerProvider).valueOrNull!.data;
+      expect(currentNotesList.contains(deletedNote1.noteWidgetData), isTrue);
+
+      // Act
+      container.read(noteControllerProvider.notifier).putNoteBack(deletedNote2);
+
+      // Verify
+      trashedNotes = container.read(trashedNotesProvider);
+      expect(trashedNotes.contains(deletedNote2), isFalse);
+      expect(trashedNotes.contains(deletedNote1), isFalse);
+      expect(trashedNotes.isEmpty, isTrue);
+
+      currentNotesList = container.read(noteControllerProvider).valueOrNull!.data;
+      expect(currentNotesList.contains(deletedNote1.noteWidgetData), isTrue);
+      expect(currentNotesList.contains(deletedNote2.noteWidgetData), isTrue);
+    });
+
   });
 }
