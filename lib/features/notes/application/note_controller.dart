@@ -118,7 +118,13 @@ class NoteController extends _$NoteController {
 
     final lastDeletedNote = ref.read(trashedNotesProvider.notifier).undoLast();
     final newList = List<NoteWidgetData>.from(currentList);
-    newList.insert(lastDeletedNote.index, lastDeletedNote.noteWidgetData);
+    late final int noteIndex;
+    if (lastDeletedNote.index > newList.length) {
+      noteIndex = newList.length;
+    } else {
+      noteIndex = lastDeletedNote.index;
+    }
+    newList.insert(noteIndex, lastDeletedNote.noteWidgetData);
     state = AsyncValue.data(state.value!.copyWith(data: newList));
 
     log(
