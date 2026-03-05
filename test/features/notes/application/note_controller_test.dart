@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/backup/application/export_service.dart';
 import 'package:private_notes_light/features/backup/data/backup_repository.dart';
 import 'package:private_notes_light/features/encryption/application/encryption_service.dart';
@@ -23,6 +24,7 @@ import 'package:private_notes_light/features/settings/domain/settings_data.dart'
   MockSpec<EncryptionService>(),
   MockSpec<SettingsRepository>(),
   MockSpec<BackupRepository>(),
+  MockSpec<AuthService>(),
 ])
 import 'note_controller_test.mocks.dart';
 
@@ -31,6 +33,7 @@ void main() {
   late MockEncryptionService mockEncryptionService;
   late MockSettingsRepository mockSettingsRepo;
   late MockBackupRepository mockBackupRepo;
+  late MockAuthService mockAuthService;
   late ProviderContainer container;
 
   setUp(() {
@@ -38,6 +41,7 @@ void main() {
     mockEncryptionService = MockEncryptionService();
     mockSettingsRepo = MockSettingsRepository();
     mockBackupRepo = MockBackupRepository();
+    mockAuthService = MockAuthService();
 
     container = container = ProviderContainer(
       overrides: [
@@ -45,6 +49,7 @@ void main() {
         encryptionServiceProvider.overrideWith((ref) => mockEncryptionService),
         settingsRepositoryProvider.overrideWith((ref) => mockSettingsRepo),
         backupRepositoryProvider.overrideWith((ref) => mockBackupRepo),
+        authServiceProvider.overrideWith((ref) => mockAuthService),
       ],
     );
     addTearDown(container.dispose);
@@ -378,5 +383,71 @@ void main() {
       expect(currentNotesList.contains(deletedNote2.noteWidgetData), isTrue);
     });
 
+    group('logout tests ->', () {
+      test('empties the trash', () async {
+        // Setup
+        final dummyKey = enc.Key.fromLength(32);
+        container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        final List<NoteWidgetData> dummyData = [
+          NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+          NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+          NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+        ];
+        container
+            .read(noteControllerProvider.notifier)
+            .setState(NoteControllerState(data: dummyData));
+
+        final deletedNote1 = TrashedNoteData(
+          NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
+          2,
+        );
+        final deletedNote2 = TrashedNoteData(
+          NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
+          4,
+        );
+        container.read(trashedNotesProvider).add(deletedNote1);
+        container.read(trashedNotesProvider).add(deletedNote2);
+
+        // Act
+        await container.read(noteControllerProvider.notifier).logout();
+
+        // Verify
+        var trashedNotes = container.read(trashedNotesProvider);
+        expect(trashedNotes.isEmpty, isTrue);
+      });
+
+      test('calls authServiceProvider.logout()', () async {
+        // Setup
+        final dummyKey = enc.Key.fromLength(32);
+        container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        final List<NoteWidgetData> dummyData = [
+          NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+          NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+          NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+        ];
+        container
+            .read(noteControllerProvider.notifier)
+            .setState(NoteControllerState(data: dummyData));
+
+        final deletedNote1 = TrashedNoteData(
+          NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
+          2,
+        );
+        final deletedNote2 = TrashedNoteData(
+          NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
+          4,
+        );
+        container.read(trashedNotesProvider).add(deletedNote1);
+        container.read(trashedNotesProvider).add(deletedNote2);
+
+        // Act
+        await container.read(noteControllerProvider.notifier).logout();
+
+        // Verify
+        verify(mockAuthService.logout()).called(1);
+      });
+    });
   });
 }
