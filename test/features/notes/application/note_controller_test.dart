@@ -449,5 +449,38 @@ void main() {
         verify(mockAuthService.logout()).called(1);
       });
     });
+
+    test('openNote works', () async {
+      // Setup
+      final dummyData = (
+        key: enc.Key.fromLength(32),
+        noteId: 'noteId',
+        iv: enc.IV.fromLength(16),
+        date: DateTime.now().toIso8601String(),
+        encryptedContent: 'encryptedContent',
+        decryptedContent: 'decryptedContent',
+      );
+      container.read(masterKeyProvider.notifier).set(dummyData.key);
+      when(mockNoteRepo.getNote(dummyData.noteId)).thenAnswer(
+        (_) async => NoteDto(
+          id: dummyData.noteId,
+          title: 'title',
+          content: dummyData.encryptedContent,
+          iv: dummyData.iv.base64,
+          dateCreated: dummyData.date,
+        ),
+      );
+      when(
+        mockEncryptionService.decryptWithMasterKey(dummyData.encryptedContent, dummyData.iv),
+      ).thenReturn(dummyData.decryptedContent);
+
+      // Act
+      final openedNote = await container
+          .read(noteControllerProvider.notifier)
+          .openNote(dummyData.noteId);
+
+      // Verify
+      expect(openedNote.content, dummyData.decryptedContent);
+    });
   });
 }
