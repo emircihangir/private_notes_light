@@ -34,5 +34,26 @@ void main() {
       expect(notes.length, 1);
       expect(notes.contains(dummyDto), isTrue);
     });
+
+    test('deleteAllNotes', () async {
+      // Setup
+      final dummyValues = (iv: enc.IV.fromLength(16), date: DateTime.now());
+      final dummyDto = NoteDto(
+        id: 'id',
+        title: 'title',
+        content: 'content',
+        iv: dummyValues.iv.base64,
+        dateCreated: dummyValues.date.toIso8601String(),
+      );
+      await repository.addNote(dummyDto);
+      await repository.addNote(dummyDto.copyWith(id: 'id2'));
+
+      // Act
+      await repository.deleteAllNotes();
+
+      // Verify
+      final notes = await repository.getNotes();
+      expect(notes.isEmpty, isTrue);
+    });
   });
 }
