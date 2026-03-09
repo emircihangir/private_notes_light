@@ -41,11 +41,15 @@ class NoteRepository {
     await db.insert('notes', dto.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
+  Future<void> deleteAllNotes() async {
+    final db = await database;
+    await db.delete('notes');
+  }
+
   Future<void> importNotes(List<NoteDto> noteDTOs) async {
     final db = await database;
 
-    // * Delete all rows from the notes table.
-    await db.delete('notes');
+    await deleteAllNotes();
 
     Batch batch = db.batch();
     for (NoteDto noteDTO in noteDTOs) {
