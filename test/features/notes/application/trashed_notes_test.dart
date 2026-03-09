@@ -75,5 +75,25 @@ void main() {
       expect(after.length, 0);
       verify(mockNoteRepo.batchDelete(argThat(isA<List<String>>()))).called(1);
     });
+
+    test('putBack works', () {
+      // Setup
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final dummyValue1 = TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 0);
+      final dummyValue2 = TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 1);
+      container.read(trashedNotesProvider.notifier).add(dummyValue1);
+      container.read(trashedNotesProvider.notifier).add(dummyValue2);
+
+      // Act
+      container.read(trashedNotesProvider.notifier).putBack(dummyValue1);
+
+      // Verify
+      final after = container.read(trashedNotesProvider);
+      expect(after.length, 1);
+      expect(after.contains(dummyValue1), isFalse);
+      expect(after.contains(dummyValue2), isTrue);
+    });
   });
 }
