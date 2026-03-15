@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:private_notes_light/features/authentication/application/app_startup.dart';
+import 'package:private_notes_light/features/authentication/application/user_signed_up.dart';
 import 'package:private_notes_light/features/authentication/data/auth_repository.dart';
 
 @GenerateNiceMocks([MockSpec<AuthRepository>()])
@@ -26,7 +26,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(appStartupProvider.future);
+      final result = await container.read(userSignedUpProvider.future);
 
       expect(result, true);
       verify(mockAuthRepository.userSignedUp).called(1);
@@ -42,7 +42,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(appStartupProvider.future);
+      final result = await container.read(userSignedUpProvider.future);
 
       expect(result, false);
       verify(mockAuthRepository.userSignedUp).called(1);

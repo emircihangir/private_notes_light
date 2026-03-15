@@ -35,7 +35,7 @@ void main() {
       expect(notes.contains(dummyDto), isTrue);
     });
 
-    test('deleteAllNotes', () async {
+    test('deleteAllNotes works', () async {
       // Setup
       final dummyValues = (iv: enc.IV.fromLength(16), date: DateTime.now());
       final dummyDto = NoteDto(

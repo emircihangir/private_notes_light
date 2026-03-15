@@ -633,6 +633,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export failed.'**
   String get failedToExport;
+
+  /// No description provided for @slide1Content.
+  ///
+  /// In en, this message translates to:
+  /// **'Private Notes keeps your data completely to yourself. Every note you write is encrypted with AES-256 using your master password before it is ever saved to your device. No one else can read your notes, not the developer, not any third party service, and not anyone who might gain access to your device. There are no servers, no cloud sync, and no accounts. Everything stays local, encrypted, and entirely under your control.'**
+  String get slide1Content;
+
+  /// No description provided for @slide1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your notes, fully private.'**
+  String get slide1Title;
+
+  /// No description provided for @slide2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'How to Use'**
+  String get slide2Title;
+
+  /// No description provided for @slide2Content.
+  ///
+  /// In en, this message translates to:
+  /// **'When you first open the app, you will be asked to create a master password. This password is the key that encrypts and decrypts all of your notes, so choose something memorable but strong. Once you are logged in, tap the plus button to create a new note. Tap any existing note to view or edit it. To delete a note, open it and use the delete option from the menu. If you want to keep a backup of your notes, head over to the backup section in settings where you can export your encrypted notes to a file and import them again whenever you need.'**
+  String get slide2Content;
+
+  /// No description provided for @slide3Content.
+  ///
+  /// In en, this message translates to:
+  /// **'Please read this carefully before you begin. The developer provides this application as is and accepts no responsibility whatsoever for any loss, corruption, theft, or inaccessibility of your notes or any other data stored within the app. This includes but is not limited to data loss caused by forgotten passwords, device failures, accidental deletion, or software bugs. You are solely responsible for keeping your data safe. It is strongly recommended that you export and store a backup of your notes on a regular basis. If you forget your master password, there is no recovery mechanism and your notes will be permanently inaccessible. By proceeding, you acknowledge that you have read this notice and agree to these terms.'**
+  String get slide3Content;
+
+  /// No description provided for @slide3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Important Notice'**
+  String get slide3Title;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
 }
 
 class _AppLocalizationsDelegate

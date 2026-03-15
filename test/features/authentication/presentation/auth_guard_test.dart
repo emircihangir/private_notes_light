@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:private_notes_light/features/authentication/application/app_startup.dart';
+import 'package:private_notes_light/features/authentication/application/user_signed_up.dart';
 import 'package:private_notes_light/features/authentication/presentation/auth_guard.dart';
 import 'package:private_notes_light/features/authentication/presentation/login_screen.dart';
 import 'package:private_notes_light/features/authentication/presentation/signup_screen.dart';
@@ -13,7 +13,7 @@ void main() {
       // Setup
       await widgetTester.pumpWidget(
         ProviderScope(
-          overrides: [appStartupProvider.overrideWith((ref) async => true)],
+          overrides: [userSignedUpProvider.overrideWith((ref) async => true)],
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -30,7 +30,7 @@ void main() {
       // Setup
       await widgetTester.pumpWidget(
         ProviderScope(
-          overrides: [appStartupProvider.overrideWith((ref) async => false)],
+          overrides: [userSignedUpProvider.overrideWith((ref) async => false)],
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
