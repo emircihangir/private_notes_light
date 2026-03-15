@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/fade_page_route_builder.dart';
-import 'package:private_notes_light/features/authentication/presentation/signup_screen.dart';
+import 'package:private_notes_light/features/authentication/presentation/auth_guard.dart';
 import 'package:private_notes_light/features/welcome/data/welcome_repository.dart';
 import 'package:private_notes_light/features/welcome/presentation/dot_indicator.dart';
 import 'package:private_notes_light/features/welcome/presentation/slide_page.dart';
@@ -43,7 +43,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
       if (mounted) {
         Navigator.of(
           context,
-        ).pushAndRemoveUntil(fadePageRouteBuilder(SignupScreen()), (route) => false);
+        ).pushAndRemoveUntil(fadePageRouteBuilder(AuthGuard()), (route) => false);
       }
     }
   }
