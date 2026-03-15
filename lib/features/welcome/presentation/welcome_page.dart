@@ -103,7 +103,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
             ),
 
             Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
