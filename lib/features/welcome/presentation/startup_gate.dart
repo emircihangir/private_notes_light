@@ -5,9 +5,9 @@ import 'package:private_notes_light/features/authentication/presentation/auth_gu
 import 'package:private_notes_light/features/welcome/application/welcome_shown.dart';
 import 'package:private_notes_light/features/welcome/presentation/welcome_page.dart';
 
-/// Returns WelcomePage() if it is a first time user,
-/// AuthGuard() otherwise.
 class StartupGate extends ConsumerWidget {
+  /// Returns WelcomePage() if it is a first time user,
+  /// AuthGuard() otherwise.
   const StartupGate({super.key});
 
   @override
