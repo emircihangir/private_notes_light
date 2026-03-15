@@ -25,7 +25,18 @@ class SlidePage extends StatelessWidget {
           const SizedBox(height: 40),
           Text(slide.title, textAlign: TextAlign.center, style: textTheme.headlineMedium),
           const SizedBox(height: 20),
-          slide.body,
+          Flexible(
+            child: SingleChildScrollView(
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 500),
+                child: Text(
+                  slide.content,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.justify,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

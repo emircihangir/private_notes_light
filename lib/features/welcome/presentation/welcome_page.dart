@@ -9,9 +9,8 @@ import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class SlideData {
   final IconData icon;
-  final String title;
-  final Widget body;
-  const SlideData({required this.icon, required this.title, required this.body});
+  final String title, content;
+  const SlideData({required this.icon, required this.title, required this.content});
 }
 
 class WelcomePage extends ConsumerStatefulWidget {
@@ -52,35 +51,19 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
   SlideData _slide1() => SlideData(
     icon: Icons.lock_outline_rounded,
     title: AppLocalizations.of(context)!.slide1Title,
-    body: Text(
-      AppLocalizations.of(context)!.slide1Content,
-      style: Theme.of(context).textTheme.bodyLarge,
-      textAlign: TextAlign.justify,
-    ),
+    content: AppLocalizations.of(context)!.slide1Content,
   );
 
   SlideData _slide2() => SlideData(
     icon: Icons.edit_note_rounded,
     title: AppLocalizations.of(context)!.slide2Title,
-    body: Text(
-      AppLocalizations.of(context)!.slide2Content,
-      style: Theme.of(context).textTheme.bodyLarge,
-      textAlign: TextAlign.justify,
-    ),
+    content: AppLocalizations.of(context)!.slide2Content,
   );
 
   SlideData _slide3() => SlideData(
     icon: Icons.warning_amber_rounded,
     title: AppLocalizations.of(context)!.slide3Title,
-    body: Expanded(
-      child: SingleChildScrollView(
-        child: Text(
-          AppLocalizations.of(context)!.slide3Content,
-          style: Theme.of(context).textTheme.bodyLarge,
-          textAlign: TextAlign.justify,
-        ),
-      ),
-    ),
+    content: AppLocalizations.of(context)!.slide3Content,
   );
 
   @override
