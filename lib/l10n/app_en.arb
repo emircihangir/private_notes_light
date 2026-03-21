@@ -315,5 +315,9 @@
   "getStarted" : "Get Started",
   "@getStarted": {},
   "next" : "Next",
-  "@next": {}
+  "@next": {},
+  "documentation" : "Documentation",
+  "@documentation": {},
+  "documentationSubtitle" : "Available on DeepWiki",
+  "@documentationSubtitle": {}
 }

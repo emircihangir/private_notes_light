@@ -681,6 +681,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next'**
   String get next;
+
+  /// No description provided for @documentation.
+  ///
+  /// In en, this message translates to:
+  /// **'Documentation'**
+  String get documentation;
+
+  /// No description provided for @documentationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Available on DeepWiki'**
+  String get documentationSubtitle;
 }
 
 class _AppLocalizationsDelegate

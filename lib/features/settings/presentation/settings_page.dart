@@ -18,6 +18,13 @@ class SettingsPage extends ConsumerWidget {
     final appVersion = ref.watch(appVersionProvider);
     final String versionNumber = appVersion.valueOrNull ?? '';
 
+    Future<void> openUrl(String urlText) async {
+      final result = await launchUrl(Uri.parse(urlText), mode: LaunchMode.externalApplication);
+      if (result == false && context.mounted) {
+        showErrorSnackbar(context);
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyActions: true,
@@ -69,43 +76,28 @@ class SettingsPage extends ConsumerWidget {
               title: Text(AppLocalizations.of(context)!.sourceCodeTitle),
               subtitle: Text(AppLocalizations.of(context)!.sourceCodeSubtitle),
               trailing: const Icon(Icons.open_in_new, size: 16),
-              onTap: () async {
-                final result = await launchUrl(
-                  Uri.parse("https://github.com/emircihangir/private_notes_light"),
-                  mode: LaunchMode.externalApplication,
-                );
-                if (result == false && context.mounted) {
-                  showErrorSnackbar(context);
-                }
-              },
+              onTap: () async =>
+                  await openUrl("https://github.com/emircihangir/private_notes_light"),
+            ),
+            ListTile(
+              leading: const Icon(Icons.article_rounded),
+              title: Text(AppLocalizations.of(context)!.documentation),
+              subtitle: Text(AppLocalizations.of(context)!.documentationSubtitle),
+              trailing: const Icon(Icons.open_in_new, size: 16),
+              onTap: () async =>
+                  await openUrl("https://deepwiki.com/emircihangir/private_notes_light"),
             ),
             ListTile(
               leading: const Icon(Icons.feedback_rounded),
               title: Text(AppLocalizations.of(context)!.reportFeedbackTitle),
               subtitle: Text(AppLocalizations.of(context)!.reportFeedbackSubtitle),
-              onTap: () async {
-                final result = await launchUrl(
-                  Uri.parse("mailto:m.emircihangir@gmail.com"),
-                  mode: LaunchMode.externalApplication,
-                );
-                if (result == false && context.mounted) {
-                  showErrorSnackbar(context);
-                }
-              },
+              onTap: () async => await openUrl("mailto:m.emircihangir@gmail.com"),
             ),
             ListTile(
               leading: const Icon(Icons.coffee),
               title: Text(AppLocalizations.of(context)!.supportDevelopmentTitle),
               subtitle: Text(AppLocalizations.of(context)!.supportDevelopmentSubtitle),
-              onTap: () async {
-                final result = await launchUrl(
-                  Uri.parse("https://buymeacoffee.com/emircihangir"),
-                  mode: LaunchMode.externalApplication,
-                );
-                if (result == false && context.mounted) {
-                  showErrorSnackbar(context);
-                }
-              },
+              onTap: () async => await openUrl("https://buymeacoffee.com/emircihangir"),
             ),
 
             const Divider(),

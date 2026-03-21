@@ -314,4 +314,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get next => 'Next';
+
+  @override
+  String get documentation => 'Documentation';
+
+  @override
+  String get documentationSubtitle => 'Available on DeepWiki';
 }
