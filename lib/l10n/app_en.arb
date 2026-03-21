@@ -17,7 +17,9 @@
     "description": "Hint text displayed inside the password text field."
   },
   "masterPasswordConfirm": "Confirm master password",
-  "@masterPasswordConfirm": {},
+  "@masterPasswordConfirm": {
+    "description": "Label for the confirm master password input field on the signup screen."
+  },
   "masterPasswordEmptyError": "Master password input cannot be empty.",
   "@masterPasswordEmptyError": {
     "description": "Error snackbar message shown when the user attempts to sign up with an empty password."
@@ -215,7 +217,9 @@
     "description": "The name of the application."
   },
   "version": "Version",
-  "@version": {},
+  "@version": {
+    "description": "Label preceding the app version number in the About section."
+  },
   "developedBy": "Developed by Muhammed Emir Cihangir",
   "@developedBy": {
     "description": "Developer credit text."
@@ -245,85 +249,167 @@
     "description": "Title for the submit button on the change master password bottom sheet"
   },
   "newPassword": "New password",
-  "@newPassword": {},
+  "@newPassword": {
+    "description": "Label for the new password input field in the change password sheet."
+  },
   "newPasswordConfirm": "Confirm new password",
-  "@newPasswordConfirm": {},
+  "@newPasswordConfirm": {
+    "description": "Label for the confirm new password input field in the change password sheet."
+  },
   "newPasswordWarning": "Caution: Do not forget the new password, as there is no way to recover your notes without it.",
-  "@newPasswordWarning": {},
+  "@newPasswordWarning": {
+    "description": "Warning shown at the top of the change password sheet."
+  },
   "passwordsDontMatch": "Passwords do not match.",
-  "@passwordsDontMatch": {},
+  "@passwordsDontMatch": {
+    "description": "Validation error shown when the two password fields do not match."
+  },
   "changedPasswordSuccessfully": "Password change successful.",
-  "@changedPasswordSuccessfully": {},
+  "@changedPasswordSuccessfully": {
+    "description": "Success snackbar shown after the master password is changed."
+  },
   "couldNotParseJson": "Could not parse the selected file. Make sure the file follows JSON syntax.",
-  "@couldNotParseJson": {},
+  "@couldNotParseJson": {
+    "description": "Error shown when the selected import file cannot be parsed as JSON."
+  },
   "fileIsCorrupt": "File is corrupt. Failed to retrieve data.",
-  "@fileIsCorrupt": {},
+  "@fileIsCorrupt": {
+    "description": "Error shown when the import file parses as JSON but cannot be converted to BackupData."
+  },
   "importPasswordDialogTitle": "Enter Password",
-  "@importPasswordDialogTitle": {},
+  "@importPasswordDialogTitle": {
+    "description": "Title of the dialog prompting for the backup file's password."
+  },
   "importPasswordDialogContent": "The import file could not be decrypted with the current master key. Please enter a password to decrypt the import file.",
-  "@importPasswordDialogContent": {},
+  "@importPasswordDialogContent": {
+    "description": "Body text of the dialog prompting for the backup file's password."
+  },
   "invalidFileType": "Invalid file type. Please choose a JSON file.",
-  "@invalidFileType": {},
+  "@invalidFileType": {
+    "description": "Error shown when the selected import file is not a valid text/JSON file."
+  },
   "noNotesFound": "No notes found",
-  "@noNotesFound": {},
+  "@noNotesFound": {
+    "description": "Message shown when a search query returns no matching notes."
+  },
   "exportSuggestionSnackbar": "Would you like to export?",
-  "@exportSuggestionSnackbar": {},
+  "@exportSuggestionSnackbar": {
+    "description": "Snackbar message suggesting an export after a note is saved."
+  },
   "failedToDeleteNote": "Failed to delete note.",
-  "@failedToDeleteNote": {},
+  "@failedToDeleteNote": {
+    "description": "Error snackbar shown when a note deletion fails."
+  },
   "failedToCreateNote": "Failed to create note.",
-  "@failedToCreateNote": {},
+  "@failedToCreateNote": {
+    "description": "Error snackbar shown when a note creation fails."
+  },
   "password": "Password",
-  "@password": {},
+  "@password": {
+    "description": "Label for the password input field on the login screen."
+  },
   "confirmPassword": "Confirm password",
-  "@confirmPassword": {},
+  "@confirmPassword": {
+    "description": "Label for the confirm password input field on the signup screen."
+  },
   "exportWarningSnackbar": "Last export was more than a week ago. Export recommended.",
-  "@exportWarningSnackbar": {},
+  "@exportWarningSnackbar": {
+    "description": "Snackbar warning shown when no backup has been made in over 7 days."
+  },
   "export": "Export",
-  "@export": {},
+  "@export": {
+    "description": "Action label on the export suggestion and warning snackbars."
+  },
   "noteDeleted": "Note deleted.",
-  "@noteDeleted": {},
+  "@noteDeleted": {
+    "description": "Snackbar message shown after a note is moved to the trash."
+  },
   "undo": "Undo",
-  "@undo": {},
+  "@undo": {
+    "description": "Action label on the note-deleted snackbar to restore the note."
+  },
   "trashedNotes": "Trashed Notes",
-  "@trashedNotes": {},
+  "@trashedNotes": {
+    "description": "Title of the trashed notes bottom sheet."
+  },
   "putBack": "Put Back",
-  "@putBack": {},
+  "@putBack": {
+    "description": "Button label to restore a note from the trash."
+  },
   "trashedNotesExplainer": "These are permanently deleted on logout.",
-  "@trashedNotesExplainer": {},
+  "@trashedNotesExplainer": {
+    "description": "Explainer text in the trashed notes sheet describing when deletion is permanent."
+  },
   "titleWarning": "Warning: Note titles are not encrypted. Do not write sensitive information in titles.",
-  "@titleWarning": {},
+  "@titleWarning": {
+    "description": "Warning card shown on the create/edit note screen about unencrypted titles."
+  },
   "dismiss": "Dismiss",
-  "@dismiss": {},
+  "@dismiss": {
+    "description": "Button to temporarily hide the title warning card."
+  },
   "dontShowAgain": "Don't show again",
-  "@dontShowAgain": {},
-  "errorOccurred" : "Error occurred.",
-  "@errorOccurred": {},
-  "failedToExport" : "Export failed.",
-  "@failedToExport": {},
-  "slide1Content" : "Private Notes keeps your data completely to yourself. Every note you write is encrypted with AES-256 using your master password before it is ever saved to your device. No one else can read your notes, not the developer, not any third party service, and not anyone who might gain access to your device. There are no servers, no cloud sync, and no accounts. Everything stays local, encrypted, and entirely under your control.",
-  "@slide1Content": {},
-  "slide1Title" : "Your notes, fully private.",
-  "@slide1Title": {},
-  "slide2Title" : "How to Use",
-  "@slide2Title": {},
-  "slide2Content" : "When you first open the app, you will be asked to create a master password. This password is the key that encrypts and decrypts all of your notes, so choose something memorable but strong. Once you are logged in, tap the plus button to create a new note. Tap any existing note to view or edit it. To delete a note, open it and use the delete option from the menu. If you want to keep a backup of your notes, head over to the backup section in settings where you can export your encrypted notes to a file and import them again whenever you need.",
-  "@slide2Content": {},
-  "slide3Content" : "Please read this carefully before you begin. The developer provides this application as is and accepts no responsibility whatsoever for any loss, corruption, theft, or inaccessibility of your notes or any other data stored within the app. This includes but is not limited to data loss caused by forgotten passwords, device failures, accidental deletion, or software bugs. You are solely responsible for keeping your data safe. It is strongly recommended that you export and store a backup of your notes on a regular basis. If you forget your master password, there is no recovery mechanism and your notes will be permanently inaccessible. By proceeding, you acknowledge that you have read this notice and agree to these terms.",
-  "@slide3Content": {},
-  "slide3Title" : "Important Notice",
-  "@slide3Title": {},
-  "getStarted" : "Get Started",
-  "@getStarted": {},
-  "next" : "Next",
-  "@next": {},
-  "documentation" : "Documentation",
-  "@documentation": {},
-  "documentationSubtitle" : "Available on DeepWiki",
-  "@documentationSubtitle": {},
-  "exportSuggestionsHelpText" : "Shows a backup prompt snackbar on every save.",
-  "@exportSuggestionsHelpText": {},
-  "exportWarningsHelpText" : "Shows a backup reminder snackbar if last export was over 7 days ago.",
-  "@exportWarningsHelpText": {},
-  "ok" : "OK",
-  "@ok": {}
+  "@dontShowAgain": {
+    "description": "Button to permanently hide the title warning card."
+  },
+  "errorOccurred": "Error occurred.",
+  "@errorOccurred": {
+    "description": "Generic error message used as a fallback in error snackbars."
+  },
+  "failedToExport": "Export failed.",
+  "@failedToExport": {
+    "description": "Error snackbar shown when the export operation fails."
+  },
+  "slide1Content": "Private Notes keeps your data completely to yourself. Every note you write is encrypted with AES-256 using your master password before it is ever saved to your device. No one else can read your notes, not the developer, not any third party service, and not anyone who might gain access to your device. There are no servers, no cloud sync, and no accounts. Everything stays local, encrypted, and entirely under your control.",
+  "@slide1Content": {
+    "description": "Body text for the first welcome slide describing the privacy model."
+  },
+  "slide1Title": "Your notes, fully private.",
+  "@slide1Title": {
+    "description": "Title for the first welcome slide."
+  },
+  "slide2Title": "How to Use",
+  "@slide2Title": {
+    "description": "Title for the second welcome slide."
+  },
+  "slide2Content": "When you first open the app, you will be asked to create a master password. This password is the key that encrypts and decrypts all of your notes, so choose something memorable but strong. Once you are logged in, tap the plus button to create a new note. Tap any existing note to view or edit it. To delete a note, open it and use the delete option from the menu. If you want to keep a backup of your notes, head over to the backup section in settings where you can export your encrypted notes to a file and import them again whenever you need.",
+  "@slide2Content": {
+    "description": "Body text for the second welcome slide explaining basic app usage."
+  },
+  "slide3Content": "Please read this carefully before you begin. The developer provides this application as is and accepts no responsibility whatsoever for any loss, corruption, theft, or inaccessibility of your notes or any other data stored within the app. This includes but is not limited to data loss caused by forgotten passwords, device failures, accidental deletion, or software bugs. You are solely responsible for keeping your data safe. It is strongly recommended that you export and store a backup of your notes on a regular basis. If you forget your master password, there is no recovery mechanism and your notes will be permanently inaccessible. By proceeding, you acknowledge that you have read this notice and agree to these terms.",
+  "@slide3Content": {
+    "description": "Body text for the third welcome slide containing the legal disclaimer."
+  },
+  "slide3Title": "Important Notice",
+  "@slide3Title": {
+    "description": "Title for the third welcome slide."
+  },
+  "getStarted": "Get Started",
+  "@getStarted": {
+    "description": "Button label on the last welcome slide to proceed to the app."
+  },
+  "next": "Next",
+  "@next": {
+    "description": "Button label to advance to the next welcome slide."
+  },
+  "documentation": "Documentation",
+  "@documentation": {
+    "description": "Link title for the documentation in the About section."
+  },
+  "documentationSubtitle": "Available on DeepWiki",
+  "@documentationSubtitle": {
+    "description": "Subtitle describing where the documentation is hosted."
+  },
+  "exportSuggestionsHelpText": "Shows a backup prompt snackbar on every save.",
+  "@exportSuggestionsHelpText": {
+    "description": "Help dialog text explaining the Export Suggestions setting."
+  },
+  "exportWarningsHelpText": "Shows a backup reminder snackbar if last export was over 7 days ago.",
+  "@exportWarningsHelpText": {
+    "description": "Help dialog text explaining the Export Warnings setting."
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "Generic confirmation button label used in help dialogs."
+  }
 }
