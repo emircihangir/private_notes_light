@@ -1,65 +1,50 @@
 # Private Notes Light
 [![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/emircihangir/private_notes_light)
 
-Private Notes Light is a secure, offline-first, and lightweight note-taking application built with Flutter. It prioritizes user privacy by storing all notes locally on your device and encrypting them with a master password.
+A local-first, end-to-end encrypted notes app for Android and iOS built with Flutter. Every note is encrypted with AES-256 using your master password before being saved to your device. There are no servers, no accounts, and no cloud sync. Everything stays local and entirely under your control.
 
 ## Features
 
-*   **Local-First Storage:** All your notes are stored locally on your device using `sqflite`. No cloud, no servers, no tracking.
-*   **Strong Encryption:** Notes are encrypted using AES with a key derived from your master password. The master password itself is never stored.
-*   **Backup and Restore:** Easily export all your notes and settings into a single JSON file for backup. You can import this file to restore your data on any device.
-*   **Privacy-Enhanced UI (iOS):** The app content is automatically blurred when switching apps or when screen recording is active to protect your private information. It also provides a warning when a screenshot is taken.
-*   **Clean & Simple UI:** A minimal, distraction-free interface for creating and managing notes.
-*   **Theme Customization:** Switch between Light, Dark, and System default themes.
-*   **Search:** Quickly find the note you're looking for with the built-in search functionality.
+- **End-to-end encryption** — Notes are encrypted with AES-256 using a master password-derived key (Argon2id KDF) before being written to disk.
+- **Local-only storage** — No servers, no accounts, no internet required.
+- **Backup and restore** — Export your encrypted notes to a JSON file and import them on any device. Automatic key rotation is performed when importing a backup encrypted with a different password.
+- **Session auto-lock** — The app clears the master key from memory and forces re-authentication when it loses focus.
+- **Trash system** — Deleted notes are held in a temporary trash until logout, with undo support.
+- **Search** — Filter notes by title instantly.
+- **Theme support** — Light, dark, and system theme modes.
+- **Change master password** — Re-encrypts the master key with a new password without touching the notes themselves.
 
 ## Security Model
 
-The security of your notes is the top priority. Here’s how it works:
+- The master password is never stored. Instead, it is used to derive a key via **Argon2id** (16MB memory, 3 iterations, parallelism 4).
+- A random 256-bit **master key** is generated at signup and encrypted with the derived key. This encrypted master key is stored in SharedPreferences.
+- All notes are encrypted and decrypted in memory using the master key via **AES-256**.
+- Note titles are **not encrypted** and are stored in plaintext. A warning is shown to the user.
 
-1.  **Sign-Up:** When you set your master password, the app generates a random, strong master encryption key. This master key is then encrypted using a separate key derived from your password and a unique salt (using a PBKDF2-like key stretching process). Only this encrypted master key is stored.
-2.  **Login:** When you enter your password, the app re-derives the key and attempts to decrypt the stored master key. If successful, the decrypted master key is held in memory to encrypt/decrypt your notes for the session.
-3.  **Data at Rest:** All note content is stored in the local SQLite database in its encrypted form.
+## Tech Stack
 
-**Important:** Because your password is never stored, there is **no password recovery**. If you forget your master password, your notes will be permanently inaccessible.
-
-## Architecture
-
-The project follows a clean, feature-driven architecture inspired by Domain-Driven Design (DDD) principles. Each feature is organized into its own directory with a clear separation of concerns:
-
-*   `application`: Contains services and controllers (business logic).
-*   `data`: Implements repositories for data access (e.g., database, shared preferences).
-*   `domain`: Defines the core models (entities, DTOs) and repository contracts.
-*   `presentation`: Contains the UI widgets and screens.
-
-State management is handled declaratively using **Riverpod**.
+- **Flutter** with Dart
+- **Riverpod** for state management
+- **SQLite** (via sqflite) for note storage
+- **SharedPreferences** for credentials and settings
+- **encrypt** package for AES-256
+- **cryptography** package for Argon2id key derivation
+- **Freezed** for immutable domain models
 
 ## Getting Started
+```bash
+git clone https://github.com/emircihangir/private_notes_light.git
+cd private_notes_light
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+flutter run
+```
 
-To get a local copy up and running, follow these simple steps.
+## Testing
+```bash
+flutter test
+```
 
-### Prerequisites
+## License
 
-*   [Flutter SDK](https://flutter.dev/docs/get-started/install)
-
-### Installation
-
-1.  Clone the repository:
-    ```sh
-    git clone https://github.com/emircihangir/private_notes_light.git
-    ```
-2.  Navigate to the project directory:
-    ```sh
-    cd private_notes_light
-    ```
-3.  Install dependencies:
-    ```sh
-    flutter pub get
-    ```
-4.  The project uses `build_runner` for code generation. Run the following command to generate the necessary files:
-    ```sh
-    dart run build_runner build --delete-conflicting-outputs
-    ```
-5.  Run the app:
-    ```sh
-    flutter run
+This project is provided as-is. The developer accepts no responsibility for any loss or inaccessibility of data. Always keep a backup of your notes.
