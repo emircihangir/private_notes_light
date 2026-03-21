@@ -41,7 +41,15 @@ class SettingsPage extends ConsumerWidget {
             const ChangePasswordListTile(),
             settingsControllerAsync.whenData((settingsData) {
                   return SwitchListTile(
-                    title: Text(AppLocalizations.of(context)!.exportSuggestions),
+                    title: Row(
+                      children: [
+                        Text(AppLocalizations.of(context)!.exportSuggestions),
+                        HelpButton(
+                          helpTitle: AppLocalizations.of(context)!.exportSuggestions,
+                          helpText: AppLocalizations.of(context)!.exportSuggestionsHelpText,
+                        ),
+                      ],
+                    ),
                     value: settingsData.exportSuggestions,
                     onChanged: (newValue) async => await ref
                         .read(settingsControllerProvider.notifier)
@@ -55,7 +63,15 @@ class SettingsPage extends ConsumerWidget {
 
             settingsControllerAsync.whenData((settingsState) {
                   return SwitchListTile(
-                    title: Text(AppLocalizations.of(context)!.exportWarnings),
+                    title: Row(
+                      children: [
+                        Text(AppLocalizations.of(context)!.exportWarnings),
+                        HelpButton(
+                          helpTitle: AppLocalizations.of(context)!.exportWarnings,
+                          helpText: AppLocalizations.of(context)!.exportWarningsHelpText,
+                        ),
+                      ],
+                    ),
                     value: settingsState.exportWarnings,
                     onChanged: (newValue) async => await ref
                         .read(settingsControllerProvider.notifier)
@@ -125,6 +141,38 @@ class SettingsPage extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class HelpButton extends StatelessWidget {
+  final String helpTitle;
+  final String helpText;
+  const HelpButton({super.key, required this.helpText, required this.helpTitle});
+
+  @override
+  Widget build(BuildContext context) {
+    void handlePress() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(helpTitle),
+            content: Text(helpText),
+            actions: [
+              TextButton(
+                child: Text(AppLocalizations.of(context)!.ok),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    return SizedBox(
+      height: 40,
+      child: IconButton(onPressed: handlePress, icon: Icon(Icons.help_outline_rounded)),
     );
   }
 }

@@ -693,6 +693,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Available on DeepWiki'**
   String get documentationSubtitle;
+
+  /// No description provided for @exportSuggestionsHelpText.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows a backup prompt snackbar on every save.'**
+  String get exportSuggestionsHelpText;
+
+  /// No description provided for @exportWarningsHelpText.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows a backup reminder snackbar if last export was over 7 days ago.'**
+  String get exportWarningsHelpText;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate

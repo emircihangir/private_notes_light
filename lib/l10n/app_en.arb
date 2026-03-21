@@ -319,5 +319,11 @@
   "documentation" : "Documentation",
   "@documentation": {},
   "documentationSubtitle" : "Available on DeepWiki",
-  "@documentationSubtitle": {}
+  "@documentationSubtitle": {},
+  "exportSuggestionsHelpText" : "Shows a backup prompt snackbar on every save.",
+  "@exportSuggestionsHelpText": {},
+  "exportWarningsHelpText" : "Shows a backup reminder snackbar if last export was over 7 days ago.",
+  "@exportWarningsHelpText": {},
+  "ok" : "OK",
+  "@ok": {}
 }

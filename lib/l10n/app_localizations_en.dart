@@ -320,4 +320,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get documentationSubtitle => 'Available on DeepWiki';
+
+  @override
+  String get exportSuggestionsHelpText =>
+      'Shows a backup prompt snackbar on every save.';
+
+  @override
+  String get exportWarningsHelpText =>
+      'Shows a backup reminder snackbar if last export was over 7 days ago.';
+
+  @override
+  String get ok => 'OK';
 }
