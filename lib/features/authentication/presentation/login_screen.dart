@@ -49,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Form(
                 key: _formKey,
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: 333),
+                  constraints: const BoxConstraints(maxWidth: 333),
                   child: PasswordTextField(
                     controller: passwordController,
                     errorText: errorText,
@@ -74,7 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ScaffoldMessenger.of(context).clearSnackBars();
                     Navigator.of(
                       context,
-                    ).pushAndRemoveUntil(fadePageRouteBuilder(NotesPage()), (route) => false);
+                    ).pushAndRemoveUntil(fadePageRouteBuilder(const NotesPage()), (route) => false);
                   } else {
                     setState(() => errorText = AppLocalizations.of(context)!.wrongPasswordError);
                   }

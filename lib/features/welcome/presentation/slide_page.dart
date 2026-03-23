@@ -28,7 +28,7 @@ class SlidePage extends StatelessWidget {
           Flexible(
             child: SingleChildScrollView(
               child: Container(
-                constraints: BoxConstraints(maxWidth: 500),
+                constraints: const BoxConstraints(maxWidth: 500),
                 child: Text(
                   slide.content,
                   style: Theme.of(context).textTheme.bodyLarge,

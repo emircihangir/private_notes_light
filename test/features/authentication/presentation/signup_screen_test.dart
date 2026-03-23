@@ -8,7 +8,7 @@ void main() {
   testWidgets('Signup page detects failed password confirmation', (widgetTester) async {
     // Setup
     await widgetTester.pumpWidget(
-      ProviderScope(
+      const ProviderScope(
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

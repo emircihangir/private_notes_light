@@ -84,9 +84,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     try {
                       await ref.read(authServiceProvider).signup(passwordInput);
                       if (context.mounted) {
-                        Navigator.of(
-                          context,
-                        ).pushAndRemoveUntil(fadePageRouteBuilder(NotesPage()), (route) => false);
+                        Navigator.of(context).pushAndRemoveUntil(
+                          fadePageRouteBuilder(const NotesPage()),
+                          (route) => false,
+                        );
                       }
                     } catch (e) {
                       if (context.mounted) {

@@ -28,7 +28,7 @@ class HelpButton extends StatelessWidget {
 
     return SizedBox(
       height: 40,
-      child: IconButton(onPressed: handlePress, icon: Icon(Icons.help_outline_rounded)),
+      child: IconButton(onPressed: handlePress, icon: const Icon(Icons.help_outline_rounded)),
     );
   }
 }

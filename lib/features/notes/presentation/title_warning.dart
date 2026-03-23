@@ -9,7 +9,7 @@ class TitleWarning extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      constraints: BoxConstraints(maxWidth: 400),
+      constraints: const BoxConstraints(maxWidth: 400),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(12),

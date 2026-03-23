@@ -8,7 +8,7 @@ void main() {
   testWidgets('PasswordTextField invalidates empty text', (widgetTester) async {
     // Setup
     await widgetTester.pumpWidget(
-      ProviderScope(
+      const ProviderScope(
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

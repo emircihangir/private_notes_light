@@ -47,7 +47,7 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
           child: Text(AppLocalizations.of(context)!.cancel),
         ),
         TextButton(
-          key: ValueKey('SubmitButton'),
+          key: const ValueKey('SubmitButton'),
           onPressed: () async {
             if (_formKey.currentState!.validate() == false) return;
 

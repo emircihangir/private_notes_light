@@ -36,7 +36,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 
   void handlePlusTap() {
     ScaffoldMessenger.of(context).clearSnackBars();
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateNotePage()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CreateNotePage()));
   }
 
   void handleSettingsTap() {
@@ -47,14 +47,16 @@ class _NotesPageState extends ConsumerState<NotesPage> {
   void handleLogout() {
     ref.read(noteControllerProvider.notifier).logout();
     ScaffoldMessenger.of(context).clearSnackBars();
-    Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
+    Navigator.of(
+      context,
+    ).pushAndRemoveUntil(fadePageRouteBuilder(const LoginScreen()), (route) => false);
   }
 
   Future<void> handleTrashTap() async {
     await showModalBottomSheet(
       showDragHandle: true,
       context: context,
-      builder: (context) => TrashedNotesSheet(),
+      builder: (context) => const TrashedNotesSheet(),
     );
   }
 
@@ -78,7 +80,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         ScaffoldMessenger.of(context).clearSnackBars();
         Navigator.of(
           context,
-        ).pushAndRemoveUntil(fadePageRouteBuilder(LoginScreen()), (route) => false);
+        ).pushAndRemoveUntil(fadePageRouteBuilder(const LoginScreen()), (route) => false);
         showInfoSnackbar(context, content: AppLocalizations.of(context)!.sessionExpiredMessage);
         ref.read(sessionExpiredProvider.notifier).setExpired(false);
       }
@@ -146,7 +148,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                     onPressed: () async => await handleTrashTap(),
                     icon: const Icon(Icons.delete_outline_rounded),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
         actions: [
@@ -181,10 +183,10 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                                     handleDismiss(direction, noteWidgetData),
                                 onTap: handleNoteWidgetTap,
                               )
-                            : NoNotesFoundWidget(),
+                            : const NoNotesFoundWidget(),
                       ],
                     )
-                  : EmptyNotesWidget(),
+                  : const EmptyNotesWidget(),
             );
           },
         ),

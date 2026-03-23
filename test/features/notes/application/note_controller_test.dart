@@ -187,7 +187,7 @@ void main() {
         );
         when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
-        final dummyLastExportDate = DateTime.now().add(Duration(days: -8));
+        final dummyLastExportDate = DateTime.now().add(const Duration(days: -8));
         when(
           mockBackupRepo.getLastExportDate(),
         ).thenAnswer((realInvocation) async => dummyLastExportDate);
@@ -234,7 +234,7 @@ void main() {
         );
         when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
-        final dummyLastExportDate = DateTime.now().add(Duration(days: -4));
+        final dummyLastExportDate = DateTime.now().add(const Duration(days: -4));
         when(
           mockBackupRepo.getLastExportDate(),
         ).thenAnswer((realInvocation) async => dummyLastExportDate);
@@ -255,12 +255,12 @@ void main() {
 
     test('moveNoteToTrash works', () {
       // Setup
-      final noteToDelete = NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle');
+      final noteToDelete = const NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle');
       final List<NoteWidgetData> dummyData = [
-        NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
-        NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
         noteToDelete,
-        NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
       ];
 
       final dummyKey = enc.Key.fromLength(32);
@@ -287,19 +287,19 @@ void main() {
       container.read(masterKeyProvider.notifier).set(dummyKey);
 
       final List<NoteWidgetData> dummyData = [
-        NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
-        NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
-        NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
       ];
       container
           .read(noteControllerProvider.notifier)
           .setState(NoteControllerState(data: dummyData));
 
-      final deletedNote1 = TrashedNoteData(
+      final deletedNote1 = const TrashedNoteData(
         NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
         2,
       );
-      final deletedNote2 = TrashedNoteData(
+      final deletedNote2 = const TrashedNoteData(
         NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
         4,
       );
@@ -338,19 +338,19 @@ void main() {
       container.read(masterKeyProvider.notifier).set(dummyKey);
 
       final List<NoteWidgetData> dummyData = [
-        NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
-        NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
-        NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
       ];
       container
           .read(noteControllerProvider.notifier)
           .setState(NoteControllerState(data: dummyData));
 
-      final deletedNote1 = TrashedNoteData(
+      final deletedNote1 = const TrashedNoteData(
         NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
         2,
       );
-      final deletedNote2 = TrashedNoteData(
+      final deletedNote2 = const TrashedNoteData(
         NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
         4,
       );
@@ -390,19 +390,19 @@ void main() {
         container.read(masterKeyProvider.notifier).set(dummyKey);
 
         final List<NoteWidgetData> dummyData = [
-          NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
-          NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
-          NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+          const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+          const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+          const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
         ];
         container
             .read(noteControllerProvider.notifier)
             .setState(NoteControllerState(data: dummyData));
 
-        final deletedNote1 = TrashedNoteData(
+        final deletedNote1 = const TrashedNoteData(
           NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
           2,
         );
-        final deletedNote2 = TrashedNoteData(
+        final deletedNote2 = const TrashedNoteData(
           NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
           4,
         );
@@ -423,19 +423,19 @@ void main() {
         container.read(masterKeyProvider.notifier).set(dummyKey);
 
         final List<NoteWidgetData> dummyData = [
-          NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
-          NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
-          NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+          const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+          const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+          const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
         ];
         container
             .read(noteControllerProvider.notifier)
             .setState(NoteControllerState(data: dummyData));
 
-        final deletedNote1 = TrashedNoteData(
+        final deletedNote1 = const TrashedNoteData(
           NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
           2,
         );
-        final deletedNote2 = TrashedNoteData(
+        final deletedNote2 = const TrashedNoteData(
           NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
           4,
         );

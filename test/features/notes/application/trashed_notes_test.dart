@@ -23,7 +23,7 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
       final before = container.read(trashedNotesProvider);
-      final dummyValue = TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 0);
+      final dummyValue = const TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 0);
 
       // Act
       container.read(trashedNotesProvider.notifier).add(dummyValue);
@@ -39,8 +39,8 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      final dummyValue1 = TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 0);
-      final dummyValue2 = TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 1);
+      final dummyValue1 = const TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 0);
+      final dummyValue2 = const TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 1);
       container.read(trashedNotesProvider.notifier).add(dummyValue1);
       container.read(trashedNotesProvider.notifier).add(dummyValue2);
 
@@ -62,8 +62,8 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final dummyValue1 = TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 0);
-      final dummyValue2 = TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 1);
+      final dummyValue1 = const TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 0);
+      final dummyValue2 = const TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 1);
       container.read(trashedNotesProvider.notifier).add(dummyValue1);
       container.read(trashedNotesProvider.notifier).add(dummyValue2);
 
@@ -81,8 +81,8 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      final dummyValue1 = TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 0);
-      final dummyValue2 = TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 1);
+      final dummyValue1 = const TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 0);
+      final dummyValue2 = const TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 1);
       container.read(trashedNotesProvider.notifier).add(dummyValue1);
       container.read(trashedNotesProvider.notifier).add(dummyValue2);
 

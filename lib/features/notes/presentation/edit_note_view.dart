@@ -93,7 +93,7 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
             await handleSave();
             widget.onCheckPressed(updatedNote);
           },
-          icon: Icon(Icons.check_rounded),
+          icon: const Icon(Icons.check_rounded),
         ),
         title: Text(AppLocalizations.of(context)!.editNoteTitle),
         // actions: [DeleteNoteButton(widget.note.id, handleDeleteTap: handleDeleteTap)],
@@ -140,7 +140,7 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  showTitleWarning ? TitleWarning() : SizedBox(),
+                  showTitleWarning ? const TitleWarning() : const SizedBox(),
                 ],
               ),
             ),

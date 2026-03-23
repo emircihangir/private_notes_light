@@ -90,7 +90,7 @@ class SettingsPage extends ConsumerWidget {
               subtitle: Text(l10n.sourceCodeSubtitle),
               trailing: const Icon(Icons.open_in_new, size: 16),
               onTap: () async =>
-                  await openUrl("https://github.com/emircihangir/private_notes_light"),
+                  await openUrl('https://github.com/emircihangir/private_notes_light'),
             ),
             ListTile(
               leading: const Icon(Icons.article_rounded),
@@ -98,19 +98,19 @@ class SettingsPage extends ConsumerWidget {
               subtitle: Text(l10n.documentationSubtitle),
               trailing: const Icon(Icons.open_in_new, size: 16),
               onTap: () async =>
-                  await openUrl("https://deepwiki.com/emircihangir/private_notes_light"),
+                  await openUrl('https://deepwiki.com/emircihangir/private_notes_light'),
             ),
             ListTile(
               leading: const Icon(Icons.feedback_rounded),
               title: Text(l10n.reportFeedbackTitle),
               subtitle: Text(l10n.reportFeedbackSubtitle),
-              onTap: () async => await openUrl("mailto:m.emircihangir@gmail.com"),
+              onTap: () async => await openUrl('mailto:m.emircihangir@gmail.com'),
             ),
             ListTile(
               leading: const Icon(Icons.coffee),
               title: Text(l10n.supportDevelopmentTitle),
               subtitle: Text(l10n.supportDevelopmentSubtitle),
-              onTap: () async => await openUrl("https://buymeacoffee.com/emircihangir"),
+              onTap: () async => await openUrl('https://buymeacoffee.com/emircihangir'),
             ),
             const Divider(),
             Padding(
@@ -121,7 +121,7 @@ class SettingsPage extends ConsumerWidget {
                   Text(l10n.appName, style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 4),
                   Text(
-                    "${l10n.version} $versionNumber",
+                    '${l10n.version} $versionNumber',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   Text(l10n.developedBy, style: Theme.of(context).textTheme.bodySmall),

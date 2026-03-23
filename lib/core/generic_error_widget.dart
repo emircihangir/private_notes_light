@@ -5,6 +5,6 @@ class GenericErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Error occurred.'));
+    return const Center(child: Text('Error occurred.'));
   }
 }

@@ -17,13 +17,13 @@ class StartupGate extends ConsumerWidget {
     return welcomeShown.when(
       data: (isShown) {
         if (isShown) {
-          return AuthGuard();
+          return const AuthGuard();
         } else {
-          return WelcomePage();
+          return const WelcomePage();
         }
       },
-      error: (error, stackTrace) => GenericErrorWidget(),
-      loading: () => CircularProgressIndicator(),
+      error: (error, stackTrace) => const GenericErrorWidget(),
+      loading: () => const CircularProgressIndicator(),
     );
   }
 }

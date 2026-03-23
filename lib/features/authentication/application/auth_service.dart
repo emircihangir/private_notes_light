@@ -48,7 +48,7 @@ class AuthService {
     final currentMasterKey = ref.read(masterKeyProvider);
     assert(
       currentMasterKey != null,
-      "Master key must not be null when changeMasterPassword function is called",
+      'Master key must not be null when changeMasterPassword function is called',
     );
 
     final encryptionService = ref.read(encryptionServiceProvider);

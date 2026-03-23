@@ -14,7 +14,7 @@ void main() {
       await widgetTester.pumpWidget(
         ProviderScope(
           overrides: [userSignedUpProvider.overrideWith((ref) async => true)],
-          child: MaterialApp(
+          child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: AuthGuard(),
@@ -31,7 +31,7 @@ void main() {
       await widgetTester.pumpWidget(
         ProviderScope(
           overrides: [userSignedUpProvider.overrideWith((ref) async => false)],
-          child: MaterialApp(
+          child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: AuthGuard(),

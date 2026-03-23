@@ -17,7 +17,7 @@ void main() {
   testWidgets('can show overwrite warning.', (widgetTester) async {
     // Setup
     await widgetTester.pumpWidget(
-      ProviderScope(
+      const ProviderScope(
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -32,7 +32,7 @@ void main() {
     // Act
     container
         .read(importControllerProvider.notifier)
-        .setState(ImportControllerState.showOverwriteWarning());
+        .setState(const ImportControllerState.showOverwriteWarning());
     await widgetTester.pumpAndSettle();
 
     // Verify
@@ -42,7 +42,7 @@ void main() {
   testWidgets('can show error snackbars.', (widgetTester) async {
     // Setup
     await widgetTester.pumpWidget(
-      ProviderScope(
+      const ProviderScope(
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -62,14 +62,14 @@ void main() {
       await widgetTester.pumpAndSettle();
 
       // Verify
-      expect(find.byKey(ValueKey('ErrorSnackbar')), findsOne);
+      expect(find.byKey(const ValueKey('ErrorSnackbar')), findsOne);
     }
   });
 
   testWidgets('can show success snackbar.', (widgetTester) async {
     // Setup
     await widgetTester.pumpWidget(
-      ProviderScope(
+      const ProviderScope(
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -87,7 +87,9 @@ void main() {
     final container = ProviderScope.containerOf(context);
 
     // Act
-    container.read(importControllerProvider.notifier).setState(ImportControllerState.showSuccess());
+    container
+        .read(importControllerProvider.notifier)
+        .setState(const ImportControllerState.showSuccess());
     await widgetTester.pumpAndSettle();
 
     // Verify
@@ -97,7 +99,7 @@ void main() {
   testWidgets('can show password dialog.', (widgetTester) async {
     // Setup
     await widgetTester.pumpWidget(
-      ProviderScope(
+      const ProviderScope(
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -122,7 +124,7 @@ void main() {
   testWidgets('can show ImportSettingsDialog', (widgetTester) async {
     // Setup
     await widgetTester.pumpWidget(
-      ProviderScope(
+      const ProviderScope(
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

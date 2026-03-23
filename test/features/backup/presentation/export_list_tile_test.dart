@@ -12,7 +12,7 @@ void main() {
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [exportServiceProvider.overrideWith((ref) => throw Exception())],
-        child: MaterialApp(
+        child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: SettingsPage(),
@@ -23,7 +23,7 @@ void main() {
     final context = widgetTester.element(find.byType(ExportListTile));
 
     // Act
-    await widgetTester.tap(find.byKey(ValueKey('ExportListTile')));
+    await widgetTester.tap(find.byKey(const ValueKey('ExportListTile')));
     await widgetTester.pumpAndSettle();
 
     // Verify
@@ -35,7 +35,7 @@ void main() {
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [exportServiceProvider.overrideWith((ref) => true)],
-        child: MaterialApp(
+        child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: SettingsPage(),
@@ -46,7 +46,7 @@ void main() {
     final context = widgetTester.element(find.byType(ExportListTile));
 
     // Act
-    await widgetTester.tap(find.byKey(ValueKey('ExportListTile')));
+    await widgetTester.tap(find.byKey(const ValueKey('ExportListTile')));
     await widgetTester.pumpAndSettle();
 
     // Verify

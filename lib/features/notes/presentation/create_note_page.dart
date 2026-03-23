@@ -67,7 +67,10 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
         title: Text(AppLocalizations.of(context)!.createNoteTitle),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () async => await handleSave(), icon: Icon(Icons.check_rounded)),
+          IconButton(
+            onPressed: () async => await handleSave(),
+            icon: const Icon(Icons.check_rounded),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -110,7 +113,7 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  showTitleWarning ? TitleWarning() : SizedBox(),
+                  showTitleWarning ? const TitleWarning() : const SizedBox(),
                 ],
               ),
             ),

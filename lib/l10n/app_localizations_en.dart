@@ -206,7 +206,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newPasswordWarning =>
-      'Caution: Do not forget the new password, as there is no way to recover your notes without it.';
+      'Warning: Do not forget the new password, as there is no way to recover your notes without it.';
 
   @override
   String get passwordsDontMatch => 'Passwords do not match.';
@@ -290,7 +290,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get slide1Content =>
-      'Private Notes keeps your data completely to yourself. Every note you write is encrypted with AES-256 using your master password before it is ever saved to your device. No one else can read your notes, not the developer, not any third party service, and not anyone who might gain access to your device. There are no servers, no cloud sync, and no accounts. Everything stays local, encrypted, and entirely under your control.';
+      'Private Notes keeps your data completely to yourself. Every note you write is encrypted with AES-256 using your master password before it is ever saved to your device. No one else can read your notes, not the developer, not any third-party service, and not anyone who might gain access to your device. There are no servers, no cloud sync, and no accounts. Everything stays local, encrypted, and entirely under your control.';
 
   @override
   String get slide1Title => 'Your notes, fully private.';
@@ -300,11 +300,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get slide2Content =>
-      'When you first open the app, you will be asked to create a master password. This password is the key that encrypts and decrypts all of your notes, so choose something memorable but strong. Once you are logged in, tap the plus button to create a new note. Tap any existing note to view or edit it. To delete a note, open it and use the delete option from the menu. If you want to keep a backup of your notes, head over to the backup section in settings where you can export your encrypted notes to a file and import them again whenever you need.';
+      'When you first open the app, you will be asked to create a master password. This password is the key that encrypts and decrypts all of your notes, so choose something memorable but strong. Once you are logged in, tap the plus button to create a new note. Tap any existing note to view or edit it. To delete a note, open it and use the delete option from the menu. If you want to keep a backup of your notes, head over to the backup section in settings where you can export your encrypted notes to a file and import them again whenever you need to.';
 
   @override
   String get slide3Content =>
-      'Please read this carefully before you begin. The developer provides this application as is and accepts no responsibility whatsoever for any loss, corruption, theft, or inaccessibility of your notes or any other data stored within the app. This includes but is not limited to data loss caused by forgotten passwords, device failures, accidental deletion, or software bugs. You are solely responsible for keeping your data safe. It is strongly recommended that you export and store a backup of your notes on a regular basis. If you forget your master password, there is no recovery mechanism and your notes will be permanently inaccessible. By proceeding, you acknowledge that you have read this notice and agree to these terms.';
+      'Please read this carefully before you begin. The developer provides this application as is and accepts no responsibility whatsoever for any loss, corruption, theft, or inaccessibility of your notes or any other data stored within the app. This includes, but is not limited to, data loss caused by forgotten passwords, device failures, accidental deletion, or software bugs. You are solely responsible for keeping your data safe. It is strongly recommended that you export and store a backup of your notes on a regular basis. If you forget your master password, there is no recovery mechanism and your notes will be permanently inaccessible. By proceeding, you acknowledge that you have read this notice and agree to these terms.';
 
   @override
   String get slide3Title => 'Important Notice';

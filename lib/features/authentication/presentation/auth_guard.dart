@@ -15,13 +15,13 @@ class AuthGuard extends ConsumerWidget {
     return userSignedUp.when(
       data: (isSignedUp) {
         if (isSignedUp) {
-          return LoginScreen();
+          return const LoginScreen();
         } else {
-          return SignupScreen();
+          return const SignupScreen();
         }
       },
-      error: (error, stackTrace) => GenericErrorWidget(),
-      loading: () => CircularProgressIndicator(),
+      error: (error, stackTrace) => const GenericErrorWidget(),
+      loading: () => const CircularProgressIndicator(),
     );
   }
 }

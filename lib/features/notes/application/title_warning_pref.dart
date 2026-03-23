@@ -18,5 +18,5 @@ class TitleWarningPref extends _$TitleWarningPref {
     dismiss();
   }
 
-  void dismiss() => state = AsyncValue.data(false);
+  void dismiss() => state = const AsyncValue.data(false);
 }

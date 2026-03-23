@@ -42,6 +42,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
       if (mounted) {
         Navigator.of(
           context,
+          // ignore: prefer_const_constructors
         ).pushAndRemoveUntil(fadePageRouteBuilder(AuthGuard()), (route) => false);
       }
     }

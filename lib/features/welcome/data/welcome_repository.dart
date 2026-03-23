@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'welcome_repository.g.dart';
 
 class WelcomeRepository {
-  static const String sharedPrefKey = "welcomePageShown";
+  static const String sharedPrefKey = 'welcomePageShown';
 
   Future<void> markShown() async {
     final prefs = await SharedPreferences.getInstance();

@@ -24,7 +24,7 @@ class NoteController extends _$NoteController {
   @override
   Future<NoteControllerState> build() async {
     final masterKey = ref.read(masterKeyProvider);
-    assert(masterKey != null, "masterKey cannot be null when NoteController initializes.");
+    assert(masterKey != null, 'masterKey cannot be null when NoteController initializes.');
 
     final List<NoteDto> dtos = await ref.read(noteRepositoryProvider).getNotes();
 
@@ -47,7 +47,7 @@ class NoteController extends _$NoteController {
   }) async {
     final encrypted = ref.read(encryptionServiceProvider).encryptWithMasterKey(content);
     Note newNote = Note(
-      id: id ?? Uuid().v4(),
+      id: id ?? const Uuid().v4(),
       title: title,
       content: encrypted.encryptedText,
       dateCreated: date ?? DateTime.now(),
@@ -79,7 +79,7 @@ class NoteController extends _$NoteController {
 
     final now = DateTime.now();
     final diff = now.difference(lastExportDate);
-    if (diff > Duration(days: 7)) {
+    if (diff > const Duration(days: 7)) {
       state = AsyncValue.data(state.value!.copyWith(warnExport: true));
     }
   }

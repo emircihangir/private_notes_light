@@ -149,7 +149,7 @@ void main() {
         // Set up
         final tempDir = Directory.systemTemp;
         final dummyFile = File('${tempDir.path}/dummyFile.json');
-        final invalidJsonContent = "{someinvalidKey : someInvalidValue}";
+        final invalidJsonContent = '{someinvalidKey : someInvalidValue}';
         await dummyFile.writeAsString(invalidJsonContent);
         PlatformFile dummyPlatformFile = PlatformFile(
           name: 'dummyFile.json',

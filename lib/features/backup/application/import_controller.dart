@@ -31,7 +31,7 @@ class ImportController extends _$ImportController {
     try {
       importString = await importFile.xFile.readAsString();
     } catch (e) {
-      state = ImportControllerState.showError(errorKind: ImportErrorKind.invalidFileType);
+      state = const ImportControllerState.showError(errorKind: ImportErrorKind.invalidFileType);
       return;
     }
 
@@ -40,7 +40,7 @@ class ImportController extends _$ImportController {
     try {
       importJson = jsonDecode(importString);
     } catch (e) {
-      state = ImportControllerState.showError(errorKind: ImportErrorKind.couldNotParseJson);
+      state = const ImportControllerState.showError(errorKind: ImportErrorKind.couldNotParseJson);
       return;
     }
 
@@ -49,7 +49,7 @@ class ImportController extends _$ImportController {
     try {
       backupData = BackupData.fromJson(importJson);
     } catch (e) {
-      state = ImportControllerState.showError(errorKind: ImportErrorKind.fileIsCorrupt);
+      state = const ImportControllerState.showError(errorKind: ImportErrorKind.fileIsCorrupt);
       return;
     }
 
@@ -94,7 +94,7 @@ class ImportController extends _$ImportController {
     ref.invalidate(noteControllerProvider);
     ref.invalidate(settingsControllerProvider);
 
-    state = ImportControllerState.showSuccess();
+    state = const ImportControllerState.showSuccess();
   }
 
   Future<BackupData> performKeyRotation({
@@ -138,7 +138,7 @@ class ImportController extends _$ImportController {
     // * Warn about overwrites if there are notes in the database.
     final notesList = await ref.read(noteRepositoryProvider).getNotes();
     if (notesList.isNotEmpty) {
-      state = ImportControllerState.showOverwriteWarning();
+      state = const ImportControllerState.showOverwriteWarning();
     } else {
       showFilePicker(dialogTitle: dialogTitle);
     }

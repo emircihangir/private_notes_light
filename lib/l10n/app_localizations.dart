@@ -118,7 +118,7 @@ abstract class AppLocalizations {
   /// **'Master password'**
   String get masterPasswordHint;
 
-  /// No description provided for @masterPasswordConfirm.
+  /// Label for the confirm master password input field on the signup screen.
   ///
   /// In en, this message translates to:
   /// **'Confirm master password'**
@@ -418,7 +418,7 @@ abstract class AppLocalizations {
   /// **'Private Notes'**
   String get appName;
 
-  /// No description provided for @version.
+  /// Label preceding the app version number in the About section.
   ///
   /// In en, this message translates to:
   /// **'Version'**
@@ -466,247 +466,247 @@ abstract class AppLocalizations {
   /// **'Submit'**
   String get submitButton;
 
-  /// No description provided for @newPassword.
+  /// Label for the new password input field in the change password sheet.
   ///
   /// In en, this message translates to:
   /// **'New password'**
   String get newPassword;
 
-  /// No description provided for @newPasswordConfirm.
+  /// Label for the confirm new password input field in the change password sheet.
   ///
   /// In en, this message translates to:
   /// **'Confirm new password'**
   String get newPasswordConfirm;
 
-  /// No description provided for @newPasswordWarning.
+  /// Warning shown at the top of the change password sheet.
   ///
   /// In en, this message translates to:
-  /// **'Caution: Do not forget the new password, as there is no way to recover your notes without it.'**
+  /// **'Warning: Do not forget the new password, as there is no way to recover your notes without it.'**
   String get newPasswordWarning;
 
-  /// No description provided for @passwordsDontMatch.
+  /// Validation error shown when the two password fields do not match.
   ///
   /// In en, this message translates to:
   /// **'Passwords do not match.'**
   String get passwordsDontMatch;
 
-  /// No description provided for @changedPasswordSuccessfully.
+  /// Success snackbar shown after the master password is changed.
   ///
   /// In en, this message translates to:
   /// **'Password change successful.'**
   String get changedPasswordSuccessfully;
 
-  /// No description provided for @couldNotParseJson.
+  /// Error shown when the selected import file cannot be parsed as JSON.
   ///
   /// In en, this message translates to:
   /// **'Could not parse the selected file. Make sure the file follows JSON syntax.'**
   String get couldNotParseJson;
 
-  /// No description provided for @fileIsCorrupt.
+  /// Error shown when the import file parses as JSON but cannot be converted to BackupData.
   ///
   /// In en, this message translates to:
   /// **'File is corrupt. Failed to retrieve data.'**
   String get fileIsCorrupt;
 
-  /// No description provided for @importPasswordDialogTitle.
+  /// Title of the dialog prompting for the backup file's password.
   ///
   /// In en, this message translates to:
   /// **'Enter Password'**
   String get importPasswordDialogTitle;
 
-  /// No description provided for @importPasswordDialogContent.
+  /// Body text of the dialog prompting for the backup file's password.
   ///
   /// In en, this message translates to:
   /// **'The import file could not be decrypted with the current master key. Please enter a password to decrypt the import file.'**
   String get importPasswordDialogContent;
 
-  /// No description provided for @invalidFileType.
+  /// Error shown when the selected import file is not a valid text/JSON file.
   ///
   /// In en, this message translates to:
   /// **'Invalid file type. Please choose a JSON file.'**
   String get invalidFileType;
 
-  /// No description provided for @noNotesFound.
+  /// Message shown when a search query returns no matching notes.
   ///
   /// In en, this message translates to:
   /// **'No notes found'**
   String get noNotesFound;
 
-  /// No description provided for @exportSuggestionSnackbar.
+  /// Snackbar message suggesting an export after a note is saved.
   ///
   /// In en, this message translates to:
   /// **'Would you like to export?'**
   String get exportSuggestionSnackbar;
 
-  /// No description provided for @failedToDeleteNote.
+  /// Error snackbar shown when a note deletion fails.
   ///
   /// In en, this message translates to:
   /// **'Failed to delete note.'**
   String get failedToDeleteNote;
 
-  /// No description provided for @failedToCreateNote.
+  /// Error snackbar shown when a note creation fails.
   ///
   /// In en, this message translates to:
   /// **'Failed to create note.'**
   String get failedToCreateNote;
 
-  /// No description provided for @password.
+  /// Label for the password input field on the login screen.
   ///
   /// In en, this message translates to:
   /// **'Password'**
   String get password;
 
-  /// No description provided for @confirmPassword.
+  /// Label for the confirm password input field on the signup screen.
   ///
   /// In en, this message translates to:
   /// **'Confirm password'**
   String get confirmPassword;
 
-  /// No description provided for @exportWarningSnackbar.
+  /// Snackbar warning shown when no backup has been made in over 7 days.
   ///
   /// In en, this message translates to:
   /// **'Last export was more than a week ago. Export recommended.'**
   String get exportWarningSnackbar;
 
-  /// No description provided for @export.
+  /// Action label on the export suggestion and warning snackbars.
   ///
   /// In en, this message translates to:
   /// **'Export'**
   String get export;
 
-  /// No description provided for @noteDeleted.
+  /// Snackbar message shown after a note is moved to the trash.
   ///
   /// In en, this message translates to:
   /// **'Note deleted.'**
   String get noteDeleted;
 
-  /// No description provided for @undo.
+  /// Action label on the note-deleted snackbar to restore the note.
   ///
   /// In en, this message translates to:
   /// **'Undo'**
   String get undo;
 
-  /// No description provided for @trashedNotes.
+  /// Title of the trashed notes bottom sheet.
   ///
   /// In en, this message translates to:
   /// **'Trashed Notes'**
   String get trashedNotes;
 
-  /// No description provided for @putBack.
+  /// Button label to restore a note from the trash.
   ///
   /// In en, this message translates to:
   /// **'Put Back'**
   String get putBack;
 
-  /// No description provided for @trashedNotesExplainer.
+  /// Explainer text in the trashed notes sheet describing when deletion is permanent.
   ///
   /// In en, this message translates to:
   /// **'These are permanently deleted on logout.'**
   String get trashedNotesExplainer;
 
-  /// No description provided for @titleWarning.
+  /// Warning card shown on the create/edit note screen about unencrypted titles.
   ///
   /// In en, this message translates to:
   /// **'Warning: Note titles are not encrypted. Do not write sensitive information in titles.'**
   String get titleWarning;
 
-  /// No description provided for @dismiss.
+  /// Button to temporarily hide the title warning card.
   ///
   /// In en, this message translates to:
   /// **'Dismiss'**
   String get dismiss;
 
-  /// No description provided for @dontShowAgain.
+  /// Button to permanently hide the title warning card.
   ///
   /// In en, this message translates to:
   /// **'Don\'t show again'**
   String get dontShowAgain;
 
-  /// No description provided for @errorOccurred.
+  /// Generic error message used as a fallback in error snackbars.
   ///
   /// In en, this message translates to:
   /// **'Error occurred.'**
   String get errorOccurred;
 
-  /// No description provided for @failedToExport.
+  /// Error snackbar shown when the export operation fails.
   ///
   /// In en, this message translates to:
   /// **'Export failed.'**
   String get failedToExport;
 
-  /// No description provided for @slide1Content.
+  /// Body text for the first welcome slide describing the privacy model.
   ///
   /// In en, this message translates to:
-  /// **'Private Notes keeps your data completely to yourself. Every note you write is encrypted with AES-256 using your master password before it is ever saved to your device. No one else can read your notes, not the developer, not any third party service, and not anyone who might gain access to your device. There are no servers, no cloud sync, and no accounts. Everything stays local, encrypted, and entirely under your control.'**
+  /// **'Private Notes keeps your data completely to yourself. Every note you write is encrypted with AES-256 using your master password before it is ever saved to your device. No one else can read your notes, not the developer, not any third-party service, and not anyone who might gain access to your device. There are no servers, no cloud sync, and no accounts. Everything stays local, encrypted, and entirely under your control.'**
   String get slide1Content;
 
-  /// No description provided for @slide1Title.
+  /// Title for the first welcome slide.
   ///
   /// In en, this message translates to:
   /// **'Your notes, fully private.'**
   String get slide1Title;
 
-  /// No description provided for @slide2Title.
+  /// Title for the second welcome slide.
   ///
   /// In en, this message translates to:
   /// **'How to Use'**
   String get slide2Title;
 
-  /// No description provided for @slide2Content.
+  /// Body text for the second welcome slide explaining basic app usage.
   ///
   /// In en, this message translates to:
-  /// **'When you first open the app, you will be asked to create a master password. This password is the key that encrypts and decrypts all of your notes, so choose something memorable but strong. Once you are logged in, tap the plus button to create a new note. Tap any existing note to view or edit it. To delete a note, open it and use the delete option from the menu. If you want to keep a backup of your notes, head over to the backup section in settings where you can export your encrypted notes to a file and import them again whenever you need.'**
+  /// **'When you first open the app, you will be asked to create a master password. This password is the key that encrypts and decrypts all of your notes, so choose something memorable but strong. Once you are logged in, tap the plus button to create a new note. Tap any existing note to view or edit it. To delete a note, open it and use the delete option from the menu. If you want to keep a backup of your notes, head over to the backup section in settings where you can export your encrypted notes to a file and import them again whenever you need to.'**
   String get slide2Content;
 
-  /// No description provided for @slide3Content.
+  /// Body text for the third welcome slide containing the legal disclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Please read this carefully before you begin. The developer provides this application as is and accepts no responsibility whatsoever for any loss, corruption, theft, or inaccessibility of your notes or any other data stored within the app. This includes but is not limited to data loss caused by forgotten passwords, device failures, accidental deletion, or software bugs. You are solely responsible for keeping your data safe. It is strongly recommended that you export and store a backup of your notes on a regular basis. If you forget your master password, there is no recovery mechanism and your notes will be permanently inaccessible. By proceeding, you acknowledge that you have read this notice and agree to these terms.'**
+  /// **'Please read this carefully before you begin. The developer provides this application as is and accepts no responsibility whatsoever for any loss, corruption, theft, or inaccessibility of your notes or any other data stored within the app. This includes, but is not limited to, data loss caused by forgotten passwords, device failures, accidental deletion, or software bugs. You are solely responsible for keeping your data safe. It is strongly recommended that you export and store a backup of your notes on a regular basis. If you forget your master password, there is no recovery mechanism and your notes will be permanently inaccessible. By proceeding, you acknowledge that you have read this notice and agree to these terms.'**
   String get slide3Content;
 
-  /// No description provided for @slide3Title.
+  /// Title for the third welcome slide.
   ///
   /// In en, this message translates to:
   /// **'Important Notice'**
   String get slide3Title;
 
-  /// No description provided for @getStarted.
+  /// Button label on the last welcome slide to proceed to the app.
   ///
   /// In en, this message translates to:
   /// **'Get Started'**
   String get getStarted;
 
-  /// No description provided for @next.
+  /// Button label to advance to the next welcome slide.
   ///
   /// In en, this message translates to:
   /// **'Next'**
   String get next;
 
-  /// No description provided for @documentation.
+  /// Link title for the documentation in the About section.
   ///
   /// In en, this message translates to:
   /// **'Documentation'**
   String get documentation;
 
-  /// No description provided for @documentationSubtitle.
+  /// Subtitle describing where the documentation is hosted.
   ///
   /// In en, this message translates to:
   /// **'Available on DeepWiki'**
   String get documentationSubtitle;
 
-  /// No description provided for @exportSuggestionsHelpText.
+  /// Help dialog text explaining the Export Suggestions setting.
   ///
   /// In en, this message translates to:
   /// **'Shows a backup prompt snackbar on every save.'**
   String get exportSuggestionsHelpText;
 
-  /// No description provided for @exportWarningsHelpText.
+  /// Help dialog text explaining the Export Warnings setting.
   ///
   /// In en, this message translates to:
   /// **'Shows a backup reminder snackbar if last export was over 7 days ago.'**
   String get exportWarningsHelpText;
 
-  /// No description provided for @ok.
+  /// Generic confirmation button label used in help dialogs.
   ///
   /// In en, this message translates to:
   /// **'OK'**

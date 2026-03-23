@@ -13,7 +13,7 @@ void main() {
   testWidgets('does not allow empty password input', (widgetTester) async {
     // Setup
     await widgetTester.pumpWidget(
-      ProviderScope(
+      const ProviderScope(
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -31,7 +31,7 @@ void main() {
         .setState(ImportControllerState.showPasswordDialog(dummyBackupData()));
     await widgetTester.pumpAndSettle();
 
-    await widgetTester.tap(find.byKey(ValueKey('SubmitButton')));
+    await widgetTester.tap(find.byKey(const ValueKey('SubmitButton')));
     await widgetTester.pumpAndSettle();
 
     // Verify

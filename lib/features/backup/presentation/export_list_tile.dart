@@ -21,7 +21,7 @@ class ExportListTile extends ConsumerWidget {
     }
 
     return ListTile(
-      key: ValueKey('ExportListTile'),
+      key: const ValueKey('ExportListTile'),
       leading: const Icon(Icons.upload_rounded),
       title: Text(AppLocalizations.of(context)!.exportDataTitle),
       subtitle: Text(AppLocalizations.of(context)!.exportDataSubtitle),

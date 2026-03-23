@@ -34,7 +34,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widget.canBeToggled ? SizedBox(width: 48, height: 48) : SizedBox(),
+          widget.canBeToggled ? const SizedBox(width: 48, height: 48) : const SizedBox(),
           Expanded(
             child: TextFormField(
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -57,7 +57,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
                   onPressed: () => setState(() => isObscure = !isObscure),
                   icon: Icon(isObscure ? Icons.visibility : Icons.visibility_off),
                 )
-              : SizedBox(),
+              : const SizedBox(),
         ],
       ),
     );
