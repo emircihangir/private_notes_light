@@ -78,9 +78,11 @@ class NoteRepository {
     await db.delete('notes', where: 'id = ?', whereArgs: [noteID]);
   }
 
-  Future<NoteDto> getNote(String noteID) async {
+  Future<NoteDto?> getNote(String noteID) async {
     final db = await database;
     final result = await db.query('notes', where: 'id = ?', whereArgs: [noteID]);
+    if (result.isEmpty) return null;
+
     final NoteDto resultDto = result.map((e) => NoteDto.fromJson(e)).toList().first;
     return resultDto;
   }

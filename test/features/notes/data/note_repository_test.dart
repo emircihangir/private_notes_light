@@ -55,5 +55,36 @@ void main() {
       final notes = await repository.getNotes();
       expect(notes.isEmpty, isTrue);
     });
+
+    test('importNotes works', () async {
+      // Setup
+      final dummyValues = (iv: enc.IV.fromLength(16), date: DateTime.now());
+      final dummyDto = NoteDto(
+        id: 'id',
+        title: 'title',
+        content: 'content',
+        iv: dummyValues.iv.base64,
+        dateCreated: dummyValues.date.toIso8601String(),
+      );
+
+      await repository.addNote(dummyDto.copyWith(id: 'to_be_deleted_1'));
+      await repository.addNote(dummyDto.copyWith(id: 'to_be_deleted_2'));
+
+      final List<NoteDto> dtoList = [
+        dummyDto,
+        dummyDto.copyWith(id: 'id2'),
+        dummyDto.copyWith(id: 'id3'),
+      ];
+
+      // Act
+      await repository.importNotes(dtoList);
+
+      // Verify
+      final notes = await repository.getNotes();
+
+      expect(notes.length, 3);
+      expect(await repository.getNote('to_be_deleted_1'), isNull);
+      expect(await repository.getNote('to_be_deleted_2'), isNull);
+    });
   });
 }

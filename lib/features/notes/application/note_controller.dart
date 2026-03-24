@@ -163,7 +163,9 @@ class NoteController extends _$NoteController {
   }
 
   Future<Note> openNote(String noteId) async {
-    final NoteDto dto = await ref.read(noteRepositoryProvider).getNote(noteId);
+    final NoteDto? dto = await ref.read(noteRepositoryProvider).getNote(noteId);
+    if (dto == null) throw Exception('Note with the ID "$noteId" does not exist.');
+
     final decryptedContent = ref
         .read(encryptionServiceProvider)
         .decryptWithMasterKey(dto.content, enc.IV.fromBase64(dto.iv));
