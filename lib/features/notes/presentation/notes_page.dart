@@ -126,20 +126,15 @@ class _NotesPageState extends ConsumerState<NotesPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.notesTitle),
         centerTitle: true,
-        leadingWidth: 96,
-        leading: Row(
-          children: [
-            IconButton(onPressed: handleLogout, icon: const Icon(Icons.logout_rounded)),
-            trashedNotes.isNotEmpty
-                ? IconButton(onPressed: () async => await handleTrashTap(), icon: const Icon(Icons.delete_outline_rounded))
-                : const SizedBox(),
-          ],
-        ),
+        leading: IconButton(onPressed: handleLogout, icon: const Icon(Icons.logout_rounded)),
         actions: [
           IconButton(onPressed: handleSettingsTap, icon: const Icon(Icons.settings_outlined)),
-          IconButton(onPressed: handlePlusTap, icon: const Icon(Icons.add_rounded)),
+          trashedNotes.isNotEmpty
+              ? IconButton(onPressed: () async => await handleTrashTap(), icon: const Icon(Icons.delete_outline_rounded))
+              : const SizedBox(),
         ],
       ),
+      floatingActionButton: FloatingActionButton(onPressed: handlePlusTap, child: const Icon(Icons.add_rounded)),
       body: SafeArea(
         child: noteController.when(
           error: (error, stackTrace) {
