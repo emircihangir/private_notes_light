@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/snackbars.dart';
@@ -15,10 +14,12 @@ class ImportListTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+
     ref.listen(importControllerProvider, (previous, next) async {
       next?.map(
         showOverwriteWarning: (_) async {
-          final filePickerTitle = AppLocalizations.of(context)!.importSelectBackupTitle;
+          final filePickerTitle = l10n.importSelectBackupTitle;
 
           bool? proceedImport = await showDialog<bool>(
             context: context,
@@ -34,17 +35,17 @@ class ImportListTile extends ConsumerWidget {
         showError: (value) {
           switch (value.errorKind) {
             case ImportErrorKind.invalidFileType:
-              showErrorSnackbar(context, content: AppLocalizations.of(context)!.invalidFileType);
+              showErrorSnackbar(context, content: l10n.invalidFileType);
 
             case ImportErrorKind.fileIsCorrupt:
-              showErrorSnackbar(context, content: AppLocalizations.of(context)!.fileIsCorrupt);
+              showErrorSnackbar(context, content: l10n.fileIsCorrupt);
 
             case ImportErrorKind.couldNotParseJson:
-              showErrorSnackbar(context, content: AppLocalizations.of(context)!.couldNotParseJson);
+              showErrorSnackbar(context, content: l10n.couldNotParseJson);
           }
         },
         showSuccess: (value) {
-          showSuccessSnackbar(context, content: AppLocalizations.of(context)!.importSuccess);
+          showSuccessSnackbar(context, content: l10n.importSuccess);
           Navigator.of(context).pop();
         },
         showPasswordDialog: (value) async {
@@ -69,11 +70,11 @@ class ImportListTile extends ConsumerWidget {
     return ListTile(
       key: const ValueKey('ImportListTile'),
       leading: const Icon(Icons.download_rounded),
-      title: Text(AppLocalizations.of(context)!.importDataTitle),
-      subtitle: Text(AppLocalizations.of(context)!.importDataSubtitle),
+      title: Text(l10n.importDataTitle),
+      subtitle: Text(l10n.importDataSubtitle),
       onTap: () async => await ref
           .read(importControllerProvider.notifier)
-          .startImport(dialogTitle: AppLocalizations.of(context)!.importSelectBackupTitle),
+          .startImport(dialogTitle: l10n.importSelectBackupTitle),
     );
   }
 }

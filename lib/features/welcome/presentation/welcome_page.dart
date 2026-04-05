@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/fade_page_route_builder.dart';
+import 'package:private_notes_light/features/authentication/application/user_signed_up.dart';
 import 'package:private_notes_light/features/authentication/presentation/auth_guard.dart';
+import 'package:private_notes_light/features/authentication/presentation/signup_screen.dart';
 import 'package:private_notes_light/features/welcome/data/welcome_repository.dart';
 import 'package:private_notes_light/features/welcome/presentation/dot_indicator.dart';
 import 'package:private_notes_light/features/welcome/presentation/slide_page.dart';
@@ -38,12 +41,11 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
         curve: Curves.easeInOut,
       );
     } else {
-      await ref.read(welcomeRepositoryProvider).markShown();
+      unawaited(ref.read(welcomeRepositoryProvider).markShown());
       if (mounted) {
         Navigator.of(
           context,
-          // ignore: prefer_const_constructors
-        ).pushAndRemoveUntil(fadePageRouteBuilder(AuthGuard()), (route) => false);
+        ).pushAndRemoveUntil(fadePageRouteBuilder(const AuthGuard()), (route) => false);
       }
     }
   }
@@ -72,6 +74,8 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
     _slides = [_slide1(), _slide2(), _slide3()];
     final colorScheme = Theme.of(context).colorScheme;
     final isLastPage = _currentPage == _slides.length - 1;
+
+    ref.read(userSignedUpProvider); // pre-warm
 
     return Scaffold(
       body: SafeArea(

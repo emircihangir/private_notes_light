@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/settings/application/settings_controller.dart';
 import 'package:private_notes_light/core/theme.dart';
 import 'package:private_notes_light/features/welcome/presentation/startup_gate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await SharedPreferences.getInstance(); // pre-warm
   runApp(const ProviderScope(child: App()));
 }
 
@@ -22,8 +24,8 @@ class App extends ConsumerWidget {
 
     return MaterialApp(
       themeMode: themeMode,
-      theme: appTheme(Brightness.light),
-      darkTheme: appTheme(Brightness.dark),
+      theme: lightAppTheme,
+      darkTheme: darkAppTheme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: const StartupGate(),

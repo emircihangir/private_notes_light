@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/settings/presentation/change_password_sheet.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 
-class ChangePasswordListTile extends ConsumerWidget {
+class ChangePasswordListTile extends StatelessWidget {
   const ChangePasswordListTile({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return ListTile(
       leading: const Icon(Icons.key_outlined),
-      title: Text(AppLocalizations.of(context)!.changePassword),
-      subtitle: Text(AppLocalizations.of(context)!.changePasswordSubtitle),
+      title: Text(l10n.changePassword),
+      subtitle: Text(l10n.changePasswordSubtitle),
       onTap: () async {
         await showModalBottomSheet(
           isScrollControlled: true,

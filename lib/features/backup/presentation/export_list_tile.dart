@@ -9,11 +9,13 @@ class ExportListTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+
     void triggerExport() async {
       try {
         final exportResult = await ref.read(exportServiceProvider.future);
         if (exportResult == true && context.mounted) {
-          showSuccessSnackbar(context, content: AppLocalizations.of(context)!.exportSuccess);
+          showSuccessSnackbar(context, content: l10n.exportSuccess);
         }
       } catch (e) {
         if (context.mounted) showErrorSnackbar(context);
@@ -23,8 +25,8 @@ class ExportListTile extends ConsumerWidget {
     return ListTile(
       key: const ValueKey('ExportListTile'),
       leading: const Icon(Icons.upload_rounded),
-      title: Text(AppLocalizations.of(context)!.exportDataTitle),
-      subtitle: Text(AppLocalizations.of(context)!.exportDataSubtitle),
+      title: Text(l10n.exportDataTitle),
+      subtitle: Text(l10n.exportDataSubtitle),
       onTap: triggerExport,
     );
   }

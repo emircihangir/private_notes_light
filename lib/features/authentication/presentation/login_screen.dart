@@ -6,6 +6,7 @@ import 'package:private_notes_light/core/fade_page_route_builder.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/notes/presentation/notes_page.dart';
 import 'package:private_notes_light/features/authentication/presentation/password_text_field.dart';
+import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -29,6 +30,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -37,15 +41,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             spacing: 32,
             children: [
               SvgPicture.asset(
-                Theme.of(context).brightness == Brightness.light
+                theme.brightness == Brightness.light
                     ? 'assets/images/app_icon_light.svg'
                     : 'assets/images/app_icon_dark.svg',
                 height: 150,
               ),
-              Text(
-                AppLocalizations.of(context)!.notesAreLocked,
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
+              Text(l10n.notesAreLocked, style: theme.textTheme.headlineLarge),
               Form(
                 key: _formKey,
                 child: Container(
@@ -53,7 +54,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: PasswordTextField(
                     controller: passwordController,
                     errorText: errorText,
-                    labelText: AppLocalizations.of(context)!.password,
+                    labelText: l10n.password,
                     onChanged: (value) {
                       if (errorText != null) setState(() => errorText = null);
                     },
@@ -76,10 +77,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       context,
                     ).pushAndRemoveUntil(fadePageRouteBuilder(const NotesPage()), (route) => false);
                   } else {
-                    setState(() => errorText = AppLocalizations.of(context)!.wrongPasswordError);
+                    setState(() => errorText = l10n.wrongPasswordError);
                   }
                 },
-                child: Text(AppLocalizations.of(context)!.unlock),
+                child: Text(l10n.unlock),
               ),
             ],
           ),

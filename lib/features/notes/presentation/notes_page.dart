@@ -15,6 +15,8 @@ import 'package:private_notes_light/features/notes/presentation/empty_notes_widg
 import 'package:private_notes_light/features/notes/presentation/notes_list.dart';
 import 'package:private_notes_light/features/notes/presentation/view_note_page.dart';
 import 'package:private_notes_light/features/notes/presentation/trashed_notes_sheet.dart';
+import 'package:private_notes_light/features/settings/application/app_version.dart';
+import 'package:private_notes_light/features/settings/application/settings_controller.dart';
 import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
 import 'package:private_notes_light/core/generic_error_widget.dart';
 import 'package:private_notes_light/core/snackbars.dart';
@@ -74,6 +76,9 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.read(settingsControllerProvider); // pre-warm
+    ref.read(appVersionProvider); // pre-warm
+
     ref.watch(sessionLifecycleProvider);
     ref.listen<bool>(sessionExpiredProvider, (previous, next) {
       if (next == true) {

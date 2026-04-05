@@ -6,13 +6,13 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8),
       child: Text(
         text,
-        style: Theme.of(
-          context,
-        ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+        style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary),
       ),
     );
   }
