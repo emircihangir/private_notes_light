@@ -49,16 +49,14 @@ class SettingsPage extends StatelessWidget {
               title: Text(l10n.sourceCodeTitle),
               subtitle: Text(l10n.sourceCodeSubtitle),
               trailing: const Icon(Icons.open_in_new, size: 16),
-              onTap: () async =>
-                  await openUrl('https://github.com/emircihangir/private_notes_light', context),
+              onTap: () async => await openUrl('https://github.com/emircihangir/private_notes_light', context),
             ),
             ListTile(
               leading: const Icon(Icons.article_rounded),
               title: Text(l10n.documentation),
               subtitle: Text(l10n.documentationSubtitle),
               trailing: const Icon(Icons.open_in_new, size: 16),
-              onTap: () async =>
-                  await openUrl('https://deepwiki.com/emircihangir/private_notes_light', context),
+              onTap: () async => await openUrl('https://deepwiki.com/emircihangir/private_notes_light', context),
             ),
             ListTile(
               leading: const Icon(Icons.feedback_rounded),
@@ -95,6 +93,7 @@ class SettingsPage extends StatelessWidget {
 class VersionText extends ConsumerWidget {
   final AppLocalizations l10n;
   final TextTheme textTheme;
+
   const VersionText({super.key, required this.l10n, required this.textTheme});
 
   @override

@@ -49,28 +49,18 @@ class _NotesPageState extends ConsumerState<NotesPage> {
   void handleLogout() {
     ref.read(noteControllerProvider.notifier).logout();
     ScaffoldMessenger.of(context).clearSnackBars();
-    Navigator.of(
-      context,
-    ).pushAndRemoveUntil(fadePageRouteBuilder(const LoginScreen()), (route) => false);
+    Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(const LoginScreen()), (route) => false);
   }
 
   Future<void> handleTrashTap() async {
-    await showModalBottomSheet(
-      showDragHandle: true,
-      context: context,
-      builder: (context) => const TrashedNotesSheet(),
-    );
+    await showModalBottomSheet(showDragHandle: true, context: context, builder: (context) => const TrashedNotesSheet());
   }
 
   Future<void> handleNoteWidgetTap(NoteWidgetData noteWidgetData) async {
-    final openedNote = await ref
-        .read(noteControllerProvider.notifier)
-        .openNote(noteWidgetData.noteId);
+    final openedNote = await ref.read(noteControllerProvider.notifier).openNote(noteWidgetData.noteId);
     if (mounted) {
       ScaffoldMessenger.of(context).clearSnackBars();
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (context) => ViewNotePage(note: openedNote)));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewNotePage(note: openedNote)));
     }
   }
 
@@ -83,9 +73,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
     ref.listen<bool>(sessionExpiredProvider, (previous, next) {
       if (next == true) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        Navigator.of(
-          context,
-        ).pushAndRemoveUntil(fadePageRouteBuilder(const LoginScreen()), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(const LoginScreen()), (route) => false);
         showInfoSnackbar(context, content: AppLocalizations.of(context)!.sessionExpiredMessage);
         ref.read(sessionExpiredProvider.notifier).setExpired(false);
       }
@@ -99,10 +87,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
       final noteControllerNotifier = ref.read(noteControllerProvider.notifier);
 
       if (nextValue?.suggestExport == true) {
-        showExportSuggestionSnackbar(
-          context,
-          () async => await noteControllerNotifier.triggerExport(),
-        );
+        showExportSuggestionSnackbar(context, () async => await noteControllerNotifier.triggerExport());
         noteControllerNotifier.consumeExportSuggestion();
       }
       if (nextValue?.showError == true) {
@@ -124,10 +109,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         noteControllerNotifier.consumeExportSuccess();
       }
       if (nextValue?.warnExport == true) {
-        showExportWarningSnackbar(
-          context,
-          () async => await noteControllerNotifier.triggerExport(),
-        );
+        showExportWarningSnackbar(context, () async => await noteControllerNotifier.triggerExport());
         noteControllerNotifier.consumeExportWarning();
       }
       if (nextValue?.showInfo == true) {
@@ -149,10 +131,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
           children: [
             IconButton(onPressed: handleLogout, icon: const Icon(Icons.logout_rounded)),
             trashedNotes.isNotEmpty
-                ? IconButton(
-                    onPressed: () async => await handleTrashTap(),
-                    icon: const Icon(Icons.delete_outline_rounded),
-                  )
+                ? IconButton(onPressed: () async => await handleTrashTap(), icon: const Icon(Icons.delete_outline_rounded))
                 : const SizedBox(),
           ],
         ),
@@ -184,8 +163,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                         filteredNotes.isNotEmpty
                             ? NotesList(
                                 filteredNotes: filteredNotes,
-                                onDismissed: (direction, noteWidgetData) =>
-                                    handleDismiss(direction, noteWidgetData),
+                                onDismissed: (direction, noteWidgetData) => handleDismiss(direction, noteWidgetData),
                                 onTap: handleNoteWidgetTap,
                               )
                             : const NoNotesFoundWidget(),
