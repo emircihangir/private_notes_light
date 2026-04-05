@@ -6,7 +6,6 @@ import 'package:private_notes_light/core/fade_page_route_builder.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/notes/presentation/notes_page.dart';
 import 'package:private_notes_light/features/authentication/presentation/password_text_field.dart';
-import 'package:private_notes_light/features/settings/presentation/settings_page.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
