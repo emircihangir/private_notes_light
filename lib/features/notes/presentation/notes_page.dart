@@ -12,6 +12,7 @@ import 'package:private_notes_light/features/notes/domain/note_controller_state.
 import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
 import 'package:private_notes_light/features/notes/presentation/create_note_page.dart';
 import 'package:private_notes_light/features/notes/presentation/empty_notes_widget.dart';
+import 'package:private_notes_light/features/notes/presentation/no_notes_found_widget.dart';
 import 'package:private_notes_light/features/notes/presentation/notes_list.dart';
 import 'package:private_notes_light/features/notes/presentation/view_note_page.dart';
 import 'package:private_notes_light/features/notes/presentation/trashed_notes_sheet.dart';
@@ -66,10 +67,14 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final filteredNotes = ref.watch(filteredNotesListProvider);
+    final noteController = ref.watch(noteControllerProvider);
+    final trashedNotes = ref.watch(trashedNotesProvider);
+    ref.watch(sessionLifecycleProvider);
+
     ref.read(settingsControllerProvider); // pre-warm
     ref.read(appVersionProvider); // pre-warm
 
-    ref.watch(sessionLifecycleProvider);
     ref.listen<bool>(sessionExpiredProvider, (previous, next) {
       if (next == true) {
         ScaffoldMessenger.of(context).clearSnackBars();
@@ -78,9 +83,6 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         ref.read(sessionExpiredProvider.notifier).setExpired(false);
       }
     });
-
-    final filteredNotes = ref.watch(filteredNotesListProvider);
-    final noteController = ref.watch(noteControllerProvider);
 
     ref.listen(noteControllerProvider, (previous, next) {
       final nextValue = next.asData?.value;
@@ -119,8 +121,6 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         }
       }
     });
-
-    final trashedNotes = ref.watch(trashedNotesProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -170,14 +170,5 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         ),
       ),
     );
-  }
-}
-
-class NoNotesFoundWidget extends StatelessWidget {
-  const NoNotesFoundWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(child: Center(child: Text(AppLocalizations.of(context)!.noNotesFound)));
   }
 }
