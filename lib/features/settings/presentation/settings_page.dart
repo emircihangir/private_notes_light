@@ -4,11 +4,11 @@ import 'package:private_notes_light/features/backup/presentation/export_list_til
 import 'package:private_notes_light/features/backup/presentation/import_list_tile.dart';
 import 'package:private_notes_light/features/settings/application/app_version.dart';
 import 'package:private_notes_light/core/snackbars.dart';
-import 'package:private_notes_light/features/settings/presentation/brightness_segmented_button.dart';
 import 'package:private_notes_light/features/settings/presentation/change_password_list_tile.dart';
 import 'package:private_notes_light/features/settings/presentation/export_suggestions_switch_tile.dart';
 import 'package:private_notes_light/features/settings/presentation/export_warnings_switch_tile.dart';
 import 'package:private_notes_light/features/settings/presentation/section_header.dart';
+import 'package:private_notes_light/features/settings/presentation/theme_dropdown_button.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,9 +40,11 @@ class SettingsPage extends StatelessWidget {
             const ExportSuggestionsSwitchTile(),
             const ExportWarningsSwitchTile(),
 
-            SectionHeader(l10n.themeSection),
-            const ListTile(title: BrightnessSegmentedButton()),
+            const SizedBox(height: 24),
+            SectionHeader(l10n.appearance),
+            ListTile(title: Text(l10n.themeSection), trailing: const ThemeDropdownButton()),
 
+            const SizedBox(height: 24),
             SectionHeader(l10n.aboutSection),
             ListTile(
               leading: const Icon(Icons.code),

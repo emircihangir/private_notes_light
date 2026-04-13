@@ -411,5 +411,7 @@
   "ok": "OK",
   "@ok": {
     "description": "Generic confirmation button label used in help dialogs."
-  }
+  },
+  "appearance" : "Appearance",
+  "@appearance": {}
 }

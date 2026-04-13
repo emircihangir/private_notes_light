@@ -9,11 +9,8 @@ class SectionHeader extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8),
-      child: Text(
-        text,
-        style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary),
-      ),
+      padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+      child: Text(text, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary)),
     );
   }
 }
