@@ -10,7 +10,6 @@ class SettingsController extends _$SettingsController {
   @override
   Future<SettingsData> build() async {
     final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
-
     return settingsRepo.getSettings();
   }
 
@@ -19,13 +18,7 @@ class SettingsController extends _$SettingsController {
     await settingsRepo.setExportSuggestions(newValue);
 
     final previous = state.value!;
-    state = AsyncData(
-      SettingsData(
-        exportSuggestions: newValue,
-        exportWarnings: previous.exportWarnings,
-        theme: previous.theme,
-      ),
-    );
+    state = AsyncData(previous.copyWith(exportSuggestions: newValue));
   }
 
   Future<void> setExportWarnings(bool newValue) async {
@@ -33,26 +26,14 @@ class SettingsController extends _$SettingsController {
     await settingsRepo.setExportWarnings(newValue);
 
     final previous = state.value!;
-    state = AsyncData(
-      SettingsData(
-        exportSuggestions: previous.exportSuggestions,
-        exportWarnings: newValue,
-        theme: previous.theme,
-      ),
-    );
+    state = AsyncData(previous.copyWith(exportWarnings: newValue));
   }
 
-  Future<void> setTheme(ThemeMode newTheme) async {
+  Future<void> setTheme(ThemeMode newValue) async {
     final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
-    await settingsRepo.setTheme(newTheme);
+    await settingsRepo.setTheme(newValue);
 
     final previous = state.value!;
-    state = AsyncData(
-      SettingsData(
-        exportSuggestions: previous.exportSuggestions,
-        exportWarnings: previous.exportWarnings,
-        theme: newTheme,
-      ),
-    );
+    state = AsyncData(previous.copyWith(theme: newValue));
   }
 }
