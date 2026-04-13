@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/backup/presentation/export_list_tile.dart';
 import 'package:private_notes_light/features/backup/presentation/import_list_tile.dart';
-import 'package:private_notes_light/features/settings/application/app_version.dart';
 import 'package:private_notes_light/core/snackbars.dart';
 import 'package:private_notes_light/features/settings/presentation/change_password_list_tile.dart';
 import 'package:private_notes_light/features/settings/presentation/export_suggestions_switch_tile.dart';
 import 'package:private_notes_light/features/settings/presentation/export_warnings_switch_tile.dart';
 import 'package:private_notes_light/features/settings/presentation/section_header.dart';
 import 'package:private_notes_light/features/settings/presentation/theme_dropdown_button.dart';
+import 'package:private_notes_light/features/settings/presentation/version_text.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,6 +26,9 @@ class SettingsPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
 
+    const sectionGap = 24.0;
+    const linkIconSize = 20.0;
+
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle), centerTitle: true),
       body: ListTileTheme(
@@ -40,24 +42,24 @@ class SettingsPage extends StatelessWidget {
             const ExportSuggestionsSwitchTile(),
             const ExportWarningsSwitchTile(),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: sectionGap),
             SectionHeader(l10n.appearance),
             ListTile(title: Text(l10n.themeSection), trailing: const ThemeDropdownButton()),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: sectionGap),
             SectionHeader(l10n.aboutSection),
             ListTile(
               leading: const Icon(Icons.code),
               title: Text(l10n.sourceCodeTitle),
               subtitle: Text(l10n.sourceCodeSubtitle),
-              trailing: const Icon(Icons.open_in_new, size: 16),
+              trailing: const Icon(Icons.open_in_new, size: linkIconSize),
               onTap: () async => await openUrl('https://github.com/emircihangir/private_notes_light', context),
             ),
             ListTile(
               leading: const Icon(Icons.article_rounded),
               title: Text(l10n.documentation),
               subtitle: Text(l10n.documentationSubtitle),
-              trailing: const Icon(Icons.open_in_new, size: 16),
+              trailing: const Icon(Icons.open_in_new, size: linkIconSize),
               onTap: () async => await openUrl('https://deepwiki.com/emircihangir/private_notes_light', context),
             ),
             ListTile(
@@ -72,6 +74,7 @@ class SettingsPage extends StatelessWidget {
               subtitle: Text(l10n.supportDevelopmentSubtitle),
               onTap: () async => await openUrl('https://buymeacoffee.com/emircihangir', context),
             ),
+
             const Divider(),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -89,20 +92,5 @@ class SettingsPage extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class VersionText extends ConsumerWidget {
-  final AppLocalizations l10n;
-  final TextTheme textTheme;
-
-  const VersionText({super.key, required this.l10n, required this.textTheme});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appVersion = ref.watch(appVersionProvider);
-    final String versionNumber = appVersion.valueOrNull ?? '';
-
-    return Text('${l10n.version} $versionNumber', style: textTheme.bodySmall);
   }
 }
