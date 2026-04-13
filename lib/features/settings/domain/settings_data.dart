@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:private_notes_light/features/settings/domain/sorting_option.dart';
 
 part 'settings_data.freezed.dart';
 part 'settings_data.g.dart';
@@ -7,9 +8,10 @@ part 'settings_data.g.dart';
 @freezed
 abstract class SettingsData with _$SettingsData {
   factory SettingsData({
-    required bool exportSuggestions,
-    required bool exportWarnings,
-    required ThemeMode theme,
+    @Default(true) bool exportSuggestions,
+    @Default(true) bool exportWarnings,
+    @Default(ThemeMode.system) ThemeMode theme,
+    @Default(SortingOption.newestFirst) SortingOption sortingOption,
   }) = _SettingsData;
 
   SettingsData._();
@@ -20,5 +22,6 @@ abstract class SettingsData with _$SettingsData {
     exportSuggestions: 'exportSuggestions',
     exportWarnings: 'exportWarnings',
     theme: 'theme',
+    sortingOption: 'sortingOption',
   );
 }
