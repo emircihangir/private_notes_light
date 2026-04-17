@@ -413,5 +413,15 @@
     "description": "Generic confirmation button label used in help dialogs."
   },
   "appearance" : "Appearance",
-  "@appearance": {}
+  "@appearance": {},
+  "aToZ" : "A - Z",
+  "@aToZ": {},
+  "zToA" : "Z - A",
+  "@zToA": {},
+  "newestFirst" : "Newest first",
+  "@newestFirst": {},
+  "oldestFirst" : "Oldest first",
+  "@oldestFirst": {},
+  "noteSorting" : "Note Sorting",
+  "@noteSorting": {}
 }

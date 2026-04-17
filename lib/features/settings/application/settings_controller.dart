@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:private_notes_light/features/settings/domain/settings_data.dart';
 import 'package:private_notes_light/features/settings/data/settings_repository.dart';
+import 'package:private_notes_light/features/settings/domain/sorting_option.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'settings_controller.g.dart';
@@ -35,5 +36,15 @@ class SettingsController extends _$SettingsController {
 
     final previous = state.value!;
     state = AsyncData(previous.copyWith(theme: newValue));
+  }
+
+  Future<void> setSortingOption(SortingOption newValue) async {
+    // TODO: replace all ref.watch with ref.read in the file.
+    // TODO: Maybe write an updateSettings method instead of individual setters?
+    final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
+    await settingsRepo.setSortingOption(newValue);
+
+    final previous = state.value!;
+    state = AsyncData(previous.copyWith(sortingOption: newValue));
   }
 }

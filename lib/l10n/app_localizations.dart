@@ -717,6 +717,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Appearance'**
   String get appearance;
+
+  /// No description provided for @aToZ.
+  ///
+  /// In en, this message translates to:
+  /// **'A - Z'**
+  String get aToZ;
+
+  /// No description provided for @zToA.
+  ///
+  /// In en, this message translates to:
+  /// **'Z - A'**
+  String get zToA;
+
+  /// No description provided for @newestFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest first'**
+  String get newestFirst;
+
+  /// No description provided for @oldestFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest first'**
+  String get oldestFirst;
+
+  /// No description provided for @noteSorting.
+  ///
+  /// In en, this message translates to:
+  /// **'Note Sorting'**
+  String get noteSorting;
 }
 
 class _AppLocalizationsDelegate

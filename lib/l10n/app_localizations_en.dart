@@ -334,4 +334,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appearance => 'Appearance';
+
+  @override
+  String get aToZ => 'A - Z';
+
+  @override
+  String get zToA => 'Z - A';
+
+  @override
+  String get newestFirst => 'Newest first';
+
+  @override
+  String get oldestFirst => 'Oldest first';
+
+  @override
+  String get noteSorting => 'Note Sorting';
 }

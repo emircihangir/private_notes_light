@@ -5,6 +5,7 @@ import 'package:private_notes_light/core/snackbars.dart';
 import 'package:private_notes_light/features/settings/presentation/change_password_list_tile.dart';
 import 'package:private_notes_light/features/settings/presentation/export_suggestions_switch_tile.dart';
 import 'package:private_notes_light/features/settings/presentation/export_warnings_switch_tile.dart';
+import 'package:private_notes_light/features/settings/presentation/note_sorting_dropdown_button.dart';
 import 'package:private_notes_light/features/settings/presentation/section_header.dart';
 import 'package:private_notes_light/features/settings/presentation/theme_dropdown_button.dart';
 import 'package:private_notes_light/features/settings/presentation/version_text.dart';
@@ -45,6 +46,7 @@ class SettingsPage extends StatelessWidget {
             const SizedBox(height: sectionGap),
             SectionHeader(l10n.appearance),
             ListTile(title: Text(l10n.themeSection), trailing: const ThemeDropdownButton()),
+            ListTile(title: Text(l10n.noteSorting), trailing: const NoteSortingDropdownButton()),
 
             const SizedBox(height: sectionGap),
             SectionHeader(l10n.aboutSection),
