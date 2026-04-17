@@ -18,7 +18,7 @@ class NoteSortingDropdownButton extends ConsumerWidget {
             .whenData(
               (settingsData) => DropdownButtonHideUnderline(
                 child: DropdownButton<SortingOption>(
-                  alignment: const AlignmentGeometry.xy(0, 0),
+                  alignment: const AlignmentGeometry.xy(1, 0),
                   isExpanded: false,
                   icon: const Icon(Icons.arrow_drop_down_rounded),
                   items: [
