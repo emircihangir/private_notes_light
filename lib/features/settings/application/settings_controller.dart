@@ -10,12 +10,12 @@ part 'settings_controller.g.dart';
 class SettingsController extends _$SettingsController {
   @override
   Future<SettingsData> build() async {
-    final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
+    final settingsRepo = await ref.read(settingsRepositoryProvider.future);
     return settingsRepo.getSettings();
   }
 
   Future<void> setExportSuggestions(bool newValue) async {
-    final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
+    final settingsRepo = await ref.read(settingsRepositoryProvider.future);
     await settingsRepo.setExportSuggestions(newValue);
 
     final previous = state.value!;
@@ -23,7 +23,7 @@ class SettingsController extends _$SettingsController {
   }
 
   Future<void> setExportWarnings(bool newValue) async {
-    final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
+    final settingsRepo = await ref.read(settingsRepositoryProvider.future);
     await settingsRepo.setExportWarnings(newValue);
 
     final previous = state.value!;
@@ -31,7 +31,7 @@ class SettingsController extends _$SettingsController {
   }
 
   Future<void> setTheme(ThemeMode newValue) async {
-    final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
+    final settingsRepo = await ref.read(settingsRepositoryProvider.future);
     await settingsRepo.setTheme(newValue);
 
     final previous = state.value!;
@@ -39,9 +39,7 @@ class SettingsController extends _$SettingsController {
   }
 
   Future<void> setSortingOption(SortingOption newValue) async {
-    // TODO: replace all ref.watch with ref.read in the file.
-    // TODO: Maybe write an updateSettings method instead of individual setters?
-    final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
+    final settingsRepo = await ref.read(settingsRepositoryProvider.future);
     await settingsRepo.setSortingOption(newValue);
 
     final previous = state.value!;
