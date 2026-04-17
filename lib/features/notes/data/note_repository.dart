@@ -1,12 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
+import 'package:private_notes_light/features/settings/application/settings_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sqflite/sqflite.dart';
 
 part 'note_repository.g.dart';
 
 class NoteRepository {
+  final Ref ref;
+  NoteRepository(this.ref);
+
   Database? _database;
   static const int _dbVersion = 1;
 
@@ -69,7 +73,8 @@ class NoteRepository {
 
   Future<List<NoteDto>> getNotes() async {
     final db = await database;
-    final notes = await db.query('notes', orderBy: 'dateCreated DESC');
+    final settingsController = await ref.read(settingsControllerProvider.future);
+    final notes = await db.query('notes', orderBy: settingsController.sortingOption.sortingValue);
     return notes.map((e) => NoteDto.fromJson(e)).toList();
   }
 
@@ -89,4 +94,4 @@ class NoteRepository {
 }
 
 @riverpod
-NoteRepository noteRepository(Ref ref) => NoteRepository();
+NoteRepository noteRepository(Ref ref) => NoteRepository(ref);

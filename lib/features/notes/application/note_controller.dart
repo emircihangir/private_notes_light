@@ -12,6 +12,7 @@ import 'package:private_notes_light/features/notes/domain/note_controller_state.
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:private_notes_light/features/notes/domain/note_widget_data.dart';
 import 'package:private_notes_light/features/notes/domain/trashed_note_data.dart';
+import 'package:private_notes_light/features/settings/application/settings_controller.dart';
 import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -23,6 +24,8 @@ part 'note_controller.g.dart';
 class NoteController extends _$NoteController {
   @override
   Future<NoteControllerState> build() async {
+    ref.watch(settingsControllerProvider);
+
     final masterKey = ref.read(masterKeyProvider);
     assert(masterKey != null, 'masterKey cannot be null when NoteController initializes.');
 
@@ -39,19 +42,9 @@ class NoteController extends _$NoteController {
   @visibleForTesting
   void setState(NoteControllerState newState) => state = AsyncValue.data(newState);
 
-  Future<void> createNote({
-    String? id,
-    required String title,
-    required String content,
-    DateTime? date,
-  }) async {
+  Future<void> createNote({String? id, required String title, required String content, DateTime? date}) async {
     final encrypted = ref.read(encryptionServiceProvider).encryptWithMasterKey(content);
-    Note newNote = Note(
-      id: id ?? const Uuid().v4(),
-      title: title,
-      content: encrypted.encryptedText,
-      dateCreated: date ?? DateTime.now(),
-    );
+    Note newNote = Note(id: id ?? const Uuid().v4(), title: title, content: encrypted.encryptedText, dateCreated: date ?? DateTime.now());
     final NoteDto dto = NoteDto.fromDomain(newNote, newNote.content, encrypted.encryptionIV.base64);
 
     await ref.read(noteRepositoryProvider).addNote(dto);
@@ -89,9 +82,7 @@ class NoteController extends _$NoteController {
     if (exportResult == true) {
       state = AsyncValue.data(state.value!.copyWith(showExportSuccessful: true));
     } else {
-      state = AsyncValue.data(
-        state.value!.copyWith(showError: true, errorKind: NoteErrorKind.failedToExport),
-      );
+      state = AsyncValue.data(state.value!.copyWith(showError: true, errorKind: NoteErrorKind.failedToExport));
     }
   }
 
@@ -100,14 +91,10 @@ class NoteController extends _$NoteController {
 
     final trashdNoteData = TrashedNoteData(noteWidgetData, currentList.indexOf(noteWidgetData));
     ref.read(trashedNotesProvider.notifier).add(trashdNoteData);
-    final newList = currentList
-        .where((element) => element.noteId != noteWidgetData.noteId)
-        .toList();
+    final newList = currentList.where((element) => element.noteId != noteWidgetData.noteId).toList();
     state = AsyncValue.data(state.value!.copyWith(data: newList));
     if (state.value!.showInfo != true) {
-      state = AsyncValue.data(
-        state.value!.copyWith(showInfo: true, infoKind: InfoKind.noteDeleted),
-      );
+      state = AsyncValue.data(state.value!.copyWith(showInfo: true, infoKind: InfoKind.noteDeleted));
     }
 
     log('Note with the title "${noteWidgetData.noteTitle}" trashed.', name: 'INFO');
@@ -127,10 +114,7 @@ class NoteController extends _$NoteController {
     newList.insert(noteIndex, lastDeletedNote.noteWidgetData);
     state = AsyncValue.data(state.value!.copyWith(data: newList));
 
-    log(
-      'Put back the note with title "${lastDeletedNote.noteWidgetData.noteTitle}".',
-      name: 'INFO',
-    );
+    log('Put back the note with title "${lastDeletedNote.noteWidgetData.noteTitle}".', name: 'INFO');
   }
 
   void putNoteBack(TrashedNoteData trashedNote) {
@@ -166,15 +150,8 @@ class NoteController extends _$NoteController {
     final NoteDto? dto = await ref.read(noteRepositoryProvider).getNote(noteId);
     if (dto == null) throw Exception('Note with the ID "$noteId" does not exist.');
 
-    final decryptedContent = ref
-        .read(encryptionServiceProvider)
-        .decryptWithMasterKey(dto.content, enc.IV.fromBase64(dto.iv));
-    return Note(
-      id: dto.id,
-      title: dto.title,
-      content: decryptedContent,
-      dateCreated: DateTime.parse(dto.dateCreated),
-    );
+    final decryptedContent = ref.read(encryptionServiceProvider).decryptWithMasterKey(dto.content, enc.IV.fromBase64(dto.iv));
+    return Note(id: dto.id, title: dto.title, content: decryptedContent, dateCreated: DateTime.parse(dto.dateCreated));
   }
 
   // Consume functions

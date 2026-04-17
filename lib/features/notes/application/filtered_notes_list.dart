@@ -13,7 +13,5 @@ List<NoteWidgetData> filteredNotesList(Ref ref) {
   final notesList = noteController.valueOrNull?.data ?? [];
   if (searchQuery.isEmpty) return notesList;
 
-  return notesList
-      .where((e) => e.noteTitle.toLowerCase().contains(searchQuery.toLowerCase()))
-      .toList();
+  return notesList.where((e) => e.noteTitle.toLowerCase().contains(searchQuery.toLowerCase())).toList();
 }
