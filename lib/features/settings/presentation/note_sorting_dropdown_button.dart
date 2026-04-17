@@ -58,7 +58,7 @@ class NoteSortingDropdownButton extends ConsumerWidget {
                         spacing: rowSpacing,
                         children: [
                           const Icon(Icons.calendar_month_rounded, size: iconSize),
-                          Text(l10n.newestFirst),
+                          Text(l10n.oldestFirst),
                         ],
                       ),
                     ),

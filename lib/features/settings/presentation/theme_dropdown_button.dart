@@ -13,51 +13,49 @@ class ThemeDropdownButton extends ConsumerWidget {
     const iconSize = 20.0;
     const rowSpacing = 8.0;
 
-    return settingsController
-            .whenData(
-              (settingsData) => DropdownButtonHideUnderline(
-                child: DropdownButton<ThemeMode>(
-                  alignment: const AlignmentGeometry.xy(0, 0),
-                  isExpanded: false,
-                  icon: const Icon(Icons.arrow_drop_down_rounded),
-                  items: [
-                    DropdownMenuItem(
-                      value: ThemeMode.light,
-                      child: Row(
-                        spacing: rowSpacing,
-                        children: [
-                          const Icon(Icons.light_mode_rounded, size: iconSize),
-                          Text(l10n.themeLight),
-                        ],
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: ThemeMode.system,
-                      child: Row(
-                        spacing: rowSpacing,
-                        children: [
-                          const Icon(Icons.auto_mode_rounded, size: iconSize),
-                          Text(l10n.themeSystem),
-                        ],
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: ThemeMode.dark,
-                      child: Row(
-                        spacing: rowSpacing,
-                        children: [
-                          const Icon(Icons.dark_mode_rounded, size: iconSize),
-                          Text(l10n.themeDark),
-                        ],
-                      ),
-                    ),
-                  ],
-                  value: settingsData.theme,
-                  onChanged: (value) async => await ref.read(settingsControllerProvider.notifier).setTheme(value!),
+    return settingsController.whenData((settingsData) {
+          return DropdownButtonHideUnderline(
+            child: DropdownButton<ThemeMode>(
+              alignment: const AlignmentGeometry.xy(0, 0),
+              isExpanded: false,
+              icon: const Icon(Icons.arrow_drop_down_rounded),
+              items: [
+                DropdownMenuItem(
+                  value: ThemeMode.light,
+                  child: Row(
+                    spacing: rowSpacing,
+                    children: [
+                      const Icon(Icons.light_mode_rounded, size: iconSize),
+                      Text(l10n.themeLight),
+                    ],
+                  ),
                 ),
-              ),
-            )
-            .valueOrNull ??
+                DropdownMenuItem(
+                  value: ThemeMode.system,
+                  child: Row(
+                    spacing: rowSpacing,
+                    children: [
+                      const Icon(Icons.auto_mode_rounded, size: iconSize),
+                      Text(l10n.themeSystem),
+                    ],
+                  ),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.dark,
+                  child: Row(
+                    spacing: rowSpacing,
+                    children: [
+                      const Icon(Icons.dark_mode_rounded, size: iconSize),
+                      Text(l10n.themeDark),
+                    ],
+                  ),
+                ),
+              ],
+              value: settingsData.theme,
+              onChanged: (value) async => await ref.read(settingsControllerProvider.notifier).setTheme(value!),
+            ),
+          );
+        }).valueOrNull ??
         const SizedBox();
   }
 }
