@@ -10,7 +10,7 @@ part 'settings_controller.g.dart';
 class SettingsController extends _$SettingsController {
   @override
   Future<SettingsData> build() async {
-    final settingsRepo = await ref.read(settingsRepositoryProvider.future);
+    final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
     return settingsRepo.getSettings();
   }
 
