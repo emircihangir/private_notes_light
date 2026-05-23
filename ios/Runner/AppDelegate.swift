@@ -3,7 +3,11 @@ import UIKit
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
-    private var privacyBlurView: UIVisualEffectView?
+    func didInitializeImplicitFlutterEngine(
+        _ engineBridge: FlutterImplicitEngineBridge
+    ) {
+        GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    }
 
     override func application(
         _ application: UIApplication,
@@ -33,39 +37,16 @@ import UIKit
         )
     }
 
-    // 2. Event: App is about to move to background (User swiped up)
-    override func applicationWillResignActive(_ application: UIApplication) {
-        // Create a blur effect
-        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
-        privacyBlurView = UIVisualEffectView(effect: blurEffect)
-
-        if let window = self.window {
-            // Make the blur fit the whole screen
-            privacyBlurView?.frame = window.frame
-            // Add it on top of everything
-            window.addSubview(privacyBlurView!)
-        }
-
-        super.applicationWillResignActive(application)
-    }
-
-    // 3. Event: App came back to foreground
-    override func applicationDidBecomeActive(_ application: UIApplication) {
-        // Remove the blur view so the user can see their notes
-        privacyBlurView?.removeFromSuperview()
-        privacyBlurView = nil
-
-        super.applicationDidBecomeActive(application)
-    }
-
     // --- B. Handle Screen Recording ---
     @objc func handleScreenCaptureChange() {
         if UIScreen.main.isCaptured {
             // User started recording -> Blur immediately
-            enablePrivacyScreen()
+            PrivacyScreen.enableOnActiveWindows(style: .systemUltraThinMaterialDark)
         } else {
             // User stopped recording -> Unblur
-            disablePrivacyScreen()
+            if UIApplication.shared.applicationState == .active {
+                PrivacyScreen.disableFromAllWindows()
+            }
         }
     }
 
@@ -80,33 +61,6 @@ import UIKit
         )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
 
-        self.window?.rootViewController?.present(alert, animated: true)
-    }
-
-    // --- Helper Functions ---
-    func enablePrivacyScreen() {
-        if privacyBlurView == nil {
-            let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)  // Darker blur for privacy
-            privacyBlurView = UIVisualEffectView(effect: blurEffect)
-
-            if let window = self.window {
-                privacyBlurView?.frame = window.bounds
-                privacyBlurView?.autoresizingMask = [
-                    .flexibleWidth, .flexibleHeight,
-                ]
-                window.addSubview(privacyBlurView!)
-            }
-        }
-    }
-
-    func disablePrivacyScreen() {
-        privacyBlurView?.removeFromSuperview()
-        privacyBlurView = nil
-    }
-
-    func didInitializeImplicitFlutterEngine(
-        _ engineBridge: FlutterImplicitEngineBridge
-    ) {
-        GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+        PrivacyScreen.topViewController?.present(alert, animated: true)
     }
 }
