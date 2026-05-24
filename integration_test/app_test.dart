@@ -50,6 +50,7 @@ void main() {
     await _viewAndEditFirstNote(tester, l10n);
     await _moveSecondNoteToTrashAndRestore(tester, l10n);
     await _exerciseSettings(tester, l10n);
+    await _verifyNoExportSuggestionAfterDisabled(tester, l10n);
     await _verifyLoginWithChangedPassword(tester, l10n);
   });
 }
@@ -169,8 +170,8 @@ Future<void> _fillCurrentNoteForm(WidgetTester tester, {required String title, r
   final textFields = find.byType(TextFormField);
   expect(textFields, findsNWidgets(2));
 
-  await tester.enterText(textFields.at(0), title);
-  await tester.enterText(textFields.at(1), content);
+  await tester.enterText(find.descendant(of: textFields.at(0), matching: find.byType(EditableText)), title);
+  await tester.enterText(find.descendant(of: textFields.at(1), matching: find.byType(EditableText)), content);
   await tester.pumpAndSettle();
 }
 
@@ -260,15 +261,10 @@ Future<void> _exerciseSettings(WidgetTester tester, AppLocalizations l10n) async
   await _setDropdownValue(tester, currentValue: l10n.themeSystem, newValue: l10n.themeDark);
   expect(find.text(l10n.themeDark), findsOneWidget);
 
-  await _setDropdownValue(tester, currentValue: l10n.newestFirst, newValue: l10n.aToZ);
-  expect(find.text(l10n.aToZ), findsOneWidget);
-
   await _pageBackAndSettle(tester);
   await _pumpUntilFound(tester, find.byType(NotesPage));
 
-  final firstNoteY = tester.getTopLeft(find.text(firstNoteUpdatedTitle)).dy;
-  final secondNoteY = tester.getTopLeft(find.text(secondNoteTitle)).dy;
-  expect(firstNoteY, lessThan(secondNoteY));
+  await _verifyEverySortingOption(tester, l10n);
 }
 
 Future<void> _setDropdownValue(WidgetTester tester, {required String currentValue, required String newValue}) async {
@@ -316,4 +312,86 @@ Future<void> _verifyLoginWithChangedPassword(WidgetTester tester, AppLocalizatio
 
   expect(find.text(firstNoteUpdatedTitle), findsOneWidget);
   expect(find.text(secondNoteTitle), findsOneWidget);
+}
+
+Future<void> _verifyEverySortingOption(WidgetTester tester, AppLocalizations l10n) async {
+  await _setSortingOptionAndExpectOrder(
+    tester,
+    l10n,
+    currentValue: l10n.newestFirst,
+    newValue: l10n.aToZ,
+    expectedTitles: [firstNoteUpdatedTitle, secondNoteTitle],
+  );
+
+  await _setSortingOptionAndExpectOrder(
+    tester,
+    l10n,
+    currentValue: l10n.aToZ,
+    newValue: l10n.zToA,
+    expectedTitles: [secondNoteTitle, firstNoteUpdatedTitle],
+  );
+
+  await _setSortingOptionAndExpectOrder(
+    tester,
+    l10n,
+    currentValue: l10n.zToA,
+    newValue: l10n.newestFirst,
+    expectedTitles: [secondNoteTitle, firstNoteUpdatedTitle],
+  );
+
+  await _setSortingOptionAndExpectOrder(
+    tester,
+    l10n,
+    currentValue: l10n.newestFirst,
+    newValue: l10n.oldestFirst,
+    expectedTitles: [firstNoteUpdatedTitle, secondNoteTitle],
+  );
+}
+
+Future<void> _setSortingOptionAndExpectOrder(
+  WidgetTester tester,
+  AppLocalizations l10n, {
+  required String currentValue,
+  required String newValue,
+  required List<String> expectedTitles,
+}) async {
+  await _tapAndSettle(tester, find.byIcon(Icons.settings_outlined));
+  await _pumpUntilFound(tester, find.byType(SettingsPage));
+
+  await _setDropdownValue(tester, currentValue: currentValue, newValue: newValue);
+  expect(find.text(newValue), findsOneWidget);
+
+  await _pageBackAndSettle(tester);
+  await _pumpUntilFound(tester, find.byType(NotesPage));
+  await _expectVisibleNoteOrder(tester, expectedTitles);
+}
+
+Future<void> _expectVisibleNoteOrder(WidgetTester tester, List<String> orderedTitles) async {
+  for (final title in orderedTitles) {
+    await _pumpUntilFound(tester, find.text(title));
+  }
+
+  for (var i = 0; i < orderedTitles.length - 1; i++) {
+    final currentY = tester.getTopLeft(find.text(orderedTitles[i])).dy;
+    final nextY = tester.getTopLeft(find.text(orderedTitles[i + 1])).dy;
+    expect(currentY, lessThan(nextY), reason: '${orderedTitles[i]} should appear before ${orderedTitles[i + 1]}');
+  }
+}
+
+Future<void> _verifyNoExportSuggestionAfterDisabled(WidgetTester tester, AppLocalizations l10n) async {
+  await _tapAndSettle(tester, find.text(firstNoteUpdatedTitle));
+  expect(find.text(firstNoteUpdatedContent), findsOneWidget);
+
+  await _tapAndSettle(tester, find.byIcon(Icons.edit_rounded));
+  expect(find.text(l10n.editNoteTitle), findsOneWidget);
+
+  await _fillCurrentNoteForm(tester, title: firstNoteUpdatedTitle, content: '$firstNoteUpdatedContent Export suggestions stay disabled.');
+  await _tapAndSettle(tester, find.byIcon(Icons.check_rounded));
+
+  expect(find.text(firstNoteUpdatedTitle), findsAtLeast(1));
+  expect(find.text(l10n.exportSuggestionSnackbar), findsNothing);
+
+  await _pageBackAndSettle(tester);
+  await _pumpUntilFound(tester, find.byType(NotesPage));
+  expect(find.text(l10n.exportSuggestionSnackbar), findsNothing);
 }
