@@ -14,12 +14,7 @@ import 'package:private_notes_light/features/settings/domain/settings_data.dart'
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/dummy_backup_data.dart';
 
-@GenerateNiceMocks([
-  MockSpec<PathService>(),
-  MockSpec<FilePickerService>(),
-  MockSpec<NoteRepository>(),
-  MockSpec<SettingsRepository>(),
-])
+@GenerateNiceMocks([MockSpec<PathService>(), MockSpec<FilePickerService>(), MockSpec<NoteRepository>(), MockSpec<SettingsRepository>()])
 import 'backup_repository_test.mocks.dart';
 
 void main() {
@@ -55,9 +50,7 @@ void main() {
           bytes: argThat(isA<Uint8List?>(), named: 'bytes'),
         ),
       ).thenAnswer((realInvocation) async => 'dummyAnswer');
-      when(
-        mockPathService.getTempDirectory(),
-      ).thenAnswer((realInvocation) async => Directory.systemTemp);
+      when(mockPathService.getTempDirectory()).thenAnswer((realInvocation) async => Directory.systemTemp);
 
       SharedPreferences.setMockInitialValues({});
 
@@ -87,9 +80,7 @@ void main() {
           bytes: argThat(isA<Uint8List?>(), named: 'bytes'),
         ),
       ).thenAnswer((realInvocation) async => null);
-      when(
-        mockPathService.getTempDirectory(),
-      ).thenAnswer((realInvocation) async => Directory.systemTemp);
+      when(mockPathService.getTempDirectory()).thenAnswer((realInvocation) async => Directory.systemTemp);
       SharedPreferences.setMockInitialValues({});
 
       // Act
@@ -119,26 +110,23 @@ void main() {
       // Verify
       verify(mockNoteRepo.importNotes(argThat(isA<List<NoteDto>?>()))).called(1);
     });
-    group(
-      'SettingsRepository.importSettings() execution aligns with alsoImportSettings parameter',
-      () {
-        test('calls when true', () async {
-          // Act
-          final backupRepository = await container.read(backupRepositoryProvider.future);
-          await backupRepository.import(dummyBackupData(), true);
+    group('SettingsRepository.importSettings() execution aligns with alsoImportSettings parameter', () {
+      test('calls when true', () async {
+        // Act
+        final backupRepository = await container.read(backupRepositoryProvider.future);
+        await backupRepository.import(dummyBackupData(), true);
 
-          // Verify
-          verify(mockSettingsRepo.importSettings(argThat(isA<SettingsData?>()))).called(1);
-        });
-        test('does not call when false', () async {
-          // Act
-          final backupRepository = await container.read(backupRepositoryProvider.future);
-          await backupRepository.import(dummyBackupData(), false);
+        // Verify
+        verify(mockSettingsRepo.importSettings(argThat(isA<SettingsData?>()))).called(1);
+      });
+      test('does not call when false', () async {
+        // Act
+        final backupRepository = await container.read(backupRepositoryProvider.future);
+        await backupRepository.import(dummyBackupData(), false);
 
-          // Verify
-          verifyNever(mockSettingsRepo.importSettings(argThat(isA<SettingsData?>())));
-        });
-      },
-    );
+        // Verify
+        verifyNever(mockSettingsRepo.importSettings(argThat(isA<SettingsData?>())));
+      });
+    });
   });
 }

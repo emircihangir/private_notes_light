@@ -9,8 +9,7 @@ enum ImportErrorKind { fileIsCorrupt, couldNotParseJson, invalidFileType }
 class ImportControllerState with _$ImportControllerState {
   const factory ImportControllerState.showError({required ImportErrorKind errorKind}) = _ShowError;
   const factory ImportControllerState.showSuccess() = _ShowSuccess;
-  const factory ImportControllerState.showPasswordDialog(BackupData backupData) =
-      _ShowPasswordDialog;
+  const factory ImportControllerState.showPasswordDialog(BackupData backupData) = _ShowPasswordDialog;
   const factory ImportControllerState.askForSettings(BackupData backupData) = _AskForSettings;
   const factory ImportControllerState.showOverwriteWarning() = _ShowOverwriteWarning;
 }

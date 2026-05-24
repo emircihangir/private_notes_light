@@ -17,15 +17,11 @@ class ExportSuggestionsSwitchTile extends ConsumerWidget {
             title: Row(
               children: [
                 Text(l10n.exportSuggestions),
-                HelpButton(
-                  helpTitle: l10n.exportSuggestions,
-                  helpText: l10n.exportSuggestionsHelpText,
-                ),
+                HelpButton(helpTitle: l10n.exportSuggestions, helpText: l10n.exportSuggestionsHelpText),
               ],
             ),
             value: settingsData.exportSuggestions,
-            onChanged: (newValue) async =>
-                await ref.read(settingsControllerProvider.notifier).setExportSuggestions(newValue),
+            onChanged: (newValue) async => await ref.read(settingsControllerProvider.notifier).setExportSuggestions(newValue),
           );
         }).valueOrNull ??
         const SizedBox();

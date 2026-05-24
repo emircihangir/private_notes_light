@@ -9,19 +9,11 @@ part 'backup_data.g.dart';
 
 @freezed
 abstract class BackupData with _$BackupData {
-  factory BackupData({
-    required CredentialsData credentialsData,
-    required SettingsData settingsData,
-    required List<NoteDto> notesData,
-  }) = _BackupData;
+  factory BackupData({required CredentialsData credentialsData, required SettingsData settingsData, required List<NoteDto> notesData}) = _BackupData;
 
   BackupData._();
 
   factory BackupData.fromJson(Map<String, Object?> json) => _$BackupDataFromJson(json);
 
-  static const propertyNames = (
-    credentialsData: 'credentialsData',
-    settingsData: 'settingsData',
-    notesData: 'notesData',
-  );
+  static const propertyNames = (credentialsData: 'credentialsData', settingsData: 'settingsData', notesData: 'notesData');
 }

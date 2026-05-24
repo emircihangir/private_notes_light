@@ -19,14 +19,8 @@ class TrashedNotesSheet extends ConsumerWidget {
           spacing: 16,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              AppLocalizations.of(context)!.trashedNotes,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            Text(
-              AppLocalizations.of(context)!.trashedNotesExplainer,
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
+            Text(AppLocalizations.of(context)!.trashedNotes, style: Theme.of(context).textTheme.titleMedium),
+            Text(AppLocalizations.of(context)!.trashedNotesExplainer, style: Theme.of(context).textTheme.labelMedium),
             Expanded(
               child: ListView.builder(
                 itemCount: trashedNotes.length,
@@ -35,8 +29,7 @@ class TrashedNotesSheet extends ConsumerWidget {
                   return ListTile(
                     title: Text(trashedNote.noteWidgetData.noteTitle),
                     trailing: TextButton(
-                      onPressed: () =>
-                          ref.read(noteControllerProvider.notifier).putNoteBack(trashedNote),
+                      onPressed: () => ref.read(noteControllerProvider.notifier).putNoteBack(trashedNote),
                       child: Text(AppLocalizations.of(context)!.putBack),
                     ),
                   );

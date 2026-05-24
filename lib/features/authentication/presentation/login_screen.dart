@@ -40,9 +40,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             spacing: 32,
             children: [
               SvgPicture.asset(
-                theme.brightness == Brightness.light
-                    ? 'assets/images/app_icon_light.svg'
-                    : 'assets/images/app_icon_dark.svg',
+                theme.brightness == Brightness.light ? 'assets/images/app_icon_light.svg' : 'assets/images/app_icon_dark.svg',
                 height: 150,
               ),
               Text(l10n.notesAreLocked, style: theme.textTheme.headlineLarge),
@@ -72,9 +70,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                   if (loggedIn) {
                     ScaffoldMessenger.of(context).clearSnackBars();
-                    Navigator.of(
-                      context,
-                    ).pushAndRemoveUntil(fadePageRouteBuilder(const NotesPage()), (route) => false);
+                    Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(const NotesPage()), (route) => false);
                   } else {
                     setState(() => errorText = l10n.wrongPasswordError);
                   }

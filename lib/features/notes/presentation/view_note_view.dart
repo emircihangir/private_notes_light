@@ -52,21 +52,15 @@ class _ViewNoteViewState extends State<ViewNoteView> {
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               ),
             ),
-            actions: [
-              IconButton(onPressed: widget.onEditPressed, icon: const Icon(Icons.edit_rounded)),
-            ],
+            actions: [IconButton(onPressed: widget.onEditPressed, icon: const Icon(Icons.edit_rounded))],
           ),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-            sliver: SliverToBoxAdapter(
-              child: Text(widget.note.title, style: Theme.of(context).textTheme.headlineLarge),
-            ),
+            sliver: SliverToBoxAdapter(child: Text(widget.note.title, style: Theme.of(context).textTheme.headlineLarge)),
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            sliver: SliverToBoxAdapter(
-              child: Text(widget.note.content, style: Theme.of(context).textTheme.bodyLarge),
-            ),
+            sliver: SliverToBoxAdapter(child: Text(widget.note.content, style: Theme.of(context).textTheme.bodyLarge)),
           ),
         ],
       ),

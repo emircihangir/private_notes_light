@@ -30,9 +30,7 @@ void main() {
     final container = ProviderScope.containerOf(context);
 
     // Act
-    container
-        .read(importControllerProvider.notifier)
-        .setState(const ImportControllerState.showOverwriteWarning());
+    container.read(importControllerProvider.notifier).setState(const ImportControllerState.showOverwriteWarning());
     await widgetTester.pumpAndSettle();
 
     // Verify
@@ -56,9 +54,7 @@ void main() {
 
     for (var errorKind in ImportErrorKind.values) {
       // Act
-      container
-          .read(importControllerProvider.notifier)
-          .setState(ImportControllerState.showError(errorKind: errorKind));
+      container.read(importControllerProvider.notifier).setState(ImportControllerState.showError(errorKind: errorKind));
       await widgetTester.pumpAndSettle();
 
       // Verify
@@ -87,9 +83,7 @@ void main() {
     final container = ProviderScope.containerOf(context);
 
     // Act
-    container
-        .read(importControllerProvider.notifier)
-        .setState(const ImportControllerState.showSuccess());
+    container.read(importControllerProvider.notifier).setState(const ImportControllerState.showSuccess());
     await widgetTester.pumpAndSettle();
 
     // Verify
@@ -112,9 +106,7 @@ void main() {
     final container = ProviderScope.containerOf(context);
 
     // Act
-    container
-        .read(importControllerProvider.notifier)
-        .setState(ImportControllerState.showPasswordDialog(dummyBackupData()));
+    container.read(importControllerProvider.notifier).setState(ImportControllerState.showPasswordDialog(dummyBackupData()));
     await widgetTester.pumpAndSettle();
 
     // Verify
@@ -137,9 +129,7 @@ void main() {
     final container = ProviderScope.containerOf(context);
 
     // Act
-    container
-        .read(importControllerProvider.notifier)
-        .setState(ImportControllerState.askForSettings(dummyBackupData()));
+    container.read(importControllerProvider.notifier).setState(ImportControllerState.askForSettings(dummyBackupData()));
     await widgetTester.pumpAndSettle();
 
     // Verify

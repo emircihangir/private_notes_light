@@ -10,10 +10,7 @@ class AuthRepository {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(CredentialsData.propertyNames.salt, credentialsData.salt);
     await prefs.setString(CredentialsData.propertyNames.iv, credentialsData.iv);
-    await prefs.setString(
-      CredentialsData.propertyNames.encryptedMasterKey,
-      credentialsData.encryptedMasterKey,
-    );
+    await prefs.setString(CredentialsData.propertyNames.encryptedMasterKey, credentialsData.encryptedMasterKey);
   }
 
   Future<bool> get userSignedUp async {

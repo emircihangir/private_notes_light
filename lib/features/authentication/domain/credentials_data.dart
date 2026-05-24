@@ -5,11 +5,7 @@ part 'credentials_data.g.dart';
 
 @freezed
 abstract class CredentialsData with _$CredentialsData {
-  factory CredentialsData({
-    required String salt,
-    required String iv,
-    required String encryptedMasterKey,
-  }) = _CredentialsData;
+  factory CredentialsData({required String salt, required String iv, required String encryptedMasterKey}) = _CredentialsData;
 
   CredentialsData._();
 

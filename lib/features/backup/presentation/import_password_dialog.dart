@@ -42,18 +42,13 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
         ],
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(AppLocalizations.of(context)!.cancel),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
         TextButton(
           key: const ValueKey('SubmitButton'),
           onPressed: () async {
             if (_formKey.currentState!.validate() == false) return;
 
-            final rotatedBackupData = await ref
-                .read(importControllerProvider.notifier)
-                .submitPassword(widget.backupData, controller.text);
+            final rotatedBackupData = await ref.read(importControllerProvider.notifier).submitPassword(widget.backupData, controller.text);
 
             if (rotatedBackupData == null) {
               setState(() => errorText = AppLocalizations.of(context)!.wrongPasswordError);

@@ -11,16 +11,8 @@ class FilePickerService {
     return await FilePicker.platform.pickFiles(dialogTitle: dialogTitle);
   }
 
-  Future<String?> saveFile({
-    required String fileName,
-    String? dialogTitle,
-    required Uint8List bytes,
-  }) async {
-    return await FilePicker.platform.saveFile(
-      fileName: fileName,
-      dialogTitle: dialogTitle,
-      bytes: bytes,
-    );
+  Future<String?> saveFile({required String fileName, String? dialogTitle, required Uint8List bytes}) async {
+    return await FilePicker.platform.saveFile(fileName: fileName, dialogTitle: dialogTitle, bytes: bytes);
   }
 }
 

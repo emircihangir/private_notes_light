@@ -13,10 +13,7 @@ class DotIndicator extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       width: isActive ? 20 : 8,
       height: 8,
-      decoration: BoxDecoration(
-        color: isActive ? color : color.withAlpha(76),
-        borderRadius: BorderRadius.circular(4),
-      ),
+      decoration: BoxDecoration(color: isActive ? color : color.withAlpha(76), borderRadius: BorderRadius.circular(4)),
     );
   }
 }

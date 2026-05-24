@@ -26,10 +26,7 @@ class _ViewNotePage extends ConsumerState<ViewNotePage> {
   @override
   Widget build(BuildContext context) {
     return _viewMode == ViewMode.view
-        ? ViewNoteView(
-            note: noteLatestVersion,
-            onEditPressed: () => setState(() => _viewMode = _viewMode.next),
-          )
+        ? ViewNoteView(note: noteLatestVersion, onEditPressed: () => setState(() => _viewMode = _viewMode.next))
         : EditNoteView(
             note: noteLatestVersion,
             onCheckPressed: (updatedNote) => setState(() {

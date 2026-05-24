@@ -8,20 +8,10 @@ class Note extends Equatable {
   final String content;
   final DateTime dateCreated;
 
-  const Note({
-    required this.id,
-    required this.title,
-    required this.content,
-    required this.dateCreated,
-  });
+  const Note({required this.id, required this.title, required this.content, required this.dateCreated});
 
   Note copyWith({String? id, String? title, String? content, DateTime? dateCreated}) {
-    return Note(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      content: content ?? this.content,
-      dateCreated: dateCreated ?? this.dateCreated,
-    );
+    return Note(id: id ?? this.id, title: title ?? this.title, content: content ?? this.content, dateCreated: dateCreated ?? this.dateCreated);
   }
 
   @override

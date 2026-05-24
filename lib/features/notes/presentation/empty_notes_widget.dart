@@ -12,16 +12,11 @@ class EmptyNotesWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: 16,
         children: [
-          Text(
-            AppLocalizations.of(context)!.noNotesTitle,
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
+          Text(AppLocalizations.of(context)!.noNotesTitle, style: Theme.of(context).textTheme.headlineMedium),
           TextButton(
             onPressed: () {
               ScaffoldMessenger.of(context).clearSnackBars();
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => const CreateNotePage()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CreateNotePage()));
             },
             child: Text(AppLocalizations.of(context)!.createNoteButton),
           ),

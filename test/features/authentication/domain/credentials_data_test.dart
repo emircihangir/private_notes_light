@@ -2,11 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:private_notes_light/features/authentication/domain/credentials_data.dart';
 
 void main() {
-  final dummyCredentials = CredentialsData(
-    salt: 'salt',
-    iv: 'iv',
-    encryptedMasterKey: 'encryptedMasterKey',
-  );
+  final dummyCredentials = CredentialsData(salt: 'salt', iv: 'iv', encryptedMasterKey: 'encryptedMasterKey');
 
   group('CredentialsData tests ->', () {
     test('serializes', () {

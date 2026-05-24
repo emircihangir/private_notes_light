@@ -18,10 +18,7 @@ class EncryptionService {
   Future<enc.Key> deriveKeyFromPassword(String password, String salt) async {
     var passwordBytes = utf8.encode(password);
     var saltBytes = utf8.encode(salt);
-    return await compute(deriveKeyBackground, {
-      'passwordBytes': passwordBytes,
-      'saltBytes': saltBytes,
-    });
+    return await compute(deriveKeyBackground, {'passwordBytes': passwordBytes, 'saltBytes': saltBytes});
   }
 
   List<int> generateRandomBytes(int length) {
@@ -40,11 +37,7 @@ class EncryptionService {
     return (encryptedText: encrypted.base64, encryptionIV: ivValue);
   }
 
-  ({String encryptedText, enc.IV encryptionIV}) encryptText({
-    required String text,
-    required enc.Key key,
-    enc.IV? iv,
-  }) {
+  ({String encryptedText, enc.IV encryptionIV}) encryptText({required String text, required enc.Key key, enc.IV? iv}) {
     final encrypter = enc.Encrypter(enc.AES(key));
     final enc.IV ivValue = iv ?? enc.IV.fromLength(16);
     final encrypted = encrypter.encrypt(text, iv: ivValue);
@@ -87,10 +80,7 @@ Future<enc.Key> deriveKeyBackground(Map<String, Uint8List> args) async {
     hashLength: 32,
   );
 
-  final newSecretKey = await algorithm.deriveKey(
-    secretKey: SecretKey(passwordBytes),
-    nonce: saltBytes,
-  );
+  final newSecretKey = await algorithm.deriveKey(secretKey: SecretKey(passwordBytes), nonce: saltBytes);
   final newSecretKeyBytes = await newSecretKey.extractBytes();
 
   return enc.Key(Uint8List.fromList(newSecretKeyBytes));

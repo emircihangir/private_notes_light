@@ -29,11 +29,7 @@ class SlidePage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 500),
-                child: Text(
-                  slide.content,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  textAlign: TextAlign.justify,
-                ),
+                child: Text(slide.content, style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.justify),
               ),
             ),
           ),

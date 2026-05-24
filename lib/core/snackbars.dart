@@ -5,10 +5,7 @@ void showErrorSnackbar(BuildContext context, {String? content}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       key: const ValueKey('ErrorSnackbar'),
-      content: Text(
-        content ?? AppLocalizations.of(context)!.errorOccurred,
-        style: TextStyle(color: Theme.of(context).colorScheme.onError),
-      ),
+      content: Text(content ?? AppLocalizations.of(context)!.errorOccurred, style: TextStyle(color: Theme.of(context).colorScheme.onError)),
       backgroundColor: Theme.of(context).colorScheme.error,
     ),
   );
@@ -17,10 +14,7 @@ void showErrorSnackbar(BuildContext context, {String? content}) {
 void showInfoSnackbar(BuildContext context, {required String content}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(
-        content,
-        style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
-      ),
+      content: Text(content, style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
       backgroundColor: Theme.of(context).colorScheme.inverseSurface,
     ),
   );
@@ -39,10 +33,7 @@ void showSuccessSnackbar(BuildContext context, {required String content}) {
 void showExportSuggestionSnackbar(BuildContext context, VoidCallback onPressed) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(
-        AppLocalizations.of(context)!.exportSuggestionSnackbar,
-        style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
-      ),
+      content: Text(AppLocalizations.of(context)!.exportSuggestionSnackbar, style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
       backgroundColor: Theme.of(context).colorScheme.inverseSurface,
       action: SnackBarAction(label: AppLocalizations.of(context)!.export, onPressed: onPressed),
       showCloseIcon: true,
@@ -53,10 +44,7 @@ void showExportSuggestionSnackbar(BuildContext context, VoidCallback onPressed) 
 void showExportWarningSnackbar(BuildContext context, VoidCallback onPressed) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(
-        AppLocalizations.of(context)!.exportWarningSnackbar,
-        style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
-      ),
+      content: Text(AppLocalizations.of(context)!.exportWarningSnackbar, style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
       backgroundColor: Theme.of(context).colorScheme.inverseSurface,
       action: SnackBarAction(label: AppLocalizations.of(context)!.export, onPressed: onPressed),
     ),
@@ -67,10 +55,7 @@ void showNoteDeletedSnackbar(BuildContext context, VoidCallback onPressed) {
   ScaffoldMessenger.of(context).clearSnackBars();
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(
-        AppLocalizations.of(context)!.noteDeleted,
-        style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
-      ),
+      content: Text(AppLocalizations.of(context)!.noteDeleted, style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
       backgroundColor: Theme.of(context).colorScheme.inverseSurface,
       action: SnackBarAction(label: AppLocalizations.of(context)!.undo, onPressed: onPressed),
       persist: false,

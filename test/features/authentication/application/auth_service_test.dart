@@ -33,19 +33,14 @@ void main() {
       final dummyEncryptionIV = enc.IV.fromLength(16);
 
       when(mockEncryptionService.generateSalt()).thenReturn(dummySalt);
-      when(
-        mockEncryptionService.deriveKeyFromPassword(dummyPassword, dummySalt),
-      ).thenAnswer((_) async => dummyUserKey);
+      when(mockEncryptionService.deriveKeyFromPassword(dummyPassword, dummySalt)).thenAnswer((_) async => dummyUserKey);
       when(mockEncryptionService.generateRandomBytes(32)).thenReturn(dummyBytes);
       when(
         mockEncryptionService.encryptText(text: dummyMasterKey.base64, key: dummyUserKey),
       ).thenReturn((encryptedText: dummyEncryptedText, encryptionIV: dummyEncryptionIV));
 
       final container = ProviderContainer(
-        overrides: [
-          authRepositoryProvider.overrideWithValue(mockAuthRepository),
-          encryptionServiceProvider.overrideWithValue(mockEncryptionService),
-        ],
+        overrides: [authRepositoryProvider.overrideWithValue(mockAuthRepository), encryptionServiceProvider.overrideWithValue(mockEncryptionService)],
       );
       addTearDown(container.dispose);
 
@@ -56,11 +51,7 @@ void main() {
       verify(mockAuthRepository.saveCredentials(any)).called(1);
 
       final masterKey = container.read(masterKeyProvider);
-      expect(
-        masterKey,
-        isNotNull,
-        reason: 'Master key must be non-null after AuthService.signup is called.',
-      );
+      expect(masterKey, isNotNull, reason: 'Master key must be non-null after AuthService.signup is called.');
     });
 
     group('login tests ->', () {
@@ -69,11 +60,7 @@ void main() {
         const password = 'correct_password';
         final validMasterKeyString = enc.Key.fromLength(32).base64;
         final dummyIV = enc.IV.fromLength(16);
-        final dummyCredentials = CredentialsData(
-          salt: 'salt',
-          iv: dummyIV.base64,
-          encryptedMasterKey: 'encrypted_content',
-        );
+        final dummyCredentials = CredentialsData(salt: 'salt', iv: dummyIV.base64, encryptedMasterKey: 'encrypted_content');
         final derivedKey = enc.Key.fromLength(32);
 
         final container = ProviderContainer(
@@ -86,16 +73,10 @@ void main() {
 
         when(mockAuthRepository.readCredentials()).thenAnswer((_) async => dummyCredentials);
 
-        when(
-          mockEncryptionService.deriveKeyFromPassword(password, dummyCredentials.salt),
-        ).thenAnswer((_) async => derivedKey);
+        when(mockEncryptionService.deriveKeyFromPassword(password, dummyCredentials.salt)).thenAnswer((_) async => derivedKey);
 
         when(
-          mockEncryptionService.decryptText(
-            encryptedText: dummyCredentials.encryptedMasterKey,
-            key: derivedKey,
-            iv: dummyIV,
-          ),
+          mockEncryptionService.decryptText(encryptedText: dummyCredentials.encryptedMasterKey, key: derivedKey, iv: dummyIV),
         ).thenReturn(validMasterKeyString);
 
         // Act
@@ -111,11 +92,7 @@ void main() {
       test('returns false and does not set master key when password is wrong', () async {
         // 1. Setup Data
         const password = 'wrong_password';
-        final dummyCredentials = CredentialsData(
-          salt: 'salt',
-          iv: 'iv',
-          encryptedMasterKey: 'encrypted_content',
-        );
+        final dummyCredentials = CredentialsData(salt: 'salt', iv: 'iv', encryptedMasterKey: 'encrypted_content');
         final derivedKey = enc.Key.fromLength(32);
 
         // 2. Setup Container
@@ -130,17 +107,11 @@ void main() {
         // 3. Mock Interactions
         when(mockAuthRepository.readCredentials()).thenAnswer((_) async => dummyCredentials);
 
-        when(
-          mockEncryptionService.deriveKeyFromPassword(password, dummyCredentials.salt),
-        ).thenAnswer((_) async => derivedKey);
+        when(mockEncryptionService.deriveKeyFromPassword(password, dummyCredentials.salt)).thenAnswer((_) async => derivedKey);
 
         // Step C: Simulate decryption failure (Exception)
         when(
-          mockEncryptionService.decryptText(
-            encryptedText: dummyCredentials.encryptedMasterKey,
-            key: derivedKey,
-            iv: anyNamed('iv'),
-          ),
+          mockEncryptionService.decryptText(encryptedText: dummyCredentials.encryptedMasterKey, key: derivedKey, iv: anyNamed('iv')),
         ).thenThrow(Exception('Decryption failed: MAC check failed'));
 
         // 4. Act
@@ -179,29 +150,19 @@ void main() {
 
       final dummyPassword = 'dummyPassword';
       final dummyDerivedKey = enc.Key.fromLength(32);
-      when(
-        mockEncryptionService.deriveKeyFromPassword(dummyPassword, dummySalt),
-      ).thenAnswer((_) async => dummyDerivedKey);
+      when(mockEncryptionService.deriveKeyFromPassword(dummyPassword, dummySalt)).thenAnswer((_) async => dummyDerivedKey);
 
       final dummyEncryptedText = 'dummyEncryptedText';
       final dummyIv = enc.IV.fromLength(16);
       final dummyReturnValue = (encryptedText: dummyEncryptedText, encryptionIV: dummyIv);
-      when(
-        mockEncryptionService.encryptText(text: dummyMasterKey.base64, key: dummyDerivedKey),
-      ).thenReturn(dummyReturnValue);
+      when(mockEncryptionService.encryptText(text: dummyMasterKey.base64, key: dummyDerivedKey)).thenReturn(dummyReturnValue);
 
       // Act
       await container.read(authServiceProvider).changeMasterPassword(dummyPassword);
 
       // Verify
       verify(
-        mockAuthRepository.saveCredentials(
-          CredentialsData(
-            salt: dummySalt,
-            iv: dummyIv.base64,
-            encryptedMasterKey: dummyEncryptedText,
-          ),
-        ),
+        mockAuthRepository.saveCredentials(CredentialsData(salt: dummySalt, iv: dummyIv.base64, encryptedMasterKey: dummyEncryptedText)),
       ).called(1);
     });
   });

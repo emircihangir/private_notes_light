@@ -21,15 +21,10 @@ class ImportListTile extends ConsumerWidget {
         showOverwriteWarning: (_) async {
           final filePickerTitle = l10n.importSelectBackupTitle;
 
-          bool? proceedImport = await showDialog<bool>(
-            context: context,
-            builder: (context) => const OverwriteWarningDialog(),
-          );
+          bool? proceedImport = await showDialog<bool>(context: context, builder: (context) => const OverwriteWarningDialog());
 
           if (proceedImport == true) {
-            ref
-                .read(importControllerProvider.notifier)
-                .showFilePicker(dialogTitle: filePickerTitle);
+            ref.read(importControllerProvider.notifier).showFilePicker(dialogTitle: filePickerTitle);
           }
         },
         showError: (value) {
@@ -49,20 +44,12 @@ class ImportListTile extends ConsumerWidget {
           Navigator.of(context).pop();
         },
         showPasswordDialog: (value) async {
-          await showDialog(
-            context: context,
-            builder: (context) => ImportPasswordDialog(value.backupData),
-          );
+          await showDialog(context: context, builder: (context) => ImportPasswordDialog(value.backupData));
         },
         askForSettings: (value) async {
           log('Opening the settings dialog');
-          final bool? alsoImportSettings = await showDialog<bool>(
-            context: context,
-            builder: (context) => const ImportSettingsDialog(),
-          );
-          await ref
-              .read(importControllerProvider.notifier)
-              .executeImport(value.backupData, alsoImportSettings ?? false);
+          final bool? alsoImportSettings = await showDialog<bool>(context: context, builder: (context) => const ImportSettingsDialog());
+          await ref.read(importControllerProvider.notifier).executeImport(value.backupData, alsoImportSettings ?? false);
         },
       );
     });
@@ -72,9 +59,7 @@ class ImportListTile extends ConsumerWidget {
       leading: const Icon(Icons.download_rounded),
       title: Text(l10n.importDataTitle),
       subtitle: Text(l10n.importDataSubtitle),
-      onTap: () async => await ref
-          .read(importControllerProvider.notifier)
-          .startImport(dialogTitle: l10n.importSelectBackupTitle),
+      onTap: () async => await ref.read(importControllerProvider.notifier).startImport(dialogTitle: l10n.importSelectBackupTitle),
     );
   }
 }

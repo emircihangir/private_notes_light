@@ -19,10 +19,7 @@ class TitleWarning extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
-                    onPressed: ref.read(titleWarningPrefProvider.notifier).dismiss,
-                    child: Text(AppLocalizations.of(context)!.dismiss),
-                  ),
+                  TextButton(onPressed: ref.read(titleWarningPrefProvider.notifier).dismiss, child: Text(AppLocalizations.of(context)!.dismiss)),
                   TextButton(
                     onPressed: ref.read(titleWarningPrefProvider.notifier).dontShowAgain,
                     child: Text(AppLocalizations.of(context)!.dontShowAgain),

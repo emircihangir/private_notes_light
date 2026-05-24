@@ -10,14 +10,8 @@ class ImportSettingsDialog extends StatelessWidget {
       title: Text(AppLocalizations.of(context)!.importSettingsDialogTitle),
       content: Text(AppLocalizations.of(context)!.importSettingsDialogContent),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(AppLocalizations.of(context)!.no),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text(AppLocalizations.of(context)!.yes),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(AppLocalizations.of(context)!.no)),
+        TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(AppLocalizations.of(context)!.yes)),
       ],
     );
   }

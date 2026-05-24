@@ -58,11 +58,7 @@ class ImportController extends _$ImportController {
 
       final isDecryptable = ref
           .read(encryptionServiceProvider)
-          .keyCanDecrypt(
-            firstNote.content,
-            ref.read(masterKeyProvider)!,
-            enc.IV.fromBase64(firstNote.iv),
-          );
+          .keyCanDecrypt(firstNote.content, ref.read(masterKeyProvider)!, enc.IV.fromBase64(firstNote.iv));
 
       if (isDecryptable) {
         askForSettings(backupData);
@@ -76,9 +72,7 @@ class ImportController extends _$ImportController {
 
   Future<void> showFilePicker({required String dialogTitle}) async {
     ref.read(filePickerRunningProvider.notifier).set(true);
-    final pickerResult = await ref
-        .read(filePickerServiceProvider)
-        .pickFiles(dialogTitle: dialogTitle);
+    final pickerResult = await ref.read(filePickerServiceProvider).pickFiles(dialogTitle: dialogTitle);
     ref.read(filePickerRunningProvider.notifier).set(false);
 
     if (pickerResult == null || pickerResult.count == 0) return;
@@ -97,10 +91,7 @@ class ImportController extends _$ImportController {
     state = const ImportControllerState.showSuccess();
   }
 
-  Future<BackupData> performKeyRotation({
-    required BackupData backupData,
-    required enc.Key backupsMasterKey,
-  }) async {
+  Future<BackupData> performKeyRotation({required BackupData backupData, required enc.Key backupsMasterKey}) async {
     final encryptionService = ref.watch(encryptionServiceProvider);
     final currentMasterKey = ref.read(masterKeyProvider)!;
 
@@ -115,14 +106,8 @@ class ImportController extends _$ImportController {
       );
 
       // * Encrypt with the current master key.
-      final reEncrypted = encryptionService.encryptText(
-        text: decryptedContent,
-        key: currentMasterKey,
-      );
-      final updateNote = currentNote.copyWith(
-        content: reEncrypted.encryptedText,
-        iv: reEncrypted.encryptionIV.base64,
-      );
+      final reEncrypted = encryptionService.encryptText(text: decryptedContent, key: currentMasterKey);
+      final updateNote = currentNote.copyWith(content: reEncrypted.encryptedText, iv: reEncrypted.encryptionIV.base64);
 
       updatedNotesList.add(updateNote);
     }
@@ -160,21 +145,15 @@ class ImportController extends _$ImportController {
     }
   }
 
-  void askForSettings(BackupData backupData) =>
-      state = ImportControllerState.askForSettings(backupData);
+  void askForSettings(BackupData backupData) => state = ImportControllerState.askForSettings(backupData);
 
   Future<BackupData?> submitPassword(BackupData backupData, String password) async {
-    final enc.Key derivedKey = await ref
-        .read(encryptionServiceProvider)
-        .deriveKeyFromPassword(password, backupData.credentialsData.salt);
+    final enc.Key derivedKey = await ref.read(encryptionServiceProvider).deriveKeyFromPassword(password, backupData.credentialsData.salt);
 
     final decryptedBackupKey = decryptBackupCredentials(backupData: backupData, key: derivedKey);
 
     if (decryptedBackupKey != null) {
-      final rotatedBackupData = await performKeyRotation(
-        backupData: backupData,
-        backupsMasterKey: decryptedBackupKey,
-      );
+      final rotatedBackupData = await performKeyRotation(backupData: backupData, backupsMasterKey: decryptedBackupKey);
       return rotatedBackupData;
     } else {
       log('User entered the wrong password.', name: 'INFO');

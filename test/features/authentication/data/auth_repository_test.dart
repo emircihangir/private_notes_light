@@ -9,11 +9,7 @@ void main() {
     test('saveCredentials works', () async {
       // Setup
       SharedPreferences.setMockInitialValues({});
-      final dummyCredentials = CredentialsData(
-        salt: 'salt',
-        iv: 'iv',
-        encryptedMasterKey: 'encryptedMasterKey',
-      );
+      final dummyCredentials = CredentialsData(salt: 'salt', iv: 'iv', encryptedMasterKey: 'encryptedMasterKey');
 
       final container = ProviderContainer();
       addTearDown(container.dispose);
@@ -25,9 +21,7 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       final savedSalt = prefs.getString(CredentialsData.propertyNames.salt);
       final savedIv = prefs.getString(CredentialsData.propertyNames.iv);
-      final savedEncryptedMasterKey = prefs.getString(
-        CredentialsData.propertyNames.encryptedMasterKey,
-      );
+      final savedEncryptedMasterKey = prefs.getString(CredentialsData.propertyNames.encryptedMasterKey);
 
       expect(savedSalt, isNotNull);
       expect(savedIv, isNotNull);
@@ -37,11 +31,7 @@ void main() {
     test('readCredentials works', () async {
       // Setup
       SharedPreferences.setMockInitialValues({});
-      final dummyCredentials = CredentialsData(
-        salt: 'salt',
-        iv: 'iv',
-        encryptedMasterKey: 'encryptedMasterKey',
-      );
+      final dummyCredentials = CredentialsData(salt: 'salt', iv: 'iv', encryptedMasterKey: 'encryptedMasterKey');
 
       final container = ProviderContainer();
       addTearDown(container.dispose);
@@ -72,9 +62,7 @@ void main() {
 
       test('returns true if encryptedMasterKey is present in shared_preferences', () async {
         // Setup
-        SharedPreferences.setMockInitialValues({
-          CredentialsData.propertyNames.encryptedMasterKey: 'dummyValue',
-        });
+        SharedPreferences.setMockInitialValues({CredentialsData.propertyNames.encryptedMasterKey: 'dummyValue'});
 
         final container = ProviderContainer();
         addTearDown(container.dispose);

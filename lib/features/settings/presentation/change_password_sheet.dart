@@ -43,10 +43,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
-                  child: Text(
-                    AppLocalizations.of(context)!.newPasswordWarning,
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
+                  child: Text(AppLocalizations.of(context)!.newPasswordWarning, style: Theme.of(context).textTheme.labelMedium),
                 ),
                 PasswordTextField(
                   controller: controller1,
@@ -79,10 +76,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
                     await ref.read(authServiceProvider).changeMasterPassword(controller1.text);
 
                     if (context.mounted) {
-                      showSuccessSnackbar(
-                        context,
-                        content: AppLocalizations.of(context)!.changedPasswordSuccessfully,
-                      );
+                      showSuccessSnackbar(context, content: AppLocalizations.of(context)!.changedPasswordSuccessfully);
                       ScaffoldMessenger.of(context).clearSnackBars();
                       Navigator.of(context).pop();
                     }

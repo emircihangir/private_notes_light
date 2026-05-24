@@ -35,16 +35,11 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
 
   Future<void> _goToNextPage() async {
     if (_currentPage < _slides.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
-      );
+      _pageController.nextPage(duration: const Duration(milliseconds: 350), curve: Curves.easeInOut);
     } else {
       unawaited(ref.read(welcomeRepositoryProvider).markShown());
       if (mounted) {
-        Navigator.of(
-          context,
-        ).pushAndRemoveUntil(fadePageRouteBuilder(const AuthGuard()), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(const AuthGuard()), (route) => false);
       }
     }
   }
@@ -93,11 +88,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _slides.length,
-                  (index) =>
-                      DotIndicator(isActive: index == _currentPage, color: colorScheme.primary),
-                ),
+                children: List.generate(_slides.length, (index) => DotIndicator(isActive: index == _currentPage, color: colorScheme.primary)),
               ),
             ),
 
@@ -108,11 +99,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                   const Spacer(),
                   TextButton(
                     onPressed: _goToNextPage,
-                    child: Text(
-                      isLastPage
-                          ? AppLocalizations.of(context)!.getStarted
-                          : AppLocalizations.of(context)!.next,
-                    ),
+                    child: Text(isLastPage ? AppLocalizations.of(context)!.getStarted : AppLocalizations.of(context)!.next),
                   ),
                 ],
               ),

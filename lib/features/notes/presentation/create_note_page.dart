@@ -32,28 +32,19 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
     if (_formKey.currentState!.validate() == false) return;
 
     final noteControllerNotifier = ref.read(noteControllerProvider.notifier);
-    await noteControllerNotifier.createNote(
-      title: titleInputController.text,
-      content: contentInputController.text,
-    );
+    await noteControllerNotifier.createNote(title: titleInputController.text, content: contentInputController.text);
     if (mounted) Navigator.of(context).pop();
   }
 
   InputDecoration inputDecoration() => InputDecoration(
     contentPadding: const EdgeInsets.all(16),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary),
-    ),
+    enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary)),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(3),
       borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.inversePrimary),
     ),
-    errorBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.error),
-    ),
-    focusedErrorBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
-    ),
+    errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.error)),
+    focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error)),
   );
 
   @override
@@ -66,12 +57,7 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
         automaticallyImplyLeading: true,
         title: Text(AppLocalizations.of(context)!.createNoteTitle),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () async => await handleSave(),
-            icon: const Icon(Icons.check_rounded),
-          ),
-        ],
+        actions: [IconButton(onPressed: () async => await handleSave(), icon: const Icon(Icons.check_rounded))],
       ),
       body: SingleChildScrollView(
         child: Center(

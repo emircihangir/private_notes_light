@@ -21,8 +21,7 @@ class ExportWarningsSwitchTile extends ConsumerWidget {
               ],
             ),
             value: settingsData.exportWarnings,
-            onChanged: (newValue) async =>
-                await ref.read(settingsControllerProvider.notifier).setExportWarnings(newValue),
+            onChanged: (newValue) async => await ref.read(settingsControllerProvider.notifier).setExportWarnings(newValue),
           );
         }).valueOrNull ??
         const SizedBox();

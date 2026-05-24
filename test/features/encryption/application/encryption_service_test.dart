@@ -17,9 +17,7 @@ void main() {
 
     // Act
     final encrypted = container.read(encryptionServiceProvider).encryptWithMasterKey(dummyText);
-    final decryptedText = container
-        .read(encryptionServiceProvider)
-        .decryptWithMasterKey(encrypted.encryptedText, encrypted.encryptionIV);
+    final decryptedText = container.read(encryptionServiceProvider).decryptWithMasterKey(encrypted.encryptedText, encrypted.encryptionIV);
 
     // Verify
     expect(decryptedText, dummyText);

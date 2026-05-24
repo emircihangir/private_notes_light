@@ -6,12 +6,7 @@ class NotesList extends StatelessWidget {
   final void Function(DismissDirection, NoteWidgetData) onDismissed;
   final Future<void> Function(NoteWidgetData) onTap;
 
-  const NotesList({
-    super.key,
-    required this.filteredNotes,
-    required this.onDismissed,
-    required this.onTap,
-  });
+  const NotesList({super.key, required this.filteredNotes, required this.onDismissed, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +24,7 @@ class NotesList extends StatelessWidget {
               color: Theme.of(context).colorScheme.errorContainer,
               padding: const EdgeInsets.only(right: 8),
               alignment: Alignment.centerRight,
-              child: Icon(
-                Icons.clear_rounded,
-                color: Theme.of(context).colorScheme.onErrorContainer,
-              ),
+              child: Icon(Icons.clear_rounded, color: Theme.of(context).colorScheme.onErrorContainer),
             ),
             child: ListTile(
               title: Text(noteWidgetData.noteTitle, maxLines: 1, overflow: TextOverflow.ellipsis),

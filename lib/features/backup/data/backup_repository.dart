@@ -21,12 +21,7 @@ class BackupRepository {
   final Directory tempDirectory;
   final _lastExportDateKey = 'lastExportDate';
 
-  BackupRepository({
-    required this.settingsRepo,
-    required this.noteRepo,
-    required this.filePickerService,
-    required this.tempDirectory,
-  });
+  BackupRepository({required this.settingsRepo, required this.noteRepo, required this.filePickerService, required this.tempDirectory});
 
   static String get lastExportDateKey => 'lastExportDate';
 
@@ -39,11 +34,7 @@ class BackupRepository {
 
     await file.writeAsString(exportJsonString);
 
-    final pickerResult = await filePickerService.saveFile(
-      fileName: fileName,
-      dialogTitle: 'Save Export File',
-      bytes: await file.readAsBytes(),
-    );
+    final pickerResult = await filePickerService.saveFile(fileName: fileName, dialogTitle: 'Save Export File', bytes: await file.readAsBytes());
 
     final operationResult = pickerResult != null;
     if (operationResult == true) {
@@ -81,10 +72,5 @@ Future<BackupRepository> backupRepository(Ref ref) async {
   final filePickerService = ref.read(filePickerServiceProvider);
   final tempDirectory = await ref.read(pathServiceProvider).getTempDirectory();
 
-  return BackupRepository(
-    settingsRepo: settingsRepo,
-    noteRepo: noteRepo,
-    filePickerService: filePickerService,
-    tempDirectory: tempDirectory,
-  );
+  return BackupRepository(settingsRepo: settingsRepo, noteRepo: noteRepo, filePickerService: filePickerService, tempDirectory: tempDirectory);
 }

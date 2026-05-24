@@ -21,9 +21,7 @@ void main() {
       when(mockAuthRepository.userSignedUp).thenAnswer((_) async => true);
 
       // * Setup the container.
-      final container = ProviderContainer(
-        overrides: [authRepositoryProvider.overrideWithValue(mockAuthRepository)],
-      );
+      final container = ProviderContainer(overrides: [authRepositoryProvider.overrideWithValue(mockAuthRepository)]);
       addTearDown(container.dispose);
 
       final result = await container.read(userSignedUpProvider.future);
@@ -37,9 +35,7 @@ void main() {
       when(mockAuthRepository.userSignedUp).thenAnswer((_) async => false);
 
       // * Setup the container.
-      final container = ProviderContainer(
-        overrides: [authRepositoryProvider.overrideWithValue(mockAuthRepository)],
-      );
+      final container = ProviderContainer(overrides: [authRepositoryProvider.overrideWithValue(mockAuthRepository)]);
       addTearDown(container.dispose);
 
       final result = await container.read(userSignedUpProvider.future);
