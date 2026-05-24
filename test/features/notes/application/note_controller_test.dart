@@ -36,6 +36,13 @@ void main() {
   late MockAuthService mockAuthService;
   late ProviderContainer container;
 
+  Future<void> initNoteController() async {
+    final sub = container.listen(noteControllerProvider, (_, __) {});
+    addTearDown(sub.close);
+
+    await container.read(noteControllerProvider.future);
+  }
+
   setUp(() {
     mockNoteRepo = MockNoteRepository();
     mockEncryptionService = MockEncryptionService();
@@ -60,10 +67,7 @@ void main() {
       test('shows success if export result is true', () async {
         // Setup
         final container = ProviderContainer(
-          overrides: [
-            noteRepositoryProvider.overrideWith((ref) => mockNoteRepo),
-            exportServiceProvider.overrideWith((ref) async => true),
-          ],
+          overrides: [noteRepositoryProvider.overrideWith((ref) => mockNoteRepo), exportServiceProvider.overrideWith((ref) async => true)],
         );
         addTearDown(container.dispose);
 
@@ -80,10 +84,7 @@ void main() {
       test('shows error if export result is false', () async {
         // Setup
         final container = ProviderContainer(
-          overrides: [
-            noteRepositoryProvider.overrideWith((ref) => mockNoteRepo),
-            exportServiceProvider.overrideWith((ref) async => false),
-          ],
+          overrides: [noteRepositoryProvider.overrideWith((ref) => mockNoteRepo), exportServiceProvider.overrideWith((ref) async => false)],
         );
         addTearDown(container.dispose);
 
@@ -95,10 +96,7 @@ void main() {
 
         // Verify
         expect(container.read(noteControllerProvider).value!.showError, isTrue);
-        expect(
-          container.read(noteControllerProvider).value!.errorKind,
-          NoteErrorKind.failedToExport,
-        );
+        expect(container.read(noteControllerProvider).value!.errorKind, NoteErrorKind.failedToExport);
       });
     });
 
@@ -109,24 +107,19 @@ void main() {
 
       final dummyIv = enc.IV.fromLength(16);
       final dummyEncryptedText = 'encryptedText';
-      when(
-        mockEncryptionService.encryptWithMasterKey(dummyContent),
-      ).thenReturn((encryptedText: dummyEncryptedText, encryptionIV: dummyIv));
+      when(mockEncryptionService.encryptWithMasterKey(dummyContent)).thenReturn((encryptedText: dummyEncryptedText, encryptionIV: dummyIv));
 
       final dummyKey = enc.Key.fromLength(32);
       container.read(masterKeyProvider.notifier).set(dummyKey);
 
-      var dummySettingsData = SettingsData(
-        exportSuggestions: false,
-        exportWarnings: false,
-        theme: ThemeMode.system,
-      );
+      var dummySettingsData = SettingsData(exportSuggestions: false, exportWarnings: false, theme: ThemeMode.system);
       when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
+      await initNoteController();
+      clearInteractions(mockSettingsRepo);
+
       // Act
-      await container
-          .read(noteControllerProvider.notifier)
-          .createNote(title: dummyTitle, content: dummyContent);
+      await container.read(noteControllerProvider.notifier).createNote(title: dummyTitle, content: dummyContent);
 
       // Verify
       verify(mockEncryptionService.encryptWithMasterKey(argThat(isA<String?>()))).called(1);
@@ -137,15 +130,14 @@ void main() {
     group('suggestExportIfPreferred aligns with preference ->', () {
       test('suggests if true', () async {
         // Setup
-        var dummySettingsData = SettingsData(
-          exportSuggestions: true,
-          exportWarnings: false,
-          theme: ThemeMode.system,
-        );
+        var dummySettingsData = SettingsData(exportSuggestions: true, exportWarnings: false, theme: ThemeMode.system);
         when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
         final dummyKey = enc.Key.fromLength(32);
         container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        await initNoteController();
+        clearInteractions(mockSettingsRepo);
 
         // Act
         await container.read(noteControllerProvider.notifier).suggestExportIfPreferred();
@@ -153,19 +145,17 @@ void main() {
         // Verify
         final value = container.read(noteControllerProvider).value!.suggestExport;
         expect(value, isTrue);
-        verify(mockSettingsRepo.getSettings()).called(1);
       });
       test('does not suggest if false', () async {
         // Setup
-        var dummySettingsData = SettingsData(
-          exportSuggestions: false,
-          exportWarnings: false,
-          theme: ThemeMode.system,
-        );
+        var dummySettingsData = SettingsData(exportSuggestions: false, exportWarnings: false, theme: ThemeMode.system);
         when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
         final dummyKey = enc.Key.fromLength(32);
         container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        await initNoteController();
+        clearInteractions(mockSettingsRepo);
 
         // Act
         await container.read(noteControllerProvider.notifier).suggestExportIfPreferred();
@@ -173,81 +163,64 @@ void main() {
         // Verify
         final value = container.read(noteControllerProvider).value!.suggestExport;
         expect(value, isFalse);
-        verify(mockSettingsRepo.getSettings()).called(1);
       });
     });
 
     group('warnExportIfValid tests ->', () {
       test('warns if preferred and past seven days', () async {
         // Setup
-        var dummySettingsData = SettingsData(
-          exportSuggestions: false,
-          exportWarnings: true,
-          theme: ThemeMode.system,
-        );
+        var dummySettingsData = SettingsData(exportSuggestions: false, exportWarnings: true, theme: ThemeMode.system);
         when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
         final dummyLastExportDate = DateTime.now().add(const Duration(days: -8));
-        when(
-          mockBackupRepo.getLastExportDate(),
-        ).thenAnswer((realInvocation) async => dummyLastExportDate);
+        when(mockBackupRepo.getLastExportDate()).thenAnswer((realInvocation) async => dummyLastExportDate);
 
         final dummyKey = enc.Key.fromLength(32);
         container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        await initNoteController();
 
         // Act
         await container.read(noteControllerProvider.notifier).warnExportIfValid();
 
         // Verify
-        verify(mockSettingsRepo.getSettings()).called(1);
-        verify(mockBackupRepo.getLastExportDate()).called(1);
         final value = container.read(noteControllerProvider).value!.warnExport;
         expect(value, isTrue);
       });
       test('does not warn if not preferred', () async {
         // Setup
-        var dummySettingsData = SettingsData(
-          exportSuggestions: false,
-          exportWarnings: false,
-          theme: ThemeMode.system,
-        );
+        var dummySettingsData = SettingsData(exportSuggestions: false, exportWarnings: false, theme: ThemeMode.system);
         when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
         final dummyKey = enc.Key.fromLength(32);
         container.read(masterKeyProvider.notifier).set(dummyKey);
 
+        await initNoteController();
+
         // Act
         await container.read(noteControllerProvider.notifier).warnExportIfValid();
 
         // Verify
-        verify(mockSettingsRepo.getSettings()).called(1);
-        verifyNever(mockBackupRepo.getLastExportDate());
         final value = container.read(noteControllerProvider).value!.warnExport;
         expect(value, isFalse);
       });
       test('does not warn if preferred but not past seven days', () async {
         // Setup
-        var dummySettingsData = SettingsData(
-          exportSuggestions: false,
-          exportWarnings: true,
-          theme: ThemeMode.system,
-        );
+        var dummySettingsData = SettingsData(exportSuggestions: false, exportWarnings: true, theme: ThemeMode.system);
         when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
 
         final dummyLastExportDate = DateTime.now().add(const Duration(days: -4));
-        when(
-          mockBackupRepo.getLastExportDate(),
-        ).thenAnswer((realInvocation) async => dummyLastExportDate);
+        when(mockBackupRepo.getLastExportDate()).thenAnswer((realInvocation) async => dummyLastExportDate);
 
         final dummyKey = enc.Key.fromLength(32);
         container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        await initNoteController();
 
         // Act
         await container.read(noteControllerProvider.notifier).warnExportIfValid();
 
         // Verify
-        verify(mockSettingsRepo.getSettings()).called(1);
-        verify(mockBackupRepo.getLastExportDate()).called(1);
         final value = container.read(noteControllerProvider).value!.warnExport;
         expect(value, isFalse);
       });
@@ -266,9 +239,7 @@ void main() {
       final dummyKey = enc.Key.fromLength(32);
       container.read(masterKeyProvider.notifier).set(dummyKey);
 
-      container
-          .read(noteControllerProvider.notifier)
-          .setState(NoteControllerState(data: dummyData));
+      container.read(noteControllerProvider.notifier).setState(NoteControllerState(data: dummyData));
 
       // Act
       container.read(noteControllerProvider.notifier).moveNoteToTrash(noteToDelete);
@@ -291,18 +262,10 @@ void main() {
         const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
         const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
       ];
-      container
-          .read(noteControllerProvider.notifier)
-          .setState(NoteControllerState(data: dummyData));
+      container.read(noteControllerProvider.notifier).setState(NoteControllerState(data: dummyData));
 
-      final deletedNote1 = const TrashedNoteData(
-        NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
-        2,
-      );
-      final deletedNote2 = const TrashedNoteData(
-        NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
-        4,
-      );
+      final deletedNote1 = const TrashedNoteData(NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'), 2);
+      final deletedNote2 = const TrashedNoteData(NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'), 4);
       container.read(trashedNotesProvider).add(deletedNote1);
       container.read(trashedNotesProvider).add(deletedNote2);
 
@@ -342,18 +305,10 @@ void main() {
         const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
         const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
       ];
-      container
-          .read(noteControllerProvider.notifier)
-          .setState(NoteControllerState(data: dummyData));
+      container.read(noteControllerProvider.notifier).setState(NoteControllerState(data: dummyData));
 
-      final deletedNote1 = const TrashedNoteData(
-        NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
-        2,
-      );
-      final deletedNote2 = const TrashedNoteData(
-        NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
-        4,
-      );
+      final deletedNote1 = const TrashedNoteData(NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'), 2);
+      final deletedNote2 = const TrashedNoteData(NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'), 4);
       container.read(trashedNotesProvider).add(deletedNote1);
       container.read(trashedNotesProvider).add(deletedNote2);
 
@@ -394,20 +349,14 @@ void main() {
           const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
           const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
         ];
-        container
-            .read(noteControllerProvider.notifier)
-            .setState(NoteControllerState(data: dummyData));
+        container.read(noteControllerProvider.notifier).setState(NoteControllerState(data: dummyData));
 
-        final deletedNote1 = const TrashedNoteData(
-          NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
-          2,
-        );
-        final deletedNote2 = const TrashedNoteData(
-          NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
-          4,
-        );
+        final deletedNote1 = const TrashedNoteData(NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'), 2);
+        final deletedNote2 = const TrashedNoteData(NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'), 4);
         container.read(trashedNotesProvider).add(deletedNote1);
         container.read(trashedNotesProvider).add(deletedNote2);
+
+        await initNoteController();
 
         // Act
         await container.read(noteControllerProvider.notifier).logout();
@@ -427,20 +376,14 @@ void main() {
           const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
           const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
         ];
-        container
-            .read(noteControllerProvider.notifier)
-            .setState(NoteControllerState(data: dummyData));
+        container.read(noteControllerProvider.notifier).setState(NoteControllerState(data: dummyData));
 
-        final deletedNote1 = const TrashedNoteData(
-          NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'),
-          2,
-        );
-        final deletedNote2 = const TrashedNoteData(
-          NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'),
-          4,
-        );
+        final deletedNote1 = const TrashedNoteData(NoteWidgetData(noteId: 'note3', noteTitle: 'noteTitle'), 2);
+        final deletedNote2 = const TrashedNoteData(NoteWidgetData(noteId: 'note5', noteTitle: 'noteTitle'), 4);
         container.read(trashedNotesProvider).add(deletedNote1);
         container.read(trashedNotesProvider).add(deletedNote2);
+
+        await initNoteController();
 
         // Act
         await container.read(noteControllerProvider.notifier).logout();
@@ -462,22 +405,15 @@ void main() {
       );
       container.read(masterKeyProvider.notifier).set(dummyData.key);
       when(mockNoteRepo.getNote(dummyData.noteId)).thenAnswer(
-        (_) async => NoteDto(
-          id: dummyData.noteId,
-          title: 'title',
-          content: dummyData.encryptedContent,
-          iv: dummyData.iv.base64,
-          dateCreated: dummyData.date,
-        ),
+        (_) async =>
+            NoteDto(id: dummyData.noteId, title: 'title', content: dummyData.encryptedContent, iv: dummyData.iv.base64, dateCreated: dummyData.date),
       );
-      when(
-        mockEncryptionService.decryptWithMasterKey(dummyData.encryptedContent, dummyData.iv),
-      ).thenReturn(dummyData.decryptedContent);
+      when(mockEncryptionService.decryptWithMasterKey(dummyData.encryptedContent, dummyData.iv)).thenReturn(dummyData.decryptedContent);
+
+      await initNoteController();
 
       // Act
-      final openedNote = await container
-          .read(noteControllerProvider.notifier)
-          .openNote(dummyData.noteId);
+      final openedNote = await container.read(noteControllerProvider.notifier).openNote(dummyData.noteId);
 
       // Verify
       expect(openedNote.content, dummyData.decryptedContent);

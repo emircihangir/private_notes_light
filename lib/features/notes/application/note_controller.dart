@@ -142,7 +142,7 @@ class NoteController extends _$NoteController {
   }
 
   Future<bool> getExportSuggestionPref() async {
-    final settingsRepo = await ref.watch(settingsRepositoryProvider.future);
+    final settingsRepo = await ref.read(settingsRepositoryProvider.future);
     return settingsRepo.getSettings().exportSuggestions;
   }
 

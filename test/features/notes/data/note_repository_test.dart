@@ -1,17 +1,21 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late NoteRepository repository;
 
   setUp(() {
+    SharedPreferences.setMockInitialValues({});
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
-
-    repository = NoteRepository();
+    final container = ProviderContainer();
+    repository = container.read(noteRepositoryProvider);
   });
 
   group('NoteRepository tests ->', () {
@@ -70,11 +74,7 @@ void main() {
       await repository.addNote(dummyDto.copyWith(id: 'to_be_deleted_1'));
       await repository.addNote(dummyDto.copyWith(id: 'to_be_deleted_2'));
 
-      final List<NoteDto> dtoList = [
-        dummyDto,
-        dummyDto.copyWith(id: 'id2'),
-        dummyDto.copyWith(id: 'id3'),
-      ];
+      final List<NoteDto> dtoList = [dummyDto, dummyDto.copyWith(id: 'id2'), dummyDto.copyWith(id: 'id3')];
 
       // Act
       await repository.importNotes(dtoList);
