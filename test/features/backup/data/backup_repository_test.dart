@@ -101,6 +101,51 @@ void main() {
     });
   });
 
+  group('getLastExportDate works', () {
+    test('returns null when no export date is stored', () async {
+      // Setup
+      SharedPreferences.setMockInitialValues({});
+      final backupRepository = BackupRepository(
+        settingsRepo: mockSettingsRepo,
+        noteRepo: mockNoteRepo,
+        filePickerService: mockFilePickerService,
+        tempDirectory: Directory.systemTemp,
+      );
+
+      // Act & Verify
+      expect(await backupRepository.getLastExportDate(), isNull);
+    });
+
+    test('returns null when stored export date cannot be parsed', () async {
+      // Setup
+      SharedPreferences.setMockInitialValues({BackupRepository.lastExportDateKey: 'not-a-date'});
+      final backupRepository = BackupRepository(
+        settingsRepo: mockSettingsRepo,
+        noteRepo: mockNoteRepo,
+        filePickerService: mockFilePickerService,
+        tempDirectory: Directory.systemTemp,
+      );
+
+      // Act & Verify
+      expect(await backupRepository.getLastExportDate(), isNull);
+    });
+
+    test('returns stored export date', () async {
+      // Setup
+      final exportDate = DateTime(2024, 1, 2, 3, 4, 5);
+      SharedPreferences.setMockInitialValues({BackupRepository.lastExportDateKey: exportDate.toIso8601String()});
+      final backupRepository = BackupRepository(
+        settingsRepo: mockSettingsRepo,
+        noteRepo: mockNoteRepo,
+        filePickerService: mockFilePickerService,
+        tempDirectory: Directory.systemTemp,
+      );
+
+      // Act & Verify
+      expect(await backupRepository.getLastExportDate(), exportDate);
+    });
+  });
+
   group('import works', () {
     test('calls NoteRepository.import()', () async {
       // Act

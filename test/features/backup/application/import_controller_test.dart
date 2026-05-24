@@ -89,6 +89,34 @@ void main() {
       expect(valueHistory, [true, false]);
     });
 
+    test('executeImport imports data and shows success', () async {
+      // Setup
+      final backupData = dummyBackupData();
+
+      // Act
+      await container.read(importControllerProvider.notifier).executeImport(backupData, true);
+
+      // Verify
+      verify(mockBackupRepo.import(backupData, true)).called(1);
+      expect(container.read(importControllerProvider)?.maybeWhen(showSuccess: () => true, orElse: () => false), isTrue);
+    });
+
+    test('notesExist aligns with repository contents', () async {
+      // Setup
+      when(mockNoteRepo.getNotes()).thenAnswer((_) async => []);
+
+      // Act & Verify
+      expect(await container.read(importControllerProvider.notifier).notesExist(), isFalse);
+
+      // Setup
+      when(
+        mockNoteRepo.getNotes(),
+      ).thenAnswer((_) async => [NoteDto(id: 'id', title: 'title', content: 'content', iv: 'iv', dateCreated: 'dateCreated')]);
+
+      // Act & Verify
+      expect(await container.read(importControllerProvider.notifier).notesExist(), isTrue);
+    });
+
     group('validateImportFile works', () {
       test('Disallows non-JSON files.', () async {
         // Set up
@@ -255,6 +283,82 @@ void main() {
         ),
       ).called(1);
       verify(mockEncryptionService.encryptText(text: decryptedContent, key: currentKey)).called(1);
+    });
+
+    group('decryptBackupCredentials tests ->', () {
+      test('returns backup master key when credentials can be decrypted', () {
+        // Setup
+        final credentialsIv = enc.IV.fromLength(16);
+        final derivedKey = enc.Key.fromLength(32);
+        final backupMasterKey = enc.Key.fromUtf8('11111111111111111111111111111111');
+        final backupData = dummyBackupData(credentialsIv: credentialsIv, notes: []);
+        when(
+          mockEncryptionService.decryptText(encryptedText: backupData.credentialsData.encryptedMasterKey, key: derivedKey, iv: credentialsIv),
+        ).thenReturn(backupMasterKey.base64);
+
+        // Act
+        final result = container.read(importControllerProvider.notifier).decryptBackupCredentials(backupData: backupData, key: derivedKey);
+
+        // Verify
+        expect(result?.base64, backupMasterKey.base64);
+      });
+
+      test('returns null when credentials cannot be decrypted', () {
+        // Setup
+        final credentialsIv = enc.IV.fromLength(16);
+        final derivedKey = enc.Key.fromLength(32);
+        final backupData = dummyBackupData(credentialsIv: credentialsIv, notes: []);
+        when(
+          mockEncryptionService.decryptText(encryptedText: backupData.credentialsData.encryptedMasterKey, key: derivedKey, iv: credentialsIv),
+        ).thenThrow(Exception('wrong password'));
+
+        // Act
+        final result = container.read(importControllerProvider.notifier).decryptBackupCredentials(backupData: backupData, key: derivedKey);
+
+        // Verify
+        expect(result, isNull);
+      });
+    });
+
+    group('submitPassword tests ->', () {
+      test('returns rotated backup data when password is correct', () async {
+        // Setup
+        final credentialsIv = enc.IV.fromLength(16);
+        final derivedKey = enc.Key.fromLength(32);
+        final backupMasterKey = enc.Key.fromUtf8('11111111111111111111111111111111');
+        final currentMasterKey = enc.Key.fromUtf8('22222222222222222222222222222222');
+        final backupData = dummyBackupData(credentialsIv: credentialsIv, notes: []);
+        container.read(masterKeyProvider.notifier).set(currentMasterKey);
+        when(mockEncryptionService.deriveKeyFromPassword('password', backupData.credentialsData.salt)).thenAnswer((_) async => derivedKey);
+        when(
+          mockEncryptionService.decryptText(encryptedText: backupData.credentialsData.encryptedMasterKey, key: derivedKey, iv: credentialsIv),
+        ).thenReturn(backupMasterKey.base64);
+
+        // Act
+        final result = await container.read(importControllerProvider.notifier).submitPassword(backupData, 'password');
+
+        // Verify
+        expect(result, isNotNull);
+        expect(result!.notesData, isEmpty);
+        verify(mockEncryptionService.deriveKeyFromPassword('password', backupData.credentialsData.salt)).called(1);
+      });
+
+      test('returns null when password is wrong', () async {
+        // Setup
+        final credentialsIv = enc.IV.fromLength(16);
+        final derivedKey = enc.Key.fromLength(32);
+        final backupData = dummyBackupData(credentialsIv: credentialsIv, notes: []);
+        when(mockEncryptionService.deriveKeyFromPassword('wrong-password', backupData.credentialsData.salt)).thenAnswer((_) async => derivedKey);
+        when(
+          mockEncryptionService.decryptText(encryptedText: backupData.credentialsData.encryptedMasterKey, key: derivedKey, iv: credentialsIv),
+        ).thenThrow(Exception('wrong password'));
+
+        // Act
+        final result = await container.read(importControllerProvider.notifier).submitPassword(backupData, 'wrong-password');
+
+        // Verify
+        expect(result, isNull);
+      });
     });
   });
 }
