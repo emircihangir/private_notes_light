@@ -57,13 +57,11 @@ void main() {
 
     test('emptyTrash works', () async {
       // Setup
-      final container = ProviderContainer(
-        overrides: [noteRepositoryProvider.overrideWith((ref) => mockNoteRepo)],
-      );
+      final container = ProviderContainer(overrides: [noteRepositoryProvider.overrideWith((ref) => mockNoteRepo)]);
       addTearDown(container.dispose);
 
-      final dummyValue1 = const TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 0);
-      final dummyValue2 = const TrashedNoteData(NoteWidgetData(noteId: '', noteTitle: ''), 1);
+      final dummyValue1 = const TrashedNoteData(NoteWidgetData(noteId: 'note1', noteTitle: ''), 0);
+      final dummyValue2 = const TrashedNoteData(NoteWidgetData(noteId: 'note2', noteTitle: ''), 1);
       container.read(trashedNotesProvider.notifier).add(dummyValue1);
       container.read(trashedNotesProvider.notifier).add(dummyValue2);
 
@@ -73,7 +71,20 @@ void main() {
       // Verify
       final after = container.read(trashedNotesProvider);
       expect(after.length, 0);
-      verify(mockNoteRepo.batchDelete(argThat(isA<List<String>>()))).called(1);
+      verify(mockNoteRepo.batchDelete(['note1', 'note2'])).called(1);
+    });
+
+    test('emptyTrash does not call repository when trash is empty', () async {
+      // Setup
+      final container = ProviderContainer(overrides: [noteRepositoryProvider.overrideWith((ref) => mockNoteRepo)]);
+      addTearDown(container.dispose);
+
+      // Act
+      await container.read(trashedNotesProvider.notifier).emptyTrash();
+
+      // Verify
+      expect(container.read(trashedNotesProvider), isEmpty);
+      verifyNever(mockNoteRepo.batchDelete(any));
     });
 
     test('putBack works', () {

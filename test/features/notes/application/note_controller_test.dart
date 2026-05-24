@@ -37,7 +37,7 @@ void main() {
   late ProviderContainer container;
 
   Future<void> initNoteController() async {
-    final sub = container.listen(noteControllerProvider, (_, __) {});
+    final sub = container.listen(noteControllerProvider, (previous, next) {});
     addTearDown(sub.close);
 
     await container.read(noteControllerProvider.future);
@@ -50,7 +50,7 @@ void main() {
     mockBackupRepo = MockBackupRepository();
     mockAuthService = MockAuthService();
 
-    container = container = ProviderContainer(
+    container = ProviderContainer(
       overrides: [
         noteRepositoryProvider.overrideWith((ref) => mockNoteRepo),
         encryptionServiceProvider.overrideWith((ref) => mockEncryptionService),
@@ -63,6 +63,42 @@ void main() {
   });
 
   group('NoteController tests ->', () {
+    test('build loads note widget data from repository dtos', () async {
+      // Setup
+      final dummyKey = enc.Key.fromLength(32);
+      container.read(masterKeyProvider.notifier).set(dummyKey);
+
+      final dummySettingsData = SettingsData(exportSuggestions: false, exportWarnings: false, theme: ThemeMode.system);
+      when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
+      when(mockNoteRepo.getNotes()).thenAnswer(
+        (_) async => [
+          NoteDto(
+            id: 'note1',
+            title: 'First note',
+            content: 'content1',
+            iv: enc.IV.fromLength(16).base64,
+            dateCreated: DateTime(2024).toIso8601String(),
+          ),
+          NoteDto(
+            id: 'note2',
+            title: 'Second note',
+            content: 'content2',
+            iv: enc.IV.fromLength(16).base64,
+            dateCreated: DateTime(2025).toIso8601String(),
+          ),
+        ],
+      );
+
+      // Act
+      await initNoteController();
+
+      // Verify
+      expect(container.read(noteControllerProvider).value!.data, [
+        const NoteWidgetData(noteId: 'note1', noteTitle: 'First note'),
+        const NoteWidgetData(noteId: 'note2', noteTitle: 'Second note'),
+      ]);
+    });
+
     group('triggerExport tests ->', () {
       test('shows success if export result is true', () async {
         // Setup
@@ -125,6 +161,42 @@ void main() {
       verify(mockEncryptionService.encryptWithMasterKey(argThat(isA<String?>()))).called(1);
       verify(mockNoteRepo.addNote(argThat(isA<NoteDto>()))).called(1);
       verify(mockSettingsRepo.getSettings()).called(2);
+    });
+
+    test('createNote persists encrypted dto with provided id and date', () async {
+      // Setup
+      final dummyData = (
+        id: 'note-id',
+        title: 'dummyTitle',
+        content: 'dummyContent',
+        encryptedText: 'encryptedText',
+        date: DateTime(2024, 2, 3, 4, 5),
+        iv: enc.IV.fromLength(16),
+      );
+      when(
+        mockEncryptionService.encryptWithMasterKey(dummyData.content),
+      ).thenReturn((encryptedText: dummyData.encryptedText, encryptionIV: dummyData.iv));
+
+      final dummyKey = enc.Key.fromLength(32);
+      container.read(masterKeyProvider.notifier).set(dummyKey);
+
+      var dummySettingsData = SettingsData(exportSuggestions: false, exportWarnings: false, theme: ThemeMode.system);
+      when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
+
+      await initNoteController();
+
+      // Act
+      await container
+          .read(noteControllerProvider.notifier)
+          .createNote(id: dummyData.id, title: dummyData.title, content: dummyData.content, date: dummyData.date);
+
+      // Verify
+      final capturedDto = verify(mockNoteRepo.addNote(captureAny)).captured.single as NoteDto;
+      expect(capturedDto.id, dummyData.id);
+      expect(capturedDto.title, dummyData.title);
+      expect(capturedDto.content, dummyData.encryptedText);
+      expect(capturedDto.iv, dummyData.iv.base64);
+      expect(capturedDto.dateCreated, dummyData.date.toIso8601String());
     });
 
     group('suggestExportIfPreferred aligns with preference ->', () {
@@ -203,6 +275,7 @@ void main() {
         // Verify
         final value = container.read(noteControllerProvider).value!.warnExport;
         expect(value, isFalse);
+        verifyNever(mockBackupRepo.getLastExportDate());
       });
       test('does not warn if preferred but not past seven days', () async {
         // Setup
@@ -223,6 +296,25 @@ void main() {
         // Verify
         final value = container.read(noteControllerProvider).value!.warnExport;
         expect(value, isFalse);
+      });
+      test('does not warn if there is no last export date', () async {
+        // Setup
+        var dummySettingsData = SettingsData(exportSuggestions: false, exportWarnings: true, theme: ThemeMode.system);
+        when(mockSettingsRepo.getSettings()).thenReturn(dummySettingsData);
+        when(mockBackupRepo.getLastExportDate()).thenAnswer((_) async => null);
+
+        final dummyKey = enc.Key.fromLength(32);
+        container.read(masterKeyProvider.notifier).set(dummyKey);
+
+        await initNoteController();
+
+        // Act
+        await container.read(noteControllerProvider.notifier).warnExportIfValid();
+
+        // Verify
+        final value = container.read(noteControllerProvider).value!.warnExport;
+        expect(value, isFalse);
+        verify(mockBackupRepo.getLastExportDate()).called(1);
       });
     });
 
@@ -250,6 +342,8 @@ void main() {
 
       final newState = container.read(noteControllerProvider).value!;
       expect(newState.data.contains(noteToDelete), isFalse);
+      expect(newState.showInfo, isTrue);
+      expect(newState.infoKind, InfoKind.noteDeleted);
     });
 
     test('undoDelete works', () {
@@ -280,6 +374,12 @@ void main() {
 
       var currentNotesList = container.read(noteControllerProvider).valueOrNull!.data;
       expect(currentNotesList.contains(deletedNote2.noteWidgetData), isTrue);
+      expect(currentNotesList, [
+        const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+        deletedNote2.noteWidgetData,
+      ]);
 
       // Act
       container.read(noteControllerProvider.notifier).undoDelete();
@@ -293,6 +393,13 @@ void main() {
       currentNotesList = container.read(noteControllerProvider).valueOrNull!.data;
       expect(currentNotesList.contains(deletedNote2.noteWidgetData), isTrue);
       expect(currentNotesList.contains(deletedNote1.noteWidgetData), isTrue);
+      expect(currentNotesList, [
+        const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+        deletedNote1.noteWidgetData,
+        const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+        deletedNote2.noteWidgetData,
+      ]);
     });
 
     test('putNoteBack works', () {
@@ -323,6 +430,12 @@ void main() {
 
       var currentNotesList = container.read(noteControllerProvider).valueOrNull!.data;
       expect(currentNotesList.contains(deletedNote1.noteWidgetData), isTrue);
+      expect(currentNotesList, [
+        const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+        deletedNote1.noteWidgetData,
+        const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+      ]);
 
       // Act
       container.read(noteControllerProvider.notifier).putNoteBack(deletedNote2);
@@ -336,6 +449,13 @@ void main() {
       currentNotesList = container.read(noteControllerProvider).valueOrNull!.data;
       expect(currentNotesList.contains(deletedNote1.noteWidgetData), isTrue);
       expect(currentNotesList.contains(deletedNote2.noteWidgetData), isTrue);
+      expect(currentNotesList, [
+        const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
+        const NoteWidgetData(noteId: 'note2', noteTitle: 'noteTitle'),
+        deletedNote1.noteWidgetData,
+        const NoteWidgetData(noteId: 'note4', noteTitle: 'noteTitle'),
+        deletedNote2.noteWidgetData,
+      ]);
     });
 
     group('logout tests ->', () {
@@ -417,6 +537,57 @@ void main() {
 
       // Verify
       expect(openedNote.content, dummyData.decryptedContent);
+    });
+
+    test('openNote throws when note does not exist', () async {
+      // Setup
+      const missingNoteId = 'missing-note-id';
+      final dummyKey = enc.Key.fromLength(32);
+      container.read(masterKeyProvider.notifier).set(dummyKey);
+      when(mockNoteRepo.getNote(missingNoteId)).thenAnswer((_) async => null);
+
+      await initNoteController();
+
+      // Act & Verify
+      expect(() => container.read(noteControllerProvider.notifier).openNote(missingNoteId), throwsA(isA<Exception>()));
+    });
+
+    test('consume methods clear transient flags', () {
+      // Setup
+      final dummyKey = enc.Key.fromLength(32);
+      container.read(masterKeyProvider.notifier).set(dummyKey);
+
+      container
+          .read(noteControllerProvider.notifier)
+          .setState(
+            const NoteControllerState(
+              showError: true,
+              errorKind: NoteErrorKind.failedToExport,
+              suggestExport: true,
+              warnExport: true,
+              showExportSuccessful: true,
+              showInfo: true,
+              infoKind: InfoKind.noteDeleted,
+            ),
+          );
+
+      // Act
+      final notifier = container.read(noteControllerProvider.notifier);
+      notifier.consumeExportWarning();
+      notifier.consumeExportSuggestion();
+      notifier.consumeInfoSnackbar();
+      notifier.consumeError();
+      notifier.consumeExportSuccess();
+
+      // Verify
+      final newState = container.read(noteControllerProvider).value!;
+      expect(newState.warnExport, isFalse);
+      expect(newState.suggestExport, isFalse);
+      expect(newState.showInfo, isFalse);
+      expect(newState.infoKind, isNull);
+      expect(newState.showError, isFalse);
+      expect(newState.errorKind, isNull);
+      expect(newState.showExportSuccessful, isFalse);
     });
   });
 }
