@@ -26,6 +26,7 @@ class App extends ConsumerWidget {
       themeMode: themeMode,
       theme: lightAppTheme,
       darkTheme: darkAppTheme,
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: const StartupGate(),
