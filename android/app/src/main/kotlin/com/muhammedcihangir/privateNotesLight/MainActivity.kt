@@ -1,4 +1,4 @@
-package com.example.private_notes_light
+package com.muhammedcihangir.privateNotesLight
 
 import io.flutter.embedding.android.FlutterActivity
 import android.os.Bundle
