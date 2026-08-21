@@ -90,5 +90,5 @@ class AuthService {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 AuthService authService(Ref ref) => AuthService(ref);
