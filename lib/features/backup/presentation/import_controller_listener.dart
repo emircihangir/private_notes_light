@@ -14,7 +14,15 @@ import 'package:private_notes_light/l10n/app_localizations.dart';
 class ImportControllerListener extends ConsumerWidget {
   final Widget child;
   final VoidCallback? onSuccess;
-  const ImportControllerListener({super.key, required this.child, this.onSuccess});
+  final String? passwordDialogContent;
+  final bool? skipSettingsDialog;
+  const ImportControllerListener({
+    super.key,
+    required this.child,
+    this.onSuccess,
+    this.passwordDialogContent,
+    this.skipSettingsDialog,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,7 +59,14 @@ class ImportControllerListener extends ConsumerWidget {
           onSuccess?.call();
         },
         showPasswordDialog: (value) async {
-          await showDialog(context: context, builder: (context) => ImportPasswordDialog(value.backupData));
+          await showDialog(
+            context: context,
+            builder: (context) => ImportPasswordDialog(
+              value.backupData,
+              dialogContent: passwordDialogContent,
+              skipSettingsDialog: skipSettingsDialog,
+            ),
+          );
         },
         askForSettings: (value) async {
           log('Opening the settings dialog');

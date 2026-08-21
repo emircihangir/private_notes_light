@@ -36,21 +36,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 32,
-            children: [
-              SvgPicture.asset(
-                theme.brightness == Brightness.light
-                    ? 'assets/images/app_icon_light.svg'
-                    : 'assets/images/app_icon_dark.svg',
-                height: 150,
-              ),
-              Text(l10n.notesAreLocked, style: theme.textTheme.headlineLarge),
-              Form(
-                key: _formKey,
-                child: Container(
-                  constraints: const BoxConstraints(maxWidth: 333),
+          child: SizedBox(
+            width: 250,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 32,
+              children: [
+                SvgPicture.asset(
+                  theme.brightness == Brightness.light
+                      ? 'assets/images/app_icon_light.svg'
+                      : 'assets/images/app_icon_dark.svg',
+                  height: 150,
+                ),
+                Text(l10n.notesAreLocked, style: theme.textTheme.headlineLarge),
+                Form(
+                  key: _formKey,
                   child: PasswordTextField(
                     controller: passwordController,
                     errorText: errorText,
@@ -60,27 +60,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     },
                   ),
                 ),
-              ),
-              FilledButton(
-                onPressed: () async {
-                  final isValid = _formKey.currentState!.validate();
-                  if (isValid == false) return;
+                FilledButton(
+                  onPressed: () async {
+                    final isValid = _formKey.currentState!.validate();
+                    if (isValid == false) return;
 
-                  final passwordInput = passwordController.text;
-                  final loggedIn = await ref.read(authServiceProvider).login(passwordInput);
+                    final passwordInput = passwordController.text;
+                    final loggedIn = await ref.read(authServiceProvider).login(passwordInput);
 
-                  if (!context.mounted) return;
+                    if (!context.mounted) return;
 
-                  if (loggedIn) {
-                    ScaffoldMessenger.of(context).clearSnackBars();
-                    Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(const NotesPage()), (route) => false);
-                  } else {
-                    setState(() => errorText = l10n.wrongPasswordError);
-                  }
-                },
-                child: Text(l10n.unlock),
-              ),
-            ],
+                    if (loggedIn) {
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      Navigator.of(context)
+                          .pushAndRemoveUntil(fadePageRouteBuilder(const NotesPage()), (route) => false);
+                    } else {
+                      setState(() => errorText = l10n.wrongPasswordError);
+                    }
+                  },
+                  child: Text(l10n.unlock),
+                ),
+              ],
+            ),
           ),
         ),
       ),

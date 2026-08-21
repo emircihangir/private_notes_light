@@ -29,37 +29,28 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          widget.canBeToggled ? const SizedBox(width: 48, height: 48) : const SizedBox(),
-          Expanded(
-            child: TextFormField(
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              autofocus: widget.autoFocus,
-              onChanged: widget.onChanged,
-              controller: widget.controller,
-              obscureText: isObscure,
-              textInputAction: widget.textInputAction,
-              decoration: InputDecoration(errorText: widget.errorText, labelText: widget.labelText),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return AppLocalizations.of(context)!.passwordEmptyError;
-                }
-                return null;
-              },
-            ),
-          ),
-          widget.canBeToggled
-              ? IconButton(
-                  onPressed: () => setState(() => isObscure = !isObscure),
-                  icon: Icon(isObscure ? Icons.visibility : Icons.visibility_off),
-                )
-              : const SizedBox(),
-        ],
+    return TextFormField(
+      autofocus: widget.autoFocus,
+      onChanged: widget.onChanged,
+      controller: widget.controller,
+      obscureText: isObscure,
+      textInputAction: widget.textInputAction,
+      decoration: InputDecoration(
+        errorText: widget.errorText,
+        labelText: widget.labelText,
+        suffixIcon: widget.canBeToggled
+            ? IconButton(
+                onPressed: () => setState(() => isObscure = !isObscure),
+                icon: Icon(isObscure ? Icons.visibility : Icons.visibility_off),
+              )
+            : null,
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return AppLocalizations.of(context)!.passwordEmptyError;
+        }
+        return null;
+      },
     );
   }
 }

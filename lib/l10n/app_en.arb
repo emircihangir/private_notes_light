@@ -36,6 +36,10 @@
   "@signupBackupPrompt": {
     "description": "Prompt on the signup screen asking whether the user has a backup file to import."
   },
+  "signupBackupPasswordDialogContent": "Please enter the password this backup file was encrypted with. If the import is successful, this password will be your master password.",
+  "@signupBackupPasswordDialogContent": {
+    "description": "Body text of the password dialog shown when importing a backup from the signup screen."
+  },
   "importBackupButton": "Import",
   "@importBackupButton": {
     "description": "Button label for importing a backup file from the signup screen."

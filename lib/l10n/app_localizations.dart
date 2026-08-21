@@ -145,6 +145,12 @@ abstract class AppLocalizations {
   /// **'Do you have a backup file?'**
   String get signupBackupPrompt;
 
+  /// Body text of the password dialog shown when importing a backup from the signup screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the password this backup file was encrypted with. If the import is successful, this password will be your master password.'**
+  String get signupBackupPasswordDialogContent;
+
   /// Button label for importing a backup file from the signup screen.
   ///
   /// In en, this message translates to:
