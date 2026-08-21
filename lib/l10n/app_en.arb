@@ -32,6 +32,14 @@
   "@signupGenericError": {
     "description": "Generic error snackbar message when the sign-up process fails."
   },
+  "signupBackupPrompt": "Do you have a backup file?",
+  "@signupBackupPrompt": {
+    "description": "Prompt on the signup screen asking whether the user has a backup file to import."
+  },
+  "importBackupButton": "Import",
+  "@importBackupButton": {
+    "description": "Button label for importing a backup file from the signup screen."
+  },
   "unlock": "Unlock",
   "@unlock": {
     "description": "Label for the unlock button."
@@ -71,6 +79,14 @@
   "importDataSubtitle": "Restore notes from a backup file",
   "@importDataSubtitle": {
     "description": "Subtitle/Description for the import option."
+  },
+  "backupHasNoNotesDialogTitle": "Backup has no notes",
+  "@backupHasNoNotesDialogTitle": {
+    "description": "Title of the dialog shown when a selected backup contains no notes."
+  },
+  "backupHasNoNotesDialogContent": "The backup file has no notes to import. Please select another file.",
+  "@backupHasNoNotesDialogContent": {
+    "description": "Body text of the dialog shown when a selected backup contains no notes."
   },
   "importSettingsDialogTitle": "Import settings?",
   "@importSettingsDialogTitle": {

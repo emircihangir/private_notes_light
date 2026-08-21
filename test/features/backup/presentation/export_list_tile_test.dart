@@ -11,6 +11,7 @@ void main() {
     // Setup
     await widgetTester.pumpWidget(
       ProviderScope(
+        retry: (_, _) => null,
         overrides: [exportServiceProvider.overrideWith((ref) => throw Exception())],
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -19,7 +20,7 @@ void main() {
         ),
       ),
     );
-    await widgetTester.pump();
+    await widgetTester.pumpAndSettle();
     final context = widgetTester.element(find.byType(ExportListTile));
 
     // Act
