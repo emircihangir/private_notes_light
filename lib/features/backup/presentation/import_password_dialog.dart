@@ -29,13 +29,15 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AlertDialog(
-      title: Text(AppLocalizations.of(context)!.importPasswordDialogTitle),
+      title: Text(l10n.importPasswordDialogTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         spacing: 8,
         children: [
-          Text(AppLocalizations.of(context)!.importPasswordDialogContent),
+          Text(l10n.importPasswordDialogContent),
           Form(
             key: _formKey,
             child: PasswordTextField(controller: controller, errorText: errorText),
@@ -43,7 +45,7 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.cancel)),
         TextButton(
           key: const ValueKey('SubmitButton'),
           onPressed: () async {
@@ -54,14 +56,14 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
                 .submitPassword(widget.backupData, controller.text);
 
             if (rotatedBackupData == null) {
-              setState(() => errorText = AppLocalizations.of(context)!.wrongPasswordError);
+              setState(() => errorText = l10n.wrongPasswordError);
             } else if (context.mounted) {
               Navigator.of(context).pop();
               log('Closed the password dialog.', name: 'INFO');
               ref.read(importControllerProvider.notifier).askForSettings(rotatedBackupData);
             }
           },
-          child: Text(AppLocalizations.of(context)!.submitButton),
+          child: Text(l10n.submitButton),
         ),
       ],
     );

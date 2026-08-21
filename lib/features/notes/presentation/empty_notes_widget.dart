@@ -7,18 +7,20 @@ class EmptyNotesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: 16,
         children: [
-          Text(AppLocalizations.of(context)!.noNotesTitle, style: Theme.of(context).textTheme.headlineMedium),
+          Text(l10n.noNotesTitle, style: Theme.of(context).textTheme.headlineMedium),
           TextButton(
             onPressed: () {
               ScaffoldMessenger.of(context).clearSnackBars();
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CreateNotePage()));
             },
-            child: Text(AppLocalizations.of(context)!.createNoteButton),
+            child: Text(l10n.createNoteButton),
           ),
         ],
       ),

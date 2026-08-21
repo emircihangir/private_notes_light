@@ -6,18 +6,14 @@ class OverwriteWarningDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AlertDialog(
-      title: Text(AppLocalizations.of(context)!.areYouSure),
-      content: Text(AppLocalizations.of(context)!.overwriteWarningContent),
+      title: Text(l10n.areYouSure),
+      content: Text(l10n.overwriteWarningContent),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(AppLocalizations.of(context)!.cancel),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text(AppLocalizations.of(context)!.proceed),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancel)),
+        TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(l10n.proceed)),
       ],
     );
   }

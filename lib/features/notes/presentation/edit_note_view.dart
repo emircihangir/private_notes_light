@@ -21,6 +21,13 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
   late final TextEditingController contentInputController;
   final _formKey = GlobalKey<FormState>();
   late Note updatedNote;
+  late final ColorScheme colorScheme;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    colorScheme = Theme.of(context).colorScheme;
+  }
 
   @override
   void initState() {
@@ -63,23 +70,21 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
 
   InputDecoration inputDecoration() => InputDecoration(
     contentPadding: const EdgeInsets.all(16),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary),
-    ),
+    enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: colorScheme.inversePrimary)),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(3),
-      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.inversePrimary),
+      borderSide: BorderSide(width: 2, color: colorScheme.inversePrimary),
     ),
-    errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.error)),
-    focusedErrorBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
-    ),
+    errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: colorScheme.error)),
+    focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: colorScheme.error)),
   );
 
   @override
   Widget build(BuildContext context) {
     final titleWarningPref = ref.watch(titleWarningPrefProvider);
     final showTitleWarning = (titleWarningPref.value == true);
+
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -90,7 +95,7 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
           },
           icon: const Icon(Icons.check_rounded),
         ),
-        title: Text(AppLocalizations.of(context)!.editNoteTitle),
+        title: Text(l10n.editNoteTitle),
         // actions: [DeleteNoteButton(widget.note.id, handleDeleteTap: handleDeleteTap)],
         actions: [IconButton(onPressed: handleDeleteTap, icon: const Icon(Icons.delete_rounded))],
 
@@ -107,14 +112,14 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
                 children: [
                   TextFormField(
                     decoration: inputDecoration().copyWith(
-                      hintText: AppLocalizations.of(context)!.noteTitleLabel,
-                      labelText: AppLocalizations.of(context)!.noteTitleLabel,
+                      hintText: l10n.noteTitleLabel,
+                      labelText: l10n.noteTitleLabel,
                     ),
                     controller: titleInputController,
                     textInputAction: TextInputAction.next,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.titleEmptyError;
+                        return l10n.titleEmptyError;
                       }
                       return null;
                     },
@@ -122,14 +127,14 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
                   ),
                   TextFormField(
                     decoration: inputDecoration().copyWith(
-                      hintText: AppLocalizations.of(context)!.noteContentLabel,
-                      labelText: AppLocalizations.of(context)!.noteContentLabel,
+                      hintText: l10n.noteContentLabel,
+                      labelText: l10n.noteContentLabel,
                     ),
                     maxLines: null,
                     controller: contentInputController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.contentEmptyError;
+                        return l10n.contentEmptyError;
                       }
                       return null;
                     },

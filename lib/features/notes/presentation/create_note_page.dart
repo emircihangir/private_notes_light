@@ -18,6 +18,13 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
   final TextEditingController titleInputController = TextEditingController();
   final TextEditingController contentInputController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  late final ColorScheme colorScheme;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    colorScheme = Theme.of(context).colorScheme;
+  }
 
   @override
   void dispose() {
@@ -39,17 +46,13 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
 
   InputDecoration inputDecoration() => InputDecoration(
     contentPadding: const EdgeInsets.all(16),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary),
-    ),
+    enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: colorScheme.inversePrimary)),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(3),
-      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.inversePrimary),
+      borderSide: BorderSide(width: 2, color: colorScheme.inversePrimary),
     ),
-    errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.error)),
-    focusedErrorBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
-    ),
+    errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: colorScheme.error)),
+    focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: colorScheme.error)),
   );
 
   @override
@@ -57,10 +60,12 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
     final titleWarningPref = ref.watch(titleWarningPrefProvider);
     final showTitleWarning = (titleWarningPref.value == true);
 
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text(AppLocalizations.of(context)!.createNoteTitle),
+        title: Text(l10n.createNoteTitle),
         centerTitle: true,
         actions: [IconButton(onPressed: () async => await handleSave(), icon: const Icon(Icons.check_rounded))],
       ),
@@ -75,14 +80,14 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
                 children: [
                   TextFormField(
                     decoration: inputDecoration().copyWith(
-                      hintText: AppLocalizations.of(context)!.noteTitleLabel,
-                      labelText: AppLocalizations.of(context)!.noteTitleLabel,
+                      hintText: l10n.noteTitleLabel,
+                      labelText: l10n.noteTitleLabel,
                     ),
                     controller: titleInputController,
                     textInputAction: TextInputAction.next,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.titleEmptyError;
+                        return l10n.titleEmptyError;
                       }
                       return null;
                     },
@@ -91,14 +96,14 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
                   ),
                   TextFormField(
                     decoration: inputDecoration().copyWith(
-                      hintText: AppLocalizations.of(context)!.noteContentLabel,
-                      labelText: AppLocalizations.of(context)!.noteContentLabel,
+                      hintText: l10n.noteContentLabel,
+                      labelText: l10n.noteContentLabel,
                     ),
                     maxLines: null,
                     controller: contentInputController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.contentEmptyError;
+                        return l10n.contentEmptyError;
                       }
                       return null;
                     },

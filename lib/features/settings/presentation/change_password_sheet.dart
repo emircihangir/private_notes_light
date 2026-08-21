@@ -31,6 +31,8 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom + 32;
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.only(bottom: bottomInset, left: 32, right: 32),
       child: SingleChildScrollView(
@@ -43,22 +45,19 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
-                  child: Text(
-                    AppLocalizations.of(context)!.newPasswordWarning,
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
+                  child: Text(l10n.newPasswordWarning, style: Theme.of(context).textTheme.labelMedium),
                 ),
                 PasswordTextField(
                   controller: controller1,
                   canBeToggled: false,
-                  labelText: AppLocalizations.of(context)!.newPassword,
+                  labelText: l10n.newPassword,
                   autoFocus: true,
                   textInputAction: TextInputAction.next,
                 ),
                 PasswordTextField(
                   controller: controller2,
                   canBeToggled: false,
-                  labelText: AppLocalizations.of(context)!.confirmPassword,
+                  labelText: l10n.confirmPassword,
                   errorText: errorText2,
                   onChanged: (value) {
                     if (errorText2 != null) setState(() => errorText2 = null);
@@ -70,7 +69,7 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
                     if (isValid == false) return;
 
                     if (controller1.text != controller2.text) {
-                      setState(() => errorText2 = AppLocalizations.of(context)!.passwordsDontMatch);
+                      setState(() => errorText2 = l10n.passwordsDontMatch);
                       return;
                     } else if (errorText2 != null) {
                       setState(() => errorText2 = null);
@@ -79,12 +78,12 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
                     await ref.read(authServiceProvider).changeMasterPassword(controller1.text);
 
                     if (context.mounted) {
-                      showSuccessSnackbar(context, content: AppLocalizations.of(context)!.changedPasswordSuccessfully);
+                      showSuccessSnackbar(context, content: l10n.changedPasswordSuccessfully);
                       ScaffoldMessenger.of(context).clearSnackBars();
                       Navigator.of(context).pop();
                     }
                   },
-                  child: Text(AppLocalizations.of(context)!.submitButton),
+                  child: Text(l10n.submitButton),
                 ),
               ],
             ),

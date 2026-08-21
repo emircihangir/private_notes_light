@@ -68,6 +68,8 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final filteredNotes = ref.watch(filteredNotesListProvider);
     final noteController = ref.watch(noteControllerProvider);
     final trashedNotes = ref.watch(trashedNotesProvider);
@@ -80,7 +82,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
       if (next == true) {
         ScaffoldMessenger.of(context).clearSnackBars();
         Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(const LoginScreen()), (route) => false);
-        showInfoSnackbar(context, content: AppLocalizations.of(context)!.sessionExpiredMessage);
+        showInfoSnackbar(context, content: l10n.sessionExpiredMessage);
         ref.read(sessionExpiredProvider.notifier).setExpired(false);
       }
     });
@@ -98,17 +100,17 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 
         switch (errorKind) {
           case NoteErrorKind.failedToDeleteNote:
-            showErrorSnackbar(context, content: AppLocalizations.of(context)!.failedToDeleteNote);
+            showErrorSnackbar(context, content: l10n.failedToDeleteNote);
             break;
           case NoteErrorKind.failedToExport:
-            showErrorSnackbar(context, content: AppLocalizations.of(context)!.failedToExport);
+            showErrorSnackbar(context, content: l10n.failedToExport);
             break;
         }
 
         noteControllerNotifier.consumeError();
       }
       if (nextValue?.showExportSuccessful == true) {
-        showSuccessSnackbar(context, content: AppLocalizations.of(context)!.exportSuccess);
+        showSuccessSnackbar(context, content: l10n.exportSuccess);
         noteControllerNotifier.consumeExportSuccess();
       }
       if (nextValue?.warnExport == true) {
@@ -125,7 +127,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.notesTitle),
+        title: Text(l10n.notesTitle),
         centerTitle: true,
         leading: IconButton(onPressed: handleLogout, icon: const Icon(Icons.logout_rounded)),
         actions: [
@@ -156,7 +158,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                       children: [
                         SearchBar(
                           leading: const Icon(Icons.search),
-                          hintText: AppLocalizations.of(context)!.searchHint,
+                          hintText: l10n.searchHint,
                           onChanged: (value) => ref.read(searchQueryProvider.notifier).set(value),
                         ),
                         filteredNotes.isNotEmpty

@@ -33,6 +33,8 @@ class _ViewNoteViewState extends State<ViewNoteView> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       body: CustomScrollView(
         controller: _scrollController,
@@ -56,13 +58,11 @@ class _ViewNoteViewState extends State<ViewNoteView> {
           ),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-            sliver: SliverToBoxAdapter(
-              child: Text(widget.note.title, style: Theme.of(context).textTheme.headlineLarge),
-            ),
+            sliver: SliverToBoxAdapter(child: Text(widget.note.title, style: textTheme.headlineLarge)),
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            sliver: SliverToBoxAdapter(child: Text(widget.note.content, style: Theme.of(context).textTheme.bodyLarge)),
+            sliver: SliverToBoxAdapter(child: Text(widget.note.content, style: textTheme.bodyLarge)),
           ),
         ],
       ),
