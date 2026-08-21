@@ -55,7 +55,7 @@ class ThemeDropdownButton extends ConsumerWidget {
               onChanged: (value) async => await ref.read(settingsControllerProvider.notifier).setTheme(value!),
             ),
           );
-        }).valueOrNull ??
+        }).value ??
         const SizedBox();
   }
 }

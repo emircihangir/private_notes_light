@@ -13,7 +13,12 @@ import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:private_notes_light/features/settings/domain/settings_data.dart';
 
-@GenerateNiceMocks([MockSpec<BackupRepository>(), MockSpec<AuthRepository>(), MockSpec<NoteRepository>(), MockSpec<SettingsRepository>()])
+@GenerateNiceMocks([
+  MockSpec<BackupRepository>(),
+  MockSpec<AuthRepository>(),
+  MockSpec<NoteRepository>(),
+  MockSpec<SettingsRepository>(),
+])
 import 'export_service_test.mocks.dart';
 
 void main() {
@@ -41,7 +46,9 @@ void main() {
 
     final dummyCredentials = CredentialsData(salt: 'salt', iv: 'iv', encryptedMasterKey: 'encryptedMasterKey');
     final dummySettings = SettingsData(exportSuggestions: true, exportWarnings: true, theme: ThemeMode.system);
-    final List<NoteDto> dummyNotes = [NoteDto(id: 'id', title: 'title', content: 'content', iv: 'iv', dateCreated: 'dateCreated')];
+    final List<NoteDto> dummyNotes = [
+      NoteDto(id: 'id', title: 'title', content: 'content', iv: 'iv', dateCreated: 'dateCreated'),
+    ];
     when(mockAuthRepository.readCredentials()).thenAnswer((_) async => dummyCredentials);
     when(mockSettingsRepository.getSettings()).thenReturn(dummySettings);
     when(mockNoteRepository.getNotes()).thenAnswer((_) async => dummyNotes);

@@ -30,7 +30,10 @@ void main() {
   group('filteredNotesList tests ->', () {
     test('returns all notes when search query is empty', () {
       // Setup
-      final notes = [const NoteWidgetData(noteId: '1', noteTitle: 'Shopping list'), const NoteWidgetData(noteId: '2', noteTitle: 'Meeting notes')];
+      final notes = [
+        const NoteWidgetData(noteId: '1', noteTitle: 'Shopping list'),
+        const NoteWidgetData(noteId: '2', noteTitle: 'Meeting notes'),
+      ];
       container.read(noteControllerProvider.notifier).setState(NoteControllerState(data: notes));
 
       // Act & Verify

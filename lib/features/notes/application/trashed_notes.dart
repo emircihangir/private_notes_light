@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/notes/domain/trashed_note_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

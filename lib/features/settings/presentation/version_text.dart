@@ -12,7 +12,7 @@ class VersionText extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appVersion = ref.watch(appVersionProvider);
-    final String versionNumber = appVersion.valueOrNull ?? '';
+    final String versionNumber = appVersion.value ?? '';
 
     return Text('${l10n.version} $versionNumber', style: textTheme.bodySmall);
   }

@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -40,7 +41,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             spacing: 32,
             children: [
               SvgPicture.asset(
-                theme.brightness == Brightness.light ? 'assets/images/app_icon_light.svg' : 'assets/images/app_icon_dark.svg',
+                theme.brightness == Brightness.light
+                    ? 'assets/images/app_icon_light.svg'
+                    : 'assets/images/app_icon_dark.svg',
                 height: 150,
               ),
               Text(l10n.notesAreLocked, style: theme.textTheme.headlineLarge),

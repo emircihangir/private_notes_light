@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,9 +20,15 @@ import 'package:private_notes_light/features/notes/data/note_repository.dart';
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:private_notes_light/features/settings/domain/settings_data.dart';
 import 'package:encrypt/encrypt.dart' as enc;
+
 import '../../../core/dummy_backup_data.dart';
 
-@GenerateNiceMocks([MockSpec<BackupRepository>(), MockSpec<EncryptionService>(), MockSpec<NoteRepository>(), MockSpec<FilePickerService>()])
+@GenerateNiceMocks([
+  MockSpec<BackupRepository>(),
+  MockSpec<EncryptionService>(),
+  MockSpec<NoteRepository>(),
+  MockSpec<FilePickerService>(),
+])
 import 'import_controller_test.mocks.dart';
 
 void main() {
@@ -52,15 +59,18 @@ void main() {
     group('startImport works', () {
       test('startImport warns about overwrites', () async {
         // Set up
-        when(
-          mockNoteRepo.getNotes(),
-        ).thenAnswer((_) async => [NoteDto(id: 'id', title: 'title', content: 'content', iv: 'iv', dateCreated: 'dateCreated')]);
+        when(mockNoteRepo.getNotes()).thenAnswer(
+          (_) async => [NoteDto(id: 'id', title: 'title', content: 'content', iv: 'iv', dateCreated: 'dateCreated')],
+        );
 
         // Act
         await container.read(importControllerProvider.notifier).startImport(dialogTitle: 'dialogTitle');
 
         // Verify
-        expect(container.read(importControllerProvider)?.maybeWhen(showOverwriteWarning: () => true, orElse: () => false), isTrue);
+        expect(
+          container.read(importControllerProvider)?.maybeWhen(showOverwriteWarning: () => true, orElse: () => false),
+          isTrue,
+        );
       });
 
       test('startImport omits overwrite warning if there are no notes', () async {
@@ -109,9 +119,9 @@ void main() {
       expect(await container.read(importControllerProvider.notifier).notesExist(), isFalse);
 
       // Setup
-      when(
-        mockNoteRepo.getNotes(),
-      ).thenAnswer((_) async => [NoteDto(id: 'id', title: 'title', content: 'content', iv: 'iv', dateCreated: 'dateCreated')]);
+      when(mockNoteRepo.getNotes()).thenAnswer(
+        (_) async => [NoteDto(id: 'id', title: 'title', content: 'content', iv: 'iv', dateCreated: 'dateCreated')],
+      );
 
       // Act & Verify
       expect(await container.read(importControllerProvider.notifier).notesExist(), isTrue);
@@ -137,7 +147,10 @@ void main() {
 
         // Verify
         final controllerState = container.read(importControllerProvider);
-        expect(controllerState?.maybeWhen(showError: (errorKind) => errorKind, orElse: () => null), ImportErrorKind.invalidFileType);
+        expect(
+          controllerState?.maybeWhen(showError: (errorKind) => errorKind, orElse: () => null),
+          ImportErrorKind.invalidFileType,
+        );
       });
 
       test('Detects invalid JSON syntax.', () async {
@@ -193,7 +206,13 @@ void main() {
         // Setup
         final firstNoteContent = 'firstNoteContent';
         final firstNoteIv = enc.IV.fromLength(16);
-        final dummyNoteDto = NoteDto(id: 'id', title: 'title', content: firstNoteContent, iv: firstNoteIv.base64, dateCreated: 'dateCreated');
+        final dummyNoteDto = NoteDto(
+          id: 'id',
+          title: 'title',
+          content: firstNoteContent,
+          iv: firstNoteIv.base64,
+          dateCreated: 'dateCreated',
+        );
         final dummyKey = enc.Key.fromLength(32);
         container.read(masterKeyProvider.notifier).set(dummyKey);
         when(mockEncryptionService.keyCanDecrypt(firstNoteContent, dummyKey, firstNoteIv)).thenReturn(true);
@@ -213,14 +232,23 @@ void main() {
         await container.read(importControllerProvider.notifier).validateImportFile(dummyPlatformFile);
 
         // Verify
-        expect(container.read(importControllerProvider)?.maybeWhen(askForSettings: (_) => true, orElse: () => false), isTrue);
+        expect(
+          container.read(importControllerProvider)?.maybeWhen(askForSettings: (_) => true, orElse: () => false),
+          isTrue,
+        );
       });
 
       test('Shows password dialog if backup data is not decryptable', () async {
         // Setup
         final firstNoteContent = 'firstNoteContent';
         final firstNoteIv = enc.IV.fromLength(16);
-        final dummyNoteDto = NoteDto(id: 'id', title: 'title', content: firstNoteContent, iv: firstNoteIv.base64, dateCreated: 'dateCreated');
+        final dummyNoteDto = NoteDto(
+          id: 'id',
+          title: 'title',
+          content: firstNoteContent,
+          iv: firstNoteIv.base64,
+          dateCreated: 'dateCreated',
+        );
         final dummyKey = enc.Key.fromLength(32);
         container.read(masterKeyProvider.notifier).set(dummyKey);
 
@@ -240,7 +268,10 @@ void main() {
         // Act
         await container.read(importControllerProvider.notifier).validateImportFile(dummyPlatformFile);
 
-        expect(container.read(importControllerProvider)?.maybeWhen(showPasswordDialog: (_) => true, orElse: () => false), isTrue);
+        expect(
+          container.read(importControllerProvider)?.maybeWhen(showPasswordDialog: (_) => true, orElse: () => false),
+          isTrue,
+        );
       });
     });
 
@@ -254,7 +285,13 @@ void main() {
       const decryptedContent = 'decryptedContent';
       const newContent = 'newEncryptedContent';
       container.read(masterKeyProvider.notifier).set(currentKey);
-      final note = NoteDto(id: '1', title: 'Test Note', content: oldContent, iv: oldIvString, dateCreated: DateTime.now().toIso8601String());
+      final note = NoteDto(
+        id: '1',
+        title: 'Test Note',
+        content: oldContent,
+        iv: oldIvString,
+        dateCreated: DateTime.now().toIso8601String(),
+      );
       final backupData = BackupData(
         credentialsData: CredentialsData(salt: 's', iv: 'i', encryptedMasterKey: 'k'),
         settingsData: SettingsData(exportSuggestions: true, exportWarnings: true, theme: ThemeMode.system),
@@ -267,10 +304,13 @@ void main() {
           iv: argThat(isA<enc.IV>(), named: 'iv'),
         ),
       ).thenReturn(decryptedContent);
-      when(mockEncryptionService.encryptText(text: decryptedContent, key: currentKey)).thenReturn((encryptedText: newContent, encryptionIV: newIv));
+      when(mockEncryptionService.encryptText(text: decryptedContent, key: currentKey))
+          .thenReturn((encryptedText: newContent, encryptionIV: newIv));
 
       // Act
-      final result = await container.read(importControllerProvider.notifier).performKeyRotation(backupData: backupData, backupsMasterKey: oldKey);
+      final result = await container
+          .read(importControllerProvider.notifier)
+          .performKeyRotation(backupData: backupData, backupsMasterKey: oldKey);
 
       // Verify
       expect(result.notesData.first.content, newContent);
@@ -293,11 +333,17 @@ void main() {
         final backupMasterKey = enc.Key.fromUtf8('11111111111111111111111111111111');
         final backupData = dummyBackupData(credentialsIv: credentialsIv, notes: []);
         when(
-          mockEncryptionService.decryptText(encryptedText: backupData.credentialsData.encryptedMasterKey, key: derivedKey, iv: credentialsIv),
+          mockEncryptionService.decryptText(
+            encryptedText: backupData.credentialsData.encryptedMasterKey,
+            key: derivedKey,
+            iv: credentialsIv,
+          ),
         ).thenReturn(backupMasterKey.base64);
 
         // Act
-        final result = container.read(importControllerProvider.notifier).decryptBackupCredentials(backupData: backupData, key: derivedKey);
+        final result = container
+            .read(importControllerProvider.notifier)
+            .decryptBackupCredentials(backupData: backupData, key: derivedKey);
 
         // Verify
         expect(result?.base64, backupMasterKey.base64);
@@ -309,11 +355,17 @@ void main() {
         final derivedKey = enc.Key.fromLength(32);
         final backupData = dummyBackupData(credentialsIv: credentialsIv, notes: []);
         when(
-          mockEncryptionService.decryptText(encryptedText: backupData.credentialsData.encryptedMasterKey, key: derivedKey, iv: credentialsIv),
+          mockEncryptionService.decryptText(
+            encryptedText: backupData.credentialsData.encryptedMasterKey,
+            key: derivedKey,
+            iv: credentialsIv,
+          ),
         ).thenThrow(Exception('wrong password'));
 
         // Act
-        final result = container.read(importControllerProvider.notifier).decryptBackupCredentials(backupData: backupData, key: derivedKey);
+        final result = container
+            .read(importControllerProvider.notifier)
+            .decryptBackupCredentials(backupData: backupData, key: derivedKey);
 
         // Verify
         expect(result, isNull);
@@ -329,9 +381,14 @@ void main() {
         final currentMasterKey = enc.Key.fromUtf8('22222222222222222222222222222222');
         final backupData = dummyBackupData(credentialsIv: credentialsIv, notes: []);
         container.read(masterKeyProvider.notifier).set(currentMasterKey);
-        when(mockEncryptionService.deriveKeyFromPassword('password', backupData.credentialsData.salt)).thenAnswer((_) async => derivedKey);
+        when(mockEncryptionService.deriveKeyFromPassword('password', backupData.credentialsData.salt))
+            .thenAnswer((_) async => derivedKey);
         when(
-          mockEncryptionService.decryptText(encryptedText: backupData.credentialsData.encryptedMasterKey, key: derivedKey, iv: credentialsIv),
+          mockEncryptionService.decryptText(
+            encryptedText: backupData.credentialsData.encryptedMasterKey,
+            key: derivedKey,
+            iv: credentialsIv,
+          ),
         ).thenReturn(backupMasterKey.base64);
 
         // Act
@@ -348,13 +405,20 @@ void main() {
         final credentialsIv = enc.IV.fromLength(16);
         final derivedKey = enc.Key.fromLength(32);
         final backupData = dummyBackupData(credentialsIv: credentialsIv, notes: []);
-        when(mockEncryptionService.deriveKeyFromPassword('wrong-password', backupData.credentialsData.salt)).thenAnswer((_) async => derivedKey);
+        when(mockEncryptionService.deriveKeyFromPassword('wrong-password', backupData.credentialsData.salt))
+            .thenAnswer((_) async => derivedKey);
         when(
-          mockEncryptionService.decryptText(encryptedText: backupData.credentialsData.encryptedMasterKey, key: derivedKey, iv: credentialsIv),
+          mockEncryptionService.decryptText(
+            encryptedText: backupData.credentialsData.encryptedMasterKey,
+            key: derivedKey,
+            iv: credentialsIv,
+          ),
         ).thenThrow(Exception('wrong password'));
 
         // Act
-        final result = await container.read(importControllerProvider.notifier).submitPassword(backupData, 'wrong-password');
+        final result = await container
+            .read(importControllerProvider.notifier)
+            .submitPassword(backupData, 'wrong-password');
 
         // Verify
         expect(result, isNull);

@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/fade_page_route_builder.dart';
@@ -130,7 +131,10 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         actions: [
           IconButton(onPressed: handleSettingsTap, icon: const Icon(Icons.settings_outlined)),
           trashedNotes.isNotEmpty
-              ? IconButton(onPressed: () async => await handleTrashTap(), icon: const Icon(Icons.delete_outline_rounded))
+              ? IconButton(
+                  onPressed: () async => await handleTrashTap(),
+                  icon: const Icon(Icons.delete_outline_rounded),
+                )
               : const SizedBox(),
         ],
       ),

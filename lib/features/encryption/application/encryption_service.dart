@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
+
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:encrypt/encrypt.dart' as enc;

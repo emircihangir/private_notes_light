@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/authentication/domain/credentials_data.dart';
 import 'package:private_notes_light/features/encryption/application/encryption_service.dart';
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
@@ -29,7 +28,9 @@ class AuthService {
     // * Save the encrypted master key along with salt and iv.
     await ref
         .read(authRepositoryProvider)
-        .saveCredentials(CredentialsData(salt: salt, iv: encrypted.encryptionIV.base64, encryptedMasterKey: encryptedMasterKeyString));
+        .saveCredentials(
+          CredentialsData(salt: salt, iv: encrypted.encryptionIV.base64, encryptedMasterKey: encryptedMasterKeyString),
+        );
 
     ref.read(masterKeyProvider.notifier).set(masterKey);
   }
@@ -51,19 +52,31 @@ class AuthService {
     // * Save the newly encrypted master key.
     await ref
         .read(authRepositoryProvider)
-        .saveCredentials(CredentialsData(salt: newSalt, iv: encrypted.encryptionIV.base64, encryptedMasterKey: encryptedMasterKeyString));
+        .saveCredentials(
+          CredentialsData(
+            salt: newSalt,
+            iv: encrypted.encryptionIV.base64,
+            encryptedMasterKey: encryptedMasterKeyString,
+          ),
+        );
   }
 
   Future<bool> login(String passwordInput) async {
     final authRepository = ref.read(authRepositoryProvider);
     final CredentialsData credentialsData = await authRepository.readCredentials();
 
-    final derivedKey = await ref.read(encryptionServiceProvider).deriveKeyFromPassword(passwordInput, credentialsData.salt);
+    final derivedKey = await ref
+        .read(encryptionServiceProvider)
+        .deriveKeyFromPassword(passwordInput, credentialsData.salt);
 
     try {
       final masterKeyString = ref
           .read(encryptionServiceProvider)
-          .decryptText(encryptedText: credentialsData.encryptedMasterKey, key: derivedKey, iv: enc.IV.fromBase64(credentialsData.iv));
+          .decryptText(
+            encryptedText: credentialsData.encryptedMasterKey,
+            key: derivedKey,
+            iv: enc.IV.fromBase64(credentialsData.iv),
+          );
 
       ref.read(masterKeyProvider.notifier).set(enc.Key.fromBase64(masterKeyString));
       return true;

@@ -37,7 +37,9 @@ void main() {
   });
 
   testWidgets('complete first-run private notes journey', (tester) async {
-    await tester.pumpWidget(ProviderScope(overrides: [exportServiceProvider.overrideWith((ref) async => true)], child: const App()));
+    await tester.pumpWidget(
+      ProviderScope(overrides: [exportServiceProvider.overrideWith((ref) async => true)], child: const App()),
+    );
     await _pumpUntilFound(tester, find.byType(WelcomePage));
 
     final l10n = _l10n(tester);
@@ -67,7 +69,11 @@ AppLocalizations _l10n(WidgetTester tester) {
   return AppLocalizations.of(tester.element(find.byType(Scaffold).last))!;
 }
 
-Future<void> _pumpUntilFound(WidgetTester tester, Finder finder, {Duration timeout = const Duration(seconds: 8)}) async {
+Future<void> _pumpUntilFound(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 8),
+}) async {
   final endTime = DateTime.now().add(timeout);
   while (DateTime.now().isBefore(endTime)) {
     await tester.pump(const Duration(milliseconds: 100));
@@ -385,7 +391,11 @@ Future<void> _verifyNoExportSuggestionAfterDisabled(WidgetTester tester, AppLoca
   await _tapAndSettle(tester, find.byIcon(Icons.edit_rounded));
   expect(find.text(l10n.editNoteTitle), findsOneWidget);
 
-  await _fillCurrentNoteForm(tester, title: firstNoteUpdatedTitle, content: '$firstNoteUpdatedContent Export suggestions stay disabled.');
+  await _fillCurrentNoteForm(
+    tester,
+    title: firstNoteUpdatedTitle,
+    content: '$firstNoteUpdatedContent Export suggestions stay disabled.',
+  );
   await _tapAndSettle(tester, find.byIcon(Icons.check_rounded));
 
   expect(find.text(firstNoteUpdatedTitle), findsAtLeast(1));

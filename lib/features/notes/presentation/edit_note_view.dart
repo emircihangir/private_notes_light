@@ -53,7 +53,9 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
   }
 
   void handleDeleteTap() {
-    ref.read(noteControllerProvider.notifier).moveNoteToTrash(NoteWidgetData(noteId: widget.note.id, noteTitle: widget.note.title));
+    ref
+        .read(noteControllerProvider.notifier)
+        .moveNoteToTrash(NoteWidgetData(noteId: widget.note.id, noteTitle: widget.note.title));
     if (mounted) {
       Navigator.of(context).pop();
     }
@@ -61,19 +63,23 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
 
   InputDecoration inputDecoration() => InputDecoration(
     contentPadding: const EdgeInsets.all(16),
-    enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary)),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary),
+    ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(3),
       borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.inversePrimary),
     ),
     errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.error)),
-    focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error)),
+    focusedErrorBorder: OutlineInputBorder(
+      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
+    ),
   );
 
   @override
   Widget build(BuildContext context) {
     final titleWarningPref = ref.watch(titleWarningPrefProvider);
-    final showTitleWarning = (titleWarningPref.valueOrNull == true);
+    final showTitleWarning = (titleWarningPref.value == true);
 
     return Scaffold(
       appBar: AppBar(

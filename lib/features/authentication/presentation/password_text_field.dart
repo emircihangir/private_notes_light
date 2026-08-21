@@ -53,7 +53,10 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
             ),
           ),
           widget.canBeToggled
-              ? IconButton(onPressed: () => setState(() => isObscure = !isObscure), icon: Icon(isObscure ? Icons.visibility : Icons.visibility_off))
+              ? IconButton(
+                  onPressed: () => setState(() => isObscure = !isObscure),
+                  icon: Icon(isObscure ? Icons.visibility : Icons.visibility_off),
+                )
               : const SizedBox(),
         ],
       ),

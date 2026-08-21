@@ -56,7 +56,9 @@ class _ViewNoteViewState extends State<ViewNoteView> {
           ),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-            sliver: SliverToBoxAdapter(child: Text(widget.note.title, style: Theme.of(context).textTheme.headlineLarge)),
+            sliver: SliverToBoxAdapter(
+              child: Text(widget.note.title, style: Theme.of(context).textTheme.headlineLarge),
+            ),
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),

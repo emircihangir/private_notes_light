@@ -15,7 +15,9 @@ class HelpButton extends StatelessWidget {
           return AlertDialog(
             title: Text(helpTitle),
             content: Text(helpText),
-            actions: [TextButton(child: Text(AppLocalizations.of(context)!.ok), onPressed: () => Navigator.of(context).pop())],
+            actions: [
+              TextButton(child: Text(AppLocalizations.of(context)!.ok), onPressed: () => Navigator.of(context).pop()),
+            ],
           );
         },
       );

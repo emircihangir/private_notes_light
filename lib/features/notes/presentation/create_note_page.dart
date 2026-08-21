@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/notes/application/note_controller.dart';
@@ -38,19 +39,23 @@ class _CreateNotePageState extends ConsumerState<CreateNotePage> {
 
   InputDecoration inputDecoration() => InputDecoration(
     contentPadding: const EdgeInsets.all(16),
-    enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary)),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.inversePrimary),
+    ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(3),
       borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.inversePrimary),
     ),
     errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Theme.of(context).colorScheme.error)),
-    focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error)),
+    focusedErrorBorder: OutlineInputBorder(
+      borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
+    ),
   );
 
   @override
   Widget build(BuildContext context) {
     final titleWarningPref = ref.watch(titleWarningPrefProvider);
-    final showTitleWarning = (titleWarningPref.valueOrNull == true);
+    final showTitleWarning = (titleWarningPref.value == true);
 
     return Scaffold(
       appBar: AppBar(

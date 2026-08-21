@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -25,8 +26,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get masterPasswordConfirm => 'Confirm master password';
 
   @override
-  String get masterPasswordEmptyError =>
-      'Master password input cannot be empty.';
+  String get masterPasswordEmptyError => 'Master password input cannot be empty.';
 
   @override
   String get signupButton => 'Sign Up';
@@ -68,8 +68,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importSettingsDialogTitle => 'Import settings?';
 
   @override
-  String get importSettingsDialogContent =>
-      'Selecting Yes will overwrite your current settings.';
+  String get importSettingsDialogContent => 'Selecting Yes will overwrite your current settings.';
 
   @override
   String get no => 'No';
@@ -215,8 +214,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changedPasswordSuccessfully => 'Password change successful.';
 
   @override
-  String get couldNotParseJson =>
-      'Could not parse the selected file. Make sure the file follows JSON syntax.';
+  String get couldNotParseJson => 'Could not parse the selected file. Make sure the file follows JSON syntax.';
 
   @override
   String get fileIsCorrupt => 'File is corrupt. Failed to retrieve data.';
@@ -250,8 +248,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmPassword => 'Confirm password';
 
   @override
-  String get exportWarningSnackbar =>
-      'Last export was more than a week ago. Export recommended.';
+  String get exportWarningSnackbar => 'Last export was more than a week ago. Export recommended.';
 
   @override
   String get export => 'Export';
@@ -269,12 +266,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get putBack => 'Put Back';
 
   @override
-  String get trashedNotesExplainer =>
-      'These are permanently deleted on logout.';
+  String get trashedNotesExplainer => 'These are permanently deleted on logout.';
 
   @override
-  String get titleWarning =>
-      'Warning: Note titles are not encrypted. Do not write sensitive information in titles.';
+  String get titleWarning => 'Warning: Note titles are not encrypted. Do not write sensitive information in titles.';
 
   @override
   String get dismiss => 'Dismiss';
@@ -322,12 +317,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get documentationSubtitle => 'Available on DeepWiki';
 
   @override
-  String get exportSuggestionsHelpText =>
-      'Shows a backup prompt snackbar on every save.';
+  String get exportSuggestionsHelpText => 'Shows a backup prompt snackbar on every save.';
 
   @override
-  String get exportWarningsHelpText =>
-      'Shows a backup reminder snackbar if last export was over 7 days ago.';
+  String get exportWarningsHelpText => 'Shows a backup reminder snackbar if last export was over 7 days ago.';
 
   @override
   String get ok => 'OK';

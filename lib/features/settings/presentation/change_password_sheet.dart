@@ -43,7 +43,10 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
-                  child: Text(AppLocalizations.of(context)!.newPasswordWarning, style: Theme.of(context).textTheme.labelMedium),
+                  child: Text(
+                    AppLocalizations.of(context)!.newPasswordWarning,
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
                 ),
                 PasswordTextField(
                   controller: controller1,

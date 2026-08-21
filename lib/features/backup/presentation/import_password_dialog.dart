@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/authentication/presentation/password_text_field.dart';
@@ -48,7 +49,9 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
           onPressed: () async {
             if (_formKey.currentState!.validate() == false) return;
 
-            final rotatedBackupData = await ref.read(importControllerProvider.notifier).submitPassword(widget.backupData, controller.text);
+            final rotatedBackupData = await ref
+                .read(importControllerProvider.notifier)
+                .submitPassword(widget.backupData, controller.text);
 
             if (rotatedBackupData == null) {
               setState(() => errorText = AppLocalizations.of(context)!.wrongPasswordError);

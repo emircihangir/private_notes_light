@@ -26,7 +26,9 @@ void main() {
     final container = ProviderScope.containerOf(context);
 
     // Act
-    container.read(importControllerProvider.notifier).setState(ImportControllerState.showPasswordDialog(dummyBackupData()));
+    container
+        .read(importControllerProvider.notifier)
+        .setState(ImportControllerState.showPasswordDialog(dummyBackupData()));
     await widgetTester.pumpAndSettle();
 
     await widgetTester.tap(find.byKey(const ValueKey('SubmitButton')));

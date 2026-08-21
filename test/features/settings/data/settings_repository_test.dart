@@ -48,7 +48,12 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
       final repository = SettingsRepository(prefs);
-      final settings = SettingsData(exportSuggestions: false, exportWarnings: false, theme: ThemeMode.light, sortingOption: SortingOption.zToA);
+      final settings = SettingsData(
+        exportSuggestions: false,
+        exportWarnings: false,
+        theme: ThemeMode.light,
+        sortingOption: SortingOption.zToA,
+      );
 
       // Act
       await repository.importSettings(settings);

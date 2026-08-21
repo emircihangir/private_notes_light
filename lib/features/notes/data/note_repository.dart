@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
 import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:private_notes_light/features/settings/application/settings_controller.dart';
@@ -93,5 +92,5 @@ class NoteRepository {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 NoteRepository noteRepository(Ref ref) => NoteRepository(ref);

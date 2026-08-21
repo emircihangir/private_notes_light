@@ -21,9 +21,10 @@ class ExportSuggestionsSwitchTile extends ConsumerWidget {
               ],
             ),
             value: settingsData.exportSuggestions,
-            onChanged: (newValue) async => await ref.read(settingsControllerProvider.notifier).setExportSuggestions(newValue),
+            onChanged: (newValue) async =>
+                await ref.read(settingsControllerProvider.notifier).setExportSuggestions(newValue),
           );
-        }).valueOrNull ??
+        }).value ??
         const SizedBox();
   }
 }

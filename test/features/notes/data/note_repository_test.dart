@@ -182,7 +182,13 @@ void main() {
       SharedPreferences.setMockInitialValues(_settingsValues(sortingOption: SortingOption.aToZ));
       final dummyValues = (iv: enc.IV.fromLength(16), date: DateTime.now());
       await repository.addNote(
-        NoteDto(id: 'id1', title: 'Charlie', content: 'content', iv: dummyValues.iv.base64, dateCreated: dummyValues.date.toIso8601String()),
+        NoteDto(
+          id: 'id1',
+          title: 'Charlie',
+          content: 'content',
+          iv: dummyValues.iv.base64,
+          dateCreated: dummyValues.date.toIso8601String(),
+        ),
       );
       await repository.addNote(
         NoteDto(

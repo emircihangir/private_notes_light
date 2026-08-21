@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:meta/meta.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/backup/application/export_service.dart';
@@ -44,7 +45,12 @@ class NoteController extends _$NoteController {
 
   Future<void> createNote({String? id, required String title, required String content, DateTime? date}) async {
     final encrypted = ref.read(encryptionServiceProvider).encryptWithMasterKey(content);
-    Note newNote = Note(id: id ?? const Uuid().v4(), title: title, content: encrypted.encryptedText, dateCreated: date ?? DateTime.now());
+    Note newNote = Note(
+      id: id ?? const Uuid().v4(),
+      title: title,
+      content: encrypted.encryptedText,
+      dateCreated: date ?? DateTime.now(),
+    );
     final NoteDto dto = NoteDto.fromDomain(newNote, newNote.content, encrypted.encryptionIV.base64);
 
     await ref.read(noteRepositoryProvider).addNote(dto);
@@ -150,7 +156,9 @@ class NoteController extends _$NoteController {
     final NoteDto? dto = await ref.read(noteRepositoryProvider).getNote(noteId);
     if (dto == null) throw Exception('Note with the ID "$noteId" does not exist.');
 
-    final decryptedContent = ref.read(encryptionServiceProvider).decryptWithMasterKey(dto.content, enc.IV.fromBase64(dto.iv));
+    final decryptedContent = ref
+        .read(encryptionServiceProvider)
+        .decryptWithMasterKey(dto.content, enc.IV.fromBase64(dto.iv));
     return Note(id: dto.id, title: dto.title, content: decryptedContent, dateCreated: DateTime.parse(dto.dateCreated));
   }
 

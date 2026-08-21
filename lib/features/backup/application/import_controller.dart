@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
@@ -148,7 +149,9 @@ class ImportController extends _$ImportController {
   void askForSettings(BackupData backupData) => state = ImportControllerState.askForSettings(backupData);
 
   Future<BackupData?> submitPassword(BackupData backupData, String password) async {
-    final enc.Key derivedKey = await ref.read(encryptionServiceProvider).deriveKeyFromPassword(password, backupData.credentialsData.salt);
+    final enc.Key derivedKey = await ref
+        .read(encryptionServiceProvider)
+        .deriveKeyFromPassword(password, backupData.credentialsData.salt);
 
     final decryptedBackupKey = decryptBackupCredentials(backupData: backupData, key: derivedKey);
 

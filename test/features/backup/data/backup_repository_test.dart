@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -12,9 +13,15 @@ import 'package:private_notes_light/features/notes/domain/note_dto.dart';
 import 'package:private_notes_light/features/settings/data/settings_repository.dart';
 import 'package:private_notes_light/features/settings/domain/settings_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../core/dummy_backup_data.dart';
 
-@GenerateNiceMocks([MockSpec<PathService>(), MockSpec<FilePickerService>(), MockSpec<NoteRepository>(), MockSpec<SettingsRepository>()])
+@GenerateNiceMocks([
+  MockSpec<PathService>(),
+  MockSpec<FilePickerService>(),
+  MockSpec<NoteRepository>(),
+  MockSpec<SettingsRepository>(),
+])
 import 'backup_repository_test.mocks.dart';
 
 void main() {

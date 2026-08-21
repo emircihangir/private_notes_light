@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/fade_page_route_builder.dart';
@@ -88,7 +89,10 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(_slides.length, (index) => DotIndicator(isActive: index == _currentPage, color: colorScheme.primary)),
+                children: List.generate(
+                  _slides.length,
+                  (index) => DotIndicator(isActive: index == _currentPage, color: colorScheme.primary),
+                ),
               ),
             ),
 
@@ -99,7 +103,9 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                   const Spacer(),
                   TextButton(
                     onPressed: _goToNextPage,
-                    child: Text(isLastPage ? AppLocalizations.of(context)!.getStarted : AppLocalizations.of(context)!.next),
+                    child: Text(
+                      isLastPage ? AppLocalizations.of(context)!.getStarted : AppLocalizations.of(context)!.next,
+                    ),
                   ),
                 ],
               ),

@@ -17,7 +17,7 @@ class AuthGuard extends ConsumerWidget {
           } else {
             return const SignupScreen();
           }
-        }).valueOrNull ??
+        }).value ??
         const SizedBox();
   }
 }

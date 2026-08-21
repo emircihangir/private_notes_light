@@ -5,6 +5,7 @@ import 'package:private_notes_light/features/settings/application/settings_contr
 import 'package:private_notes_light/core/theme.dart';
 import 'package:private_notes_light/features/welcome/presentation/startup_gate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'l10n/app_localizations.dart';
 
 Future<void> main() async {
@@ -20,7 +21,7 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsAsync = ref.watch(settingsControllerProvider);
-    final themeMode = settingsAsync.valueOrNull?.theme ?? ThemeMode.system;
+    final themeMode = settingsAsync.value?.theme ?? ThemeMode.system;
 
     return MaterialApp(
       themeMode: themeMode,

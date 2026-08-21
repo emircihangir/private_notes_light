@@ -14,7 +14,9 @@ ThemeData appTheme(Brightness brightness) {
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(colorScheme.primary),
         elevation: const WidgetStatePropertyAll(0),
-        shape: const WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3)))),
+        shape: const WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
+        ),
       ),
     ),
 
@@ -32,10 +34,15 @@ ThemeData appTheme(Brightness brightness) {
     ),
 
     iconButtonTheme: IconButtonThemeData(
-      style: ButtonStyle(iconColor: WidgetStatePropertyAll(colorScheme.primary), elevation: const WidgetStatePropertyAll(0)),
+      style: ButtonStyle(
+        iconColor: WidgetStatePropertyAll(colorScheme.primary),
+        elevation: const WidgetStatePropertyAll(0),
+      ),
     ),
 
-    textButtonTheme: TextButtonThemeData(style: ButtonStyle(foregroundColor: WidgetStatePropertyAll(colorScheme.primary))),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(foregroundColor: WidgetStatePropertyAll(colorScheme.primary)),
+    ),
 
     listTileTheme: ListTileThemeData(
       shape: Border(bottom: BorderSide(width: 1, color: colorScheme.outlineVariant)),
@@ -60,13 +67,21 @@ ThemeData appTheme(Brightness brightness) {
       }),
     ),
 
-    dialogTheme: const DialogThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3)))),
-
-    segmentedButtonTheme: const SegmentedButtonThemeData(
-      style: ButtonStyle(shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))))),
+    dialogTheme: const DialogThemeData(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
     ),
 
-    bottomSheetTheme: const BottomSheetThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3)))),
+    segmentedButtonTheme: const SegmentedButtonThemeData(
+      style: ButtonStyle(
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
+        ),
+      ),
+    ),
+
+    bottomSheetTheme: const BottomSheetThemeData(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all(Radius.circular(3))),
+    ),
 
     cardTheme: const CardThemeData(elevation: 0),
   );

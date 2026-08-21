@@ -50,7 +50,11 @@ void main() {
 
     // Act
     final encrypted = encryptionService.encryptText(text: dummyText, key: dummyKey, iv: dummyIv);
-    final decryptedText = encryptionService.decryptText(encryptedText: encrypted.encryptedText, key: dummyKey, iv: encrypted.encryptionIV);
+    final decryptedText = encryptionService.decryptText(
+      encryptedText: encrypted.encryptedText,
+      key: dummyKey,
+      iv: encrypted.encryptionIV,
+    );
 
     // Verify
     expect(encrypted.encryptionIV, dummyIv);
@@ -77,7 +81,9 @@ void main() {
 
     // Act
     final encrypted = container.read(encryptionServiceProvider).encryptWithMasterKey(dummyText);
-    final decryptedText = container.read(encryptionServiceProvider).decryptWithMasterKey(encrypted.encryptedText, encrypted.encryptionIV);
+    final decryptedText = container
+        .read(encryptionServiceProvider)
+        .decryptWithMasterKey(encrypted.encryptedText, encrypted.encryptionIV);
 
     // Verify
     expect(decryptedText, dummyText);

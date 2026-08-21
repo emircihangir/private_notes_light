@@ -103,7 +103,10 @@ void main() {
       test('shows success if export result is true', () async {
         // Setup
         final container = ProviderContainer(
-          overrides: [noteRepositoryProvider.overrideWith((ref) => mockNoteRepo), exportServiceProvider.overrideWith((ref) async => true)],
+          overrides: [
+            noteRepositoryProvider.overrideWith((ref) => mockNoteRepo),
+            exportServiceProvider.overrideWith((ref) async => true),
+          ],
         );
         addTearDown(container.dispose);
 
@@ -120,7 +123,10 @@ void main() {
       test('shows error if export result is false', () async {
         // Setup
         final container = ProviderContainer(
-          overrides: [noteRepositoryProvider.overrideWith((ref) => mockNoteRepo), exportServiceProvider.overrideWith((ref) async => false)],
+          overrides: [
+            noteRepositoryProvider.overrideWith((ref) => mockNoteRepo),
+            exportServiceProvider.overrideWith((ref) async => false),
+          ],
         );
         addTearDown(container.dispose);
 
@@ -143,7 +149,8 @@ void main() {
 
       final dummyIv = enc.IV.fromLength(16);
       final dummyEncryptedText = 'encryptedText';
-      when(mockEncryptionService.encryptWithMasterKey(dummyContent)).thenReturn((encryptedText: dummyEncryptedText, encryptionIV: dummyIv));
+      when(mockEncryptionService.encryptWithMasterKey(dummyContent))
+          .thenReturn((encryptedText: dummyEncryptedText, encryptionIV: dummyIv));
 
       final dummyKey = enc.Key.fromLength(32);
       container.read(masterKeyProvider.notifier).set(dummyKey);
@@ -173,9 +180,8 @@ void main() {
         date: DateTime(2024, 2, 3, 4, 5),
         iv: enc.IV.fromLength(16),
       );
-      when(
-        mockEncryptionService.encryptWithMasterKey(dummyData.content),
-      ).thenReturn((encryptedText: dummyData.encryptedText, encryptionIV: dummyData.iv));
+      when(mockEncryptionService.encryptWithMasterKey(dummyData.content))
+          .thenReturn((encryptedText: dummyData.encryptedText, encryptionIV: dummyData.iv));
 
       final dummyKey = enc.Key.fromLength(32);
       container.read(masterKeyProvider.notifier).set(dummyKey);
@@ -372,7 +378,7 @@ void main() {
       expect(trashedNotes.contains(deletedNote1), isTrue);
       expect(trashedNotes.length, 1);
 
-      var currentNotesList = container.read(noteControllerProvider).valueOrNull!.data;
+      var currentNotesList = container.read(noteControllerProvider).value!.data;
       expect(currentNotesList.contains(deletedNote2.noteWidgetData), isTrue);
       expect(currentNotesList, [
         const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
@@ -390,7 +396,7 @@ void main() {
       expect(trashedNotes.contains(deletedNote1), isFalse);
       expect(trashedNotes.isEmpty, isTrue);
 
-      currentNotesList = container.read(noteControllerProvider).valueOrNull!.data;
+      currentNotesList = container.read(noteControllerProvider).value!.data;
       expect(currentNotesList.contains(deletedNote2.noteWidgetData), isTrue);
       expect(currentNotesList.contains(deletedNote1.noteWidgetData), isTrue);
       expect(currentNotesList, [
@@ -428,7 +434,7 @@ void main() {
       expect(trashedNotes.contains(deletedNote1), isFalse);
       expect(trashedNotes.length, 1);
 
-      var currentNotesList = container.read(noteControllerProvider).valueOrNull!.data;
+      var currentNotesList = container.read(noteControllerProvider).value!.data;
       expect(currentNotesList.contains(deletedNote1.noteWidgetData), isTrue);
       expect(currentNotesList, [
         const NoteWidgetData(noteId: 'note1', noteTitle: 'noteTitle'),
@@ -446,7 +452,7 @@ void main() {
       expect(trashedNotes.contains(deletedNote1), isFalse);
       expect(trashedNotes.isEmpty, isTrue);
 
-      currentNotesList = container.read(noteControllerProvider).valueOrNull!.data;
+      currentNotesList = container.read(noteControllerProvider).value!.data;
       expect(currentNotesList.contains(deletedNote1.noteWidgetData), isTrue);
       expect(currentNotesList.contains(deletedNote2.noteWidgetData), isTrue);
       expect(currentNotesList, [
@@ -525,10 +531,16 @@ void main() {
       );
       container.read(masterKeyProvider.notifier).set(dummyData.key);
       when(mockNoteRepo.getNote(dummyData.noteId)).thenAnswer(
-        (_) async =>
-            NoteDto(id: dummyData.noteId, title: 'title', content: dummyData.encryptedContent, iv: dummyData.iv.base64, dateCreated: dummyData.date),
+        (_) async => NoteDto(
+          id: dummyData.noteId,
+          title: 'title',
+          content: dummyData.encryptedContent,
+          iv: dummyData.iv.base64,
+          dateCreated: dummyData.date,
+        ),
       );
-      when(mockEncryptionService.decryptWithMasterKey(dummyData.encryptedContent, dummyData.iv)).thenReturn(dummyData.decryptedContent);
+      when(mockEncryptionService.decryptWithMasterKey(dummyData.encryptedContent, dummyData.iv))
+          .thenReturn(dummyData.decryptedContent);
 
       await initNoteController();
 

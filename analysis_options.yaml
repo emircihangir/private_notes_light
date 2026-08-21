@@ -14,3 +14,6 @@ linter:
   rules:
     prefer_single_quotes: true
     prefer_const_constructors: true
+
+formatter:
+  page_width: 120

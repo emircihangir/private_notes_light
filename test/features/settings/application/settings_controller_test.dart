@@ -25,7 +25,12 @@ void main() {
   group('SettingsController tests ->', () {
     test('build returns repository settings', () async {
       // Setup
-      repository.settings = SettingsData(exportSuggestions: false, exportWarnings: false, theme: ThemeMode.dark, sortingOption: SortingOption.aToZ);
+      repository.settings = SettingsData(
+        exportSuggestions: false,
+        exportWarnings: false,
+        theme: ThemeMode.dark,
+        sortingOption: SortingOption.aToZ,
+      );
 
       // Act
       final settings = await container.read(settingsControllerProvider.future);

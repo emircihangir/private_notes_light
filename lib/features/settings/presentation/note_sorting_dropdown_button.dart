@@ -64,11 +64,12 @@ class NoteSortingDropdownButton extends ConsumerWidget {
                     ),
                   ],
                   value: settingsData.sortingOption,
-                  onChanged: (value) async => await ref.read(settingsControllerProvider.notifier).setSortingOption(value!),
+                  onChanged: (value) async =>
+                      await ref.read(settingsControllerProvider.notifier).setSortingOption(value!),
                 ),
               ),
             )
-            .valueOrNull ??
+            .value ??
         const SizedBox();
   }
 }

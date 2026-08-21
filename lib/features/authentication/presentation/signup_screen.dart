@@ -44,7 +44,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 Text(AppLocalizations.of(context)!.welcome, style: Theme.of(context).textTheme.headlineLarge),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
-                  child: Text(AppLocalizations.of(context)!.masterPasswordSetupWarning, style: Theme.of(context).textTheme.labelMedium),
+                  child: Text(
+                    AppLocalizations.of(context)!.masterPasswordSetupWarning,
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
                 ),
                 PasswordTextField(
                   controller: controller1,
@@ -78,7 +81,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     try {
                       await ref.read(authServiceProvider).signup(passwordInput);
                       if (context.mounted) {
-                        Navigator.of(context).pushAndRemoveUntil(fadePageRouteBuilder(const NotesPage()), (route) => false);
+                        Navigator.of(context)
+                            .pushAndRemoveUntil(fadePageRouteBuilder(const NotesPage()), (route) => false);
                       }
                     } catch (e) {
                       if (context.mounted) {

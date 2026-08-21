@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/snackbars.dart';
@@ -21,7 +22,10 @@ class ImportListTile extends ConsumerWidget {
         showOverwriteWarning: (_) async {
           final filePickerTitle = l10n.importSelectBackupTitle;
 
-          bool? proceedImport = await showDialog<bool>(context: context, builder: (context) => const OverwriteWarningDialog());
+          bool? proceedImport = await showDialog<bool>(
+            context: context,
+            builder: (context) => const OverwriteWarningDialog(),
+          );
 
           if (proceedImport == true) {
             ref.read(importControllerProvider.notifier).showFilePicker(dialogTitle: filePickerTitle);
@@ -48,8 +52,13 @@ class ImportListTile extends ConsumerWidget {
         },
         askForSettings: (value) async {
           log('Opening the settings dialog');
-          final bool? alsoImportSettings = await showDialog<bool>(context: context, builder: (context) => const ImportSettingsDialog());
-          await ref.read(importControllerProvider.notifier).executeImport(value.backupData, alsoImportSettings ?? false);
+          final bool? alsoImportSettings = await showDialog<bool>(
+            context: context,
+            builder: (context) => const ImportSettingsDialog(),
+          );
+          await ref
+              .read(importControllerProvider.notifier)
+              .executeImport(value.backupData, alsoImportSettings ?? false);
         },
       );
     });
@@ -59,7 +68,8 @@ class ImportListTile extends ConsumerWidget {
       leading: const Icon(Icons.download_rounded),
       title: Text(l10n.importDataTitle),
       subtitle: Text(l10n.importDataSubtitle),
-      onTap: () async => await ref.read(importControllerProvider.notifier).startImport(dialogTitle: l10n.importSelectBackupTitle),
+      onTap: () async =>
+          await ref.read(importControllerProvider.notifier).startImport(dialogTitle: l10n.importSelectBackupTitle),
     );
   }
 }
