@@ -38,6 +38,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signupBackupPrompt => 'Do you have a backup file?';
 
   @override
+  String get signupBackupPasswordDialogContent =>
+      'Please enter the password this backup file was encrypted with. If the import is successful, this password will be your master password.';
+
+  @override
   String get importBackupButton => 'Import';
 
   @override

@@ -95,6 +95,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   FilledButton(onPressed: () => _submitForm(l10n), child: Text(l10n.signupButton)),
                   const Spacer(),
                   ImportControllerListener(
+                    skipSettingsDialog: true,
+                    passwordDialogContent: l10n.signupBackupPasswordDialogContent,
                     onSuccess: () =>
                         Navigator.of(context)
                             .pushAndRemoveUntil(fadePageRouteBuilder(const NotesPage()), (route) => false),

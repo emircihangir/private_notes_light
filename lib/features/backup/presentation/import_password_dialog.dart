@@ -9,7 +9,9 @@ import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class ImportPasswordDialog extends ConsumerStatefulWidget {
   final BackupData backupData;
-  const ImportPasswordDialog(this.backupData, {super.key});
+  final String? dialogContent;
+  final bool? skipSettingsDialog;
+  const ImportPasswordDialog(this.backupData, {super.key, this.dialogContent, this.skipSettingsDialog});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ImportPasswordDialogState();
@@ -34,13 +36,13 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
     return AlertDialog(
       title: Text(l10n.importPasswordDialogTitle),
       content: Column(
+        spacing: 16,
         mainAxisSize: MainAxisSize.min,
-        spacing: 8,
         children: [
-          Text(l10n.importPasswordDialogContent),
+          Text(widget.dialogContent ?? l10n.importPasswordDialogContent),
           Form(
             key: _formKey,
-            child: PasswordTextField(controller: controller, errorText: errorText),
+            child: PasswordTextField(controller: controller, errorText: errorText, autoFocus: true),
           ),
         ],
       ),
@@ -60,7 +62,11 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
             } else if (context.mounted) {
               Navigator.of(context).pop();
               log('Closed the password dialog.', name: 'INFO');
-              ref.read(importControllerProvider.notifier).askForSettings(rotatedBackupData);
+              if (widget.skipSettingsDialog == true) {
+                ref.read(importControllerProvider.notifier).executeImport(rotatedBackupData, true);
+              } else {
+                ref.read(importControllerProvider.notifier).askForSettings(rotatedBackupData);
+              }
             }
           },
           child: Text(l10n.submitButton),
