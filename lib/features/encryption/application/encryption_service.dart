@@ -26,6 +26,11 @@ class EncryptionService {
     return List<int>.generate(length, (i) => random.nextInt(256));
   }
 
+  enc.Key generateRandomKey() {
+    final bytes = generateRandomBytes(32);
+    return enc.Key(Uint8List.fromList(bytes));
+  }
+
   ({String encryptedText, enc.IV encryptionIV}) encryptWithMasterKey(String text, {enc.IV? iv}) {
     final masterKey = ref.read(masterKeyProvider);
     assert(masterKey != null, 'masterKey cannot be null when encryptWithMasterKey executes.');
@@ -86,5 +91,5 @@ Future<enc.Key> deriveKeyBackground(Map<String, Uint8List> args) async {
   return enc.Key(Uint8List.fromList(newSecretKeyBytes));
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 EncryptionService encryptionService(Ref ref) => EncryptionService(ref);

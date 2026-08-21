@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'export_service.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<bool> exportService(Ref ref) async {
   final backupRepo = await ref.watch(backupRepositoryProvider.future);
   final authRepo = ref.watch(authRepositoryProvider);

@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:private_notes_light/features/authentication/domain/credentials_data.dart';
 import 'package:private_notes_light/features/encryption/application/encryption_service.dart';
 import 'package:private_notes_light/features/encryption/application/master_key.dart';
@@ -17,9 +16,7 @@ class AuthService {
     final salt = ref.read(encryptionServiceProvider).generateSalt();
     final userKey = await ref.read(encryptionServiceProvider).deriveKeyFromPassword(masterPassword, salt);
 
-    // * Generate random master key.
-    final masterKeyBytes = ref.read(encryptionServiceProvider).generateRandomBytes(32);
-    final masterKey = enc.Key(Uint8List.fromList(masterKeyBytes));
+    final masterKey = ref.read(encryptionServiceProvider).generateRandomKey();
 
     // * Encrypt the generated master key.
     var encrypted = ref.read(encryptionServiceProvider).encryptText(text: masterKey.base64, key: userKey);

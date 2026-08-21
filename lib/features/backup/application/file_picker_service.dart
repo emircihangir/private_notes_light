@@ -15,5 +15,5 @@ class FilePickerService {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 FilePickerService filePickerService(Ref ref) => FilePickerService();

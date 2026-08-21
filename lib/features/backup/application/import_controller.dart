@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:private_notes_light/features/authentication/data/auth_repository.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_running.dart';
 import 'package:private_notes_light/features/backup/application/file_picker_service.dart';
 import 'package:private_notes_light/features/backup/data/backup_repository.dart';
@@ -57,9 +58,15 @@ class ImportController extends _$ImportController {
     if (backupData.notesData.isNotEmpty) {
       final firstNote = backupData.notesData.first;
 
-      final isDecryptable = ref
-          .read(encryptionServiceProvider)
-          .keyCanDecrypt(firstNote.content, ref.read(masterKeyProvider)!, enc.IV.fromBase64(firstNote.iv));
+      final bool isDecryptable;
+
+      if (ref.read(masterKeyProvider) != null) {
+        isDecryptable = ref
+            .read(encryptionServiceProvider)
+            .keyCanDecrypt(firstNote.content, ref.read(masterKeyProvider)!, enc.IV.fromBase64(firstNote.iv));
+      } else {
+        isDecryptable = false;
+      }
 
       if (isDecryptable) {
         askForSettings(backupData);
@@ -67,7 +74,8 @@ class ImportController extends _$ImportController {
         state = ImportControllerState.showPasswordDialog(backupData);
       }
     } else {
-      askForSettings(backupData);
+      state = const ImportControllerState.backupHasNoNotes();
+      return;
     }
   }
 
@@ -93,7 +101,7 @@ class ImportController extends _$ImportController {
   }
 
   Future<BackupData> performKeyRotation({required BackupData backupData, required enc.Key backupsMasterKey}) async {
-    final encryptionService = ref.watch(encryptionServiceProvider);
+    final encryptionService = ref.read(encryptionServiceProvider);
     final currentMasterKey = ref.read(masterKeyProvider)!;
 
     final currentNotesList = List<NoteDto>.from(backupData.notesData);
@@ -156,8 +164,17 @@ class ImportController extends _$ImportController {
     final decryptedBackupKey = decryptBackupCredentials(backupData: backupData, key: derivedKey);
 
     if (decryptedBackupKey != null) {
-      final rotatedBackupData = await performKeyRotation(backupData: backupData, backupsMasterKey: decryptedBackupKey);
-      return rotatedBackupData;
+      if (ref.read(masterKeyProvider) == null) {
+        await ref.read(authRepositoryProvider).saveCredentials(backupData.credentialsData);
+        ref.read(masterKeyProvider.notifier).set(decryptedBackupKey);
+        return backupData;
+      } else {
+        final rotatedBackupData = await performKeyRotation(
+          backupData: backupData,
+          backupsMasterKey: decryptedBackupKey,
+        );
+        return rotatedBackupData;
+      }
     } else {
       log('User entered the wrong password.', name: 'INFO');
       return null;

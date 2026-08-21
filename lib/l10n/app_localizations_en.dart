@@ -35,6 +35,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signupGenericError => 'Signup failed. Please try again.';
 
   @override
+  String get signupBackupPrompt => 'Do you have a backup file?';
+
+  @override
+  String get importBackupButton => 'Import';
+
+  @override
   String get unlock => 'Unlock';
 
   @override
@@ -63,6 +69,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importDataSubtitle => 'Restore notes from a backup file';
+
+  @override
+  String get backupHasNoNotesDialogTitle => 'Backup has no notes';
+
+  @override
+  String get backupHasNoNotesDialogContent => 'The backup file has no notes to import. Please select another file.';
 
   @override
   String get importSettingsDialogTitle => 'Import settings?';

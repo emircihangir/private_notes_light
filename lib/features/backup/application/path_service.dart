@@ -9,5 +9,5 @@ class PathService {
   Future<Directory> getTempDirectory() async => await getTemporaryDirectory();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 PathService pathService(Ref ref) => PathService();

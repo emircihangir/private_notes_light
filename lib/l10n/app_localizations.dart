@@ -139,6 +139,18 @@ abstract class AppLocalizations {
   /// **'Signup failed. Please try again.'**
   String get signupGenericError;
 
+  /// Prompt on the signup screen asking whether the user has a backup file to import.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you have a backup file?'**
+  String get signupBackupPrompt;
+
+  /// Button label for importing a backup file from the signup screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get importBackupButton;
+
   /// Label for the unlock button.
   ///
   /// In en, this message translates to:
@@ -198,6 +210,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore notes from a backup file'**
   String get importDataSubtitle;
+
+  /// Title of the dialog shown when a selected backup contains no notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup has no notes'**
+  String get backupHasNoNotesDialogTitle;
+
+  /// Body text of the dialog shown when a selected backup contains no notes.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup file has no notes to import. Please select another file.'**
+  String get backupHasNoNotesDialogContent;
 
   /// Title of the dialog asking to import settings.
   ///

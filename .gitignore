@@ -49,3 +49,5 @@ sample_export.json
 *.g.dart
 *.freezed.dart
 *.mocks.dart
+# Widget Preview related
+.widget_preview/

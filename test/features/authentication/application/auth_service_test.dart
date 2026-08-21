@@ -34,6 +34,7 @@ void main() {
       final dummyEncryptionIV = enc.IV.fromLength(16);
 
       when(mockEncryptionService.generateSalt()).thenReturn(dummySalt);
+      when(mockEncryptionService.generateRandomKey()).thenReturn(dummyMasterKey);
       when(mockEncryptionService.deriveKeyFromPassword(dummyPassword, dummySalt)).thenAnswer((_) async => dummyUserKey);
       when(mockEncryptionService.generateRandomBytes(32)).thenReturn(dummyBytes);
       when(mockEncryptionService.encryptText(text: dummyMasterKey.base64, key: dummyUserKey))
