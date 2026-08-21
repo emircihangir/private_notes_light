@@ -12,6 +12,9 @@ class TrashedNotesSheet extends ConsumerWidget {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom + 32;
     final trashedNotes = ref.watch(trashedNotesProvider);
 
+    final l10n = AppLocalizations.of(context)!;
+    final textTheme = Theme.of(context).textTheme;
+
     return Padding(
       padding: EdgeInsets.only(bottom: bottomInset),
       child: Center(
@@ -19,8 +22,8 @@ class TrashedNotesSheet extends ConsumerWidget {
           spacing: 16,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(AppLocalizations.of(context)!.trashedNotes, style: Theme.of(context).textTheme.titleMedium),
-            Text(AppLocalizations.of(context)!.trashedNotesExplainer, style: Theme.of(context).textTheme.labelMedium),
+            Text(l10n.trashedNotes, style: textTheme.titleMedium),
+            Text(l10n.trashedNotesExplainer, style: textTheme.labelMedium),
             Expanded(
               child: ListView.builder(
                 itemCount: trashedNotes.length,
@@ -30,7 +33,7 @@ class TrashedNotesSheet extends ConsumerWidget {
                     title: Text(trashedNote.noteWidgetData.noteTitle),
                     trailing: TextButton(
                       onPressed: () => ref.read(noteControllerProvider.notifier).putNoteBack(trashedNote),
-                      child: Text(AppLocalizations.of(context)!.putBack),
+                      child: Text(l10n.putBack),
                     ),
                   );
                 },

@@ -27,6 +27,13 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   List<SlideData> _slides = [];
+  late final AppLocalizations l10n;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    l10n = AppLocalizations.of(context)!;
+  }
 
   @override
   void dispose() {
@@ -46,23 +53,13 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
   }
 
   // Slides
-  SlideData _slide1() => SlideData(
-    icon: Icons.lock_outline_rounded,
-    title: AppLocalizations.of(context)!.slide1Title,
-    content: AppLocalizations.of(context)!.slide1Content,
-  );
+  SlideData _slide1() =>
+      SlideData(icon: Icons.lock_outline_rounded, title: l10n.slide1Title, content: l10n.slide1Content);
 
-  SlideData _slide2() => SlideData(
-    icon: Icons.edit_note_rounded,
-    title: AppLocalizations.of(context)!.slide2Title,
-    content: AppLocalizations.of(context)!.slide2Content,
-  );
+  SlideData _slide2() => SlideData(icon: Icons.edit_note_rounded, title: l10n.slide2Title, content: l10n.slide2Content);
 
-  SlideData _slide3() => SlideData(
-    icon: Icons.warning_amber_rounded,
-    title: AppLocalizations.of(context)!.slide3Title,
-    content: AppLocalizations.of(context)!.slide3Content,
-  );
+  SlideData _slide3() =>
+      SlideData(icon: Icons.warning_amber_rounded, title: l10n.slide3Title, content: l10n.slide3Content);
 
   @override
   Widget build(BuildContext context) {
@@ -101,12 +98,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
               child: Row(
                 children: [
                   const Spacer(),
-                  TextButton(
-                    onPressed: _goToNextPage,
-                    child: Text(
-                      isLastPage ? AppLocalizations.of(context)!.getStarted : AppLocalizations.of(context)!.next,
-                    ),
-                  ),
+                  TextButton(onPressed: _goToNextPage, child: Text(isLastPage ? l10n.getStarted : l10n.next)),
                 ],
               ),
             ),
