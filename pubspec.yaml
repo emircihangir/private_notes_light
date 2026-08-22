@@ -32,7 +32,6 @@ dependencies:
   json_annotation: ^4.9.0
   cryptography: ^2.9.0
   cryptography_flutter: ^2.3.4
-  flutter_svg: ^2.3.0
   package_info_plus: ^9.0.1
   sqflite_common_ffi: ^2.4.2+1
 
@@ -53,5 +52,3 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
-  assets:
-    - assets/images/
