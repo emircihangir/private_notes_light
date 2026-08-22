@@ -3,15 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/features/authentication/presentation/password_text_field.dart';
-import 'package:private_notes_light/features/backup/application/import_controller.dart';
-import 'package:private_notes_light/features/backup/domain/backup_data.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
 
 class ImportPasswordDialog extends ConsumerStatefulWidget {
-  final BackupData backupData;
   final String? dialogContent;
-  final bool? skipSettingsDialog;
-  const ImportPasswordDialog(this.backupData, {super.key, this.dialogContent, this.skipSettingsDialog});
+  final Future<bool?> Function(String submittedPassword) onPasswordSubmitted;
+  const ImportPasswordDialog({super.key, this.dialogContent, required this.onPasswordSubmitted});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ImportPasswordDialogState();
@@ -53,20 +50,13 @@ class _ImportPasswordDialogState extends ConsumerState<ImportPasswordDialog> {
           onPressed: () async {
             if (_formKey.currentState!.validate() == false) return;
 
-            final rotatedBackupData = await ref
-                .read(importControllerProvider.notifier)
-                .submitPassword(widget.backupData, controller.text);
+            final submissionResult = await widget.onPasswordSubmitted(controller.text);
+            if (!context.mounted) return;
 
-            if (rotatedBackupData == null) {
+            if (submissionResult == true) {
+              Navigator.of(context).pop(true);
+            } else {
               setState(() => errorText = l10n.wrongPasswordError);
-            } else if (context.mounted) {
-              Navigator.of(context).pop();
-              log('Closed the password dialog.', name: 'INFO');
-              if (widget.skipSettingsDialog == true) {
-                ref.read(importControllerProvider.notifier).executeImport(rotatedBackupData, true);
-              } else {
-                ref.read(importControllerProvider.notifier).askForSettings(rotatedBackupData);
-              }
             }
           },
           child: Text(l10n.submitButton),

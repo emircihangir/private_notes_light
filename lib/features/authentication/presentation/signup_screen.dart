@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:private_notes_light/core/fade_page_route_builder.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
-import 'package:private_notes_light/features/backup/application/import_controller.dart';
-import 'package:private_notes_light/features/backup/presentation/import_controller_listener.dart';
 import 'package:private_notes_light/features/notes/presentation/notes_page.dart';
 import 'package:private_notes_light/core/snackbars.dart';
 import 'package:private_notes_light/l10n/app_localizations.dart';
+import 'package:private_notes_light/shared/utils/trigger_import_flow.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -94,25 +93,24 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   const SizedBox(height: 32),
                   FilledButton(onPressed: () => _submitForm(l10n), child: Text(l10n.signupButton)),
                   const Spacer(),
-                  ImportControllerListener(
-                    skipSettingsDialog: true,
-                    passwordDialogContent: l10n.signupBackupPasswordDialogContent,
-                    onSuccess: () =>
-                        Navigator.of(context)
-                            .pushAndRemoveUntil(fadePageRouteBuilder(const NotesPage()), (route) => false),
-                    child: Column(
-                      children: [
-                        Text(l10n.signupBackupPrompt),
-                        TextButton(
-                          onPressed: () async {
-                            await ref
-                                .read(importControllerProvider.notifier)
-                                .startImport(dialogTitle: l10n.importSelectBackupTitle);
-                          },
-                          child: Text(l10n.importBackupButton),
-                        ),
-                      ],
-                    ),
+                  Column(
+                    children: [
+                      Text(l10n.signupBackupPrompt),
+                      TextButton(
+                        onPressed: () async {
+                          await triggerImportFlow(
+                            context,
+                            ref,
+                            onSuccessfulImport: () {
+                              final routeBuilder = fadePageRouteBuilder(const NotesPage());
+                              Navigator.of(context).pushAndRemoveUntil(routeBuilder, (route) => false);
+                              showSuccessSnackbar(context, content: l10n.importSuccess);
+                            },
+                          );
+                        },
+                        child: Text(l10n.importBackupButton),
+                      ),
+                    ],
                   ),
                 ],
               ),
