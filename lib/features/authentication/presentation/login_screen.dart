@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:private_notes_light/core/fade_page_route_builder.dart';
 import 'package:private_notes_light/features/authentication/application/auth_service.dart';
 import 'package:private_notes_light/features/notes/presentation/notes_page.dart';
@@ -42,12 +41,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 32,
               children: [
-                SvgPicture.asset(
-                  theme.brightness == Brightness.light
-                      ? 'assets/images/app_icon_light.svg'
-                      : 'assets/images/app_icon_dark.svg',
-                  height: 150,
-                ),
+                const CircleAvatar(radius: 75, child: Icon(Icons.lock_outline_rounded, size: 90)),
                 Text(l10n.notesAreLocked, style: theme.textTheme.headlineLarge),
                 Form(
                   key: _formKey,
