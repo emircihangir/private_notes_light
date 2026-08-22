@@ -90,6 +90,8 @@ class NoteRepository {
     final NoteDto resultDto = result.map((e) => NoteDto.fromJson(e)).toList().first;
     return resultDto;
   }
+
+  Future<bool> get hasNotes async => (await getNotes()).isNotEmpty;
 }
 
 @Riverpod(keepAlive: true)
