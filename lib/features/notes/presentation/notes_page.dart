@@ -141,39 +141,37 @@ class _NotesPageState extends ConsumerState<NotesPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(onPressed: handlePlusTap, child: const Icon(Icons.add_rounded)),
-      body: SafeArea(
-        child: noteController.when(
-          error: (error, stackTrace) {
-            log('', error: error, stackTrace: stackTrace, name: 'ERROR');
-            return const Center(child: GenericErrorWidget());
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          data: (noteControllerState) {
-            final data = noteControllerState.data;
+      body: noteController.when(
+        error: (error, stackTrace) {
+          log('', error: error, stackTrace: stackTrace, name: 'ERROR');
+          return const Center(child: GenericErrorWidget());
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        data: (noteControllerState) {
+          final data = noteControllerState.data;
 
-            return Padding(
-              padding: const EdgeInsets.all(12),
-              child: data.isNotEmpty
-                  ? Column(
-                      children: [
-                        SearchBar(
-                          leading: const Icon(Icons.search),
-                          hintText: l10n.searchHint,
-                          onChanged: (value) => ref.read(searchQueryProvider.notifier).set(value),
-                        ),
-                        filteredNotes.isNotEmpty
-                            ? NotesList(
-                                filteredNotes: filteredNotes,
-                                onDismissed: (direction, noteWidgetData) => handleDismiss(direction, noteWidgetData),
-                                onTap: handleNoteWidgetTap,
-                              )
-                            : const NoNotesFoundWidget(),
-                      ],
-                    )
-                  : const EmptyNotesWidget(),
-            );
-          },
-        ),
+          return Padding(
+            padding: const EdgeInsets.all(12),
+            child: data.isNotEmpty
+                ? Column(
+                    children: [
+                      SearchBar(
+                        leading: const Icon(Icons.search),
+                        hintText: l10n.searchHint,
+                        onChanged: (value) => ref.read(searchQueryProvider.notifier).set(value),
+                      ),
+                      filteredNotes.isNotEmpty
+                          ? NotesList(
+                              filteredNotes: filteredNotes,
+                              onDismissed: (direction, noteWidgetData) => handleDismiss(direction, noteWidgetData),
+                              onTap: handleNoteWidgetTap,
+                            )
+                          : const NoNotesFoundWidget(),
+                    ],
+                  )
+                : const EmptyNotesWidget(),
+          );
+        },
       ),
     );
   }
