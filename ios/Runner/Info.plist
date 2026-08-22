@@ -22,6 +22,10 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Private Notes may use the camera when you choose to capture a file for importing notes.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Private Notes may use your location while you select a file for importing notes.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Private Notes lets you choose backup files from your device when importing notes.</string>
 	<key>CFBundleVersion</key>
