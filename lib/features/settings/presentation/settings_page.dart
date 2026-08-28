@@ -70,12 +70,6 @@ class SettingsPage extends StatelessWidget {
               subtitle: Text(l10n.reportFeedbackSubtitle),
               onTap: () async => await openUrl('mailto:m.emircihangir@gmail.com', context),
             ),
-            ListTile(
-              leading: const Icon(Icons.coffee),
-              title: Text(l10n.supportDevelopmentTitle),
-              subtitle: Text(l10n.supportDevelopmentSubtitle),
-              onTap: () async => await openUrl('https://buymeacoffee.com/emircihangir', context),
-            ),
 
             const Divider(),
             Padding(
