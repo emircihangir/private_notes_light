@@ -54,65 +54,59 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       body: SafeArea(
         child: Form(
           key: _formKey,
-          child: Center(
-            child: SizedBox(
-              width: 300,
-              child: Column(
-                mainAxisAlignment: .center,
-                children: [
-                  const Spacer(),
-                  Text(l10n.welcome, style: textTheme.headlineLarge),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: Text(l10n.masterPasswordSetupWarning, textAlign: .justify),
-                  ),
-                  const SizedBox(height: 32),
-                  TextFormField(
-                    controller: controller1,
-                    decoration: InputDecoration(labelText: l10n.password),
-                    textInputAction: .next,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) return l10n.passwordEmptyError;
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: controller2,
-                    decoration: InputDecoration(labelText: l10n.confirmPassword),
-                    textInputAction: .done,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) return l10n.passwordEmptyError;
-                      if (value != controller1.text) return l10n.passwordsDontMatch;
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 32),
-                  FilledButton(onPressed: () => _submitForm(l10n), child: Text(l10n.signupButton)),
-                  const Spacer(),
-                  Column(
-                    children: [
-                      Text(l10n.signupBackupPrompt),
-                      TextButton(
-                        onPressed: () async {
-                          await triggerImportFlow(
-                            context,
-                            ref,
-                            onSuccessfulImport: () {
-                              final routeBuilder = fadePageRouteBuilder(const NotesPage());
-                              Navigator.of(context).pushAndRemoveUntil(routeBuilder, (route) => false);
-                              showSuccessSnackbar(context, content: l10n.importSuccess);
-                            },
-                          );
-                        },
-                        child: Text(l10n.importBackupButton),
-                      ),
-                    ],
-                  ),
-                ],
+          child: SingleChildScrollView(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const .new(maxWidth: 300),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 32 * 1.5),
+                    Text(l10n.welcome, style: textTheme.headlineLarge),
+                    const SizedBox(height: 32),
+                    Text(l10n.masterPasswordSetupWarning, textAlign: .justify),
+                    const SizedBox(height: 32),
+                    TextFormField(
+                      controller: controller1,
+                      decoration: InputDecoration(labelText: l10n.password),
+                      textInputAction: .next,
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return l10n.passwordEmptyError;
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: controller2,
+                      decoration: InputDecoration(labelText: l10n.confirmPassword),
+                      textInputAction: .done,
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return l10n.passwordEmptyError;
+                        if (value != controller1.text) return l10n.passwordsDontMatch;
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    FilledButton(onPressed: () => _submitForm(l10n), child: Text(l10n.signupButton)),
+                    const SizedBox(height: 32),
+                    Text(l10n.signupBackupPrompt),
+                    TextButton(
+                      onPressed: () async {
+                        await triggerImportFlow(
+                          context,
+                          ref,
+                          onSuccessfulImport: () {
+                            final routeBuilder = fadePageRouteBuilder(const NotesPage());
+                            Navigator.of(context).pushAndRemoveUntil(routeBuilder, (route) => false);
+                            showSuccessSnackbar(context, content: l10n.importSuccess);
+                          },
+                        );
+                      },
+                      child: Text(l10n.importBackupButton),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
