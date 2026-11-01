@@ -35,23 +35,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: SizedBox(
-            width: 250,
+          child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: .center,
               spacing: 32,
               children: [
                 const CircleAvatar(radius: 75, child: Icon(Icons.lock_outline_rounded, size: 90)),
-                Text(l10n.notesAreLocked, style: theme.textTheme.headlineLarge),
+                FittedBox(
+                  fit: .scaleDown,
+                  child: Text(l10n.notesAreLocked, style: theme.textTheme.headlineLarge, maxLines: 1, softWrap: false),
+                ),
                 Form(
                   key: _formKey,
-                  child: PasswordTextField(
-                    controller: passwordController,
-                    errorText: errorText,
-                    labelText: l10n.password,
-                    onChanged: (value) {
-                      if (errorText != null) setState(() => errorText = null);
-                    },
+                  child: ConstrainedBox(
+                    constraints: const .new(maxWidth: 250),
+                    child: PasswordTextField(
+                      controller: passwordController,
+                      errorText: errorText,
+                      labelText: l10n.password,
+                      onChanged: (value) {
+                        if (errorText != null) setState(() => errorText = null);
+                      },
+                    ),
                   ),
                 ),
                 FilledButton(
